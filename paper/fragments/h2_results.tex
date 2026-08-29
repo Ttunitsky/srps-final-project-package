@@ -1,0 +1,27 @@
+Table~\ref{tab:h2fixed} reports the corrected matrix, in which the dual signal is live at the point of use (Section~\ref{sec:h2-fix}).
+
+\begin{table}[htbp]
+\centering
+\caption{Corrected dual-guided matrix. Lower mean $\Delta$gap is better. The $\delta$ column is measured against the warm-$\mu$ control where available, so the seed cost is not charged to the guidance.}
+\label{tab:h2fixed}
+\begin{tabular}{lrrrr}
+\toprule
+Arm & $n$ & mean $\Delta$gap (pp) & mean $\Delta$obj & $\delta$ vs.\ base (pp) \\
+\midrule
+control (no dual operators, no warm $\mu$) & 12 & 0.1663 & -0.250 & +0.1310 \\
+control + warm $\mu$ (isolates seed cost) & 12 & 0.0353 & -0.250 & --- \\
+v1 operators + warm $\mu$ & 12 & 0.0559 & -0.750 & +0.0206 \\
+v2 destroy only + warm $\mu$ & 12 & 0.0316 & -0.417 & -0.0037 \\
+v2 repair only + warm $\mu$ & 12 & 0.0478 & -0.667 & +0.0125 \\
+v2 destroy + repair + warm $\mu$ & 12 & 0.0324 & -0.333 & -0.0030 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The matrix decomposes cleanly once the warm-$\mu$ control is included. Warm initialisation alone accounts for -0.1310\pp of the movement; the guided operators, measured against that same baseline, span -0.0037\pp to +0.0206\pp, and 2 of the 4 are worse than the warm control outright.
+
+Two columns settle the attribution. The mean objective delta is identical for the plain and warm controls (-0.250 in both), so warm initialisation changed nothing in the primal---its entire contribution is a tighter $ub$. The guided operators, by contrast, degrade the objective (to -0.750) while moving the gap by at most 0.0037\pp in the favourable direction, inside the $\pm0.01$--$0.09\pp$ arm-to-arm noise band of the earlier suites and below the $0.0087\pp$ median ceiling of Table~\ref{tab:ceiling}.
+
+The naive reading of this matrix---comparing guided arms against the \emph{plain} control---reports a 0.1347\pp improvement and concludes that corrected dual guidance works. It does not. That apparent effect is the warm-$\mu$ solve, and it would have been reported as a positive result had the isolating arm not been run. We regard this as the most instructive artifact of the study: a confound that survives every check except the one that varies the suspected cause on its own.
+
+The hypothesis is therefore falsified as stated, while the experiment yields a positive finding of its own: dual effort spent \emph{before} the search, rather than reactively when a phase fails to improve, tightens the certificate materially on this subset. This is a scheduling question about the dual, not a steering question about the primal, and it belongs to the dual-stabilisation family~\cite{DuMerle1999Stabilized} rather than to guidance. Section~\ref{sec:threats} records the budget caveat that qualifies it.

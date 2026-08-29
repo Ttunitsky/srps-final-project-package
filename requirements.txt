@@ -1,0 +1,15 @@
+# SRPS-ALNS — Python dependencies
+# Tested with Python 3.10.11 on Windows 11. Lower bounds are conservative;
+# the exact versions used for the published results are noted in comments.
+
+numpy>=1.24        # tested 2.2.6   — core arrays / DP
+pandas>=2.0        # tested 2.3.3   — results aggregation (build_*.py)
+scipy>=1.10        # tested 1.15.3  — statistical tests (run_quality_analysis.py)
+statsmodels>=0.14  # tested 0.14.6  — Tobit / likelihood-ratio models
+matplotlib>=3.7    # tested 3.10.x  — figures (build_figures.py)
+pypdf>=4.0         # tested 6.x     — per-group BPC time tables (build_bpc_times.py)
+
+# The core solver, bounds, and the certificate verifier (core/, adapters/,
+# validators/, scripts/verify_certificates.py) depend only on numpy + the
+# Python standard library. matplotlib/pypdf/scipy/statsmodels are needed only
+# for the figure/statistics build scripts.

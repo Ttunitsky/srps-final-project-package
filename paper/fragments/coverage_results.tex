@@ -1,0 +1,29 @@
+Table~\ref{tab:coverage} lists every technique evaluated, the metric it targets, and its outcome. \textbf{The numbered rows are the ten strengthening techniques} and are the subject of Sections~\ref{sec:dual}--\ref{sec:runtime}. The two unnumbered rows above the rule are not interventions: one is the solver's own dual bound, the object the ten techniques try to strengthen, and the other is an independent reference solver used for comparison in Section~\ref{sec:exact}.
+
+The organising observation is the split by target. Interventions aimed at the certified gap are bounded in advance by the ceiling of Table~\ref{tab:ceiling}, and every one of them was absorbed by it; the two aimed at runtime carry no such bound, and one of them delivered.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Techniques evaluated in this study. Rows 1--10 are the strengthening attempts; the two rows above the rule are the bound being strengthened and the reference solver. Section references point to the derivation and the supporting measurement.}
+\label{tab:coverage}
+\begin{tabular}{clll}
+\toprule
+\# & Technique & Target & Outcome \\
+\midrule
+--- & \emph{Lagrangian relaxation} & \emph{dual $ub$} & \emph{the method under study} (\S\ref{sec:lagbound}) \\
+--- & \emph{Compact MILP (SRPS-1) in CPLEX} & \emph{reference} & \emph{looser bound than the Lagrangian on 22/30} (\S\ref{sec:exact}) \\
+\midrule
+1 & BPC-style cut separation & dual $ub$ & falsified on three independent grounds (\S\ref{sec:cuts}) \\
+2 & Dual-guided destroy / repair & primal $z$ & $+0.0037\pp$ vs.\ warm control at production budget (\S\ref{sec:guided}, \S\ref{sec:prod}) \\
+3 & Warm-$\mu$ dual effort scheduling & dual $ub$ & $-0.0086\pp$ at production budget (\S\ref{sec:prod}) \\
+4 & Primal-to-dual seeding & dual $ub$ & 9 tighter / 8 looser after flooring (\S\ref{sec:seeding}) \\
+5 & Dual stabilisation (trust region, smoothing) & dual $ub$ & budget-dependent; no transfer at the solver's budget (\S\ref{sec:convergence}) \\
+6 & Lagrangian decomposition (variable copies) & dual $ub$ & provably equal to the existing bound (\S\ref{sec:ld}) \\
+7 & Dantzig--Wolfe reformulation / column generation & dual $ub$ & master bound equals the Lagrangian dual optimum (\S\ref{sec:combining}) \\
+8 & Surrogate relaxation & dual $ub$ & dominates in theory; forfeits separability (\S\ref{sec:combining}) \\
+9 & Reduced-cost variable fixing & runtime & reach $24.8\%\to0.3\%$ at $0.99z$ (\S\ref{sec:fixing}) \\
+10 & Parallel subproblem evaluation & runtime & $\mathbf{1.42\times}$ dual, bit-identical bounds (\S\ref{sec:parallel}) \\
+\bottomrule
+\end{tabular}
+\end{table}

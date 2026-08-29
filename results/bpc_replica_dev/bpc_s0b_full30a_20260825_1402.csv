@@ -1,0 +1,16 @@
+instance,family,L,claimed_jobs,active_processors,makespan_lb,best_makespan_found,excess_over_L,excess_pct_L,feasible_schedule_found,restarts,evals,verdict
+B_n100_001_a25_001,B,2719.0,40,49,2636.0,2636.0,-83.0,-3.053,1,18,837,SCHEDULABLE - no-good cut would be UNSOUND
+B_n120_011_a75_033,B,9215.0,73,53,9168.0,9327.0,112.0,1.215,0,39322,4053142,"none found (inconclusive, not a proof)"
+C_n050_001_a25_001,C,1858.0,13,25,1856.0,1856.0,-2.0,-0.108,1,1,13,SCHEDULABLE - no-good cut would be UNSOUND
+B_n110_006_a50_017,B,5719.0,66,53,5651.0,5848.0,129.0,2.256,0,38378,3228460,"none found (inconclusive, not a proof)"
+C_n060_011_a50_032,C,5315.0,36,50,5228.0,5724.0,409.0,7.695,0,93140,4301197,"none found (inconclusive, not a proof)"
+B_n140_021_a25_061,B,3072.0,49,52,3071.0,3071.0,-1.0,-0.033,1,116,7460,SCHEDULABLE - no-good cut would be UNSOUND
+B_n150_026_a50_077,B,6144.0,89,54,6129.0,7916.0,1772.0,28.841,0,19895,2331084,"none found (inconclusive, not a proof)"
+D_n040_001_a25_001,D,1943.0,9,25,1856.0,1856.0,-87.0,-4.478,1,1,9,SCHEDULABLE - no-good cut would be UNSOUND
+C_n070_021_a25_061,C,2658.0,26,44,2632.0,2632.0,-26.0,-0.978,1,226,7876,SCHEDULABLE - no-good cut would be UNSOUND
+C_n065_016_a75_048,C,7973.0,65,54,7914.0,9415.0,1442.0,18.086,0,25649,2612715,"none found (inconclusive, not a proof)"
+C_n080_031_a50_092,C,5315.0,43,52,5284.0,5285.0,-30.0,-0.564,1,15,687,SCHEDULABLE - no-good cut would be UNSOUND
+D_n050_011_a50_032,D,4672.0,27,47,4668.0,4669.0,-3.0,-0.064,1,2038,83990,SCHEDULABLE - no-good cut would be UNSOUND
+EB_n100_001_a25_001,EB,2728.0,28,38,2720.0,2720.0,-8.0,-0.293,1,2,83,SCHEDULABLE - no-good cut would be UNSOUND
+D_n070_031_a25_091,D,2788.0,28,43,2776.0,2777.0,-11.0,-0.395,1,110,4241,SCHEDULABLE - no-good cut would be UNSOUND
+EB_n120_011_a75_033,EB,9240.0,74,53,9190.0,9200.0,-40.0,-0.433,1,15137,1579892,SCHEDULABLE - no-good cut would be UNSOUND

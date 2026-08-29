@@ -1,0 +1,2 @@
+instance,family,n,alpha,group_id,ref_obj,ref_rt_s,ref_gap_pct,final_obj,delta_ref,bks,delta_bks,ub,final_gap_pct,delta_rt_s,delta_gap_pct,cut_feasible,cut_pressure,cut_critical_path_len,phases,lag_calls,lag_iters,cut_destroy,cut_repair,stop_reason,total_rt_s
+B_n100_001_a25_001,B,100,0.25,001,2142.0,300.6,0.0933,2142.0,0.0,2142.0,0.0,2144,0.093284,0.303,-1.6e-05,1,3.916949,3,1,0,0,1,1,GAP<0.3%,300.9

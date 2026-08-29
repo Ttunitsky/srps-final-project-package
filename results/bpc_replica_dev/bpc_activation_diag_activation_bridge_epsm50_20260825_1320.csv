@@ -1,0 +1,4 @@
+instance,family,cut_gen_calls,cuts_added_total,cuts_active_peak,sep_empty_rounds,sep_nonempty_rounds,sep_budget_skips,sep_candidates_total,sep_candidates_circuit,sep_candidates_route_len,sep_candidates_sync,sep_empty_no_cycles,sep_empty_no_route_over,sep_empty_sync_not_acyclic,sep_empty_sync_no_path,sep_empty_sync_not_over_L,avg_sep_nodes,avg_sep_edges,activation_pass
+B_n150_026_a50_077,B,1,2,2,0,1,0,2,0,1,1,0,0,0,0,0,100.0,171.0,1
+C_n080_031_a50_092,C,1,0,0,1,0,0,0,0,0,0,1,1,0,0,1,51.0,104.0,0
+ED_n080_041_a50_122,ED,2,0,0,2,0,0,0,0,0,0,2,2,0,0,2,55.5,121.5,0

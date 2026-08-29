@@ -1,0 +1,27 @@
+Two coupling directions from the syllabus remained untested after the dual-guided operators: primal-to-dual seeding, in which the incumbent's own selection sets the starting multipliers rather than only serving as the Polyak target; and dual stabilisation via trust region or smoothing~\cite{DuMerle1999Stabilized}. Both are evaluated below over 30 instances at 200 subgradient iterations.
+
+\begin{table}[htbp]
+\centering
+\caption{Dual variants over 30 instances, 200 iterations. $\Delta$UB is the change in the real-valued bound against baseline; negative is tighter. The final column is what survives $\lfloor\cdot\rfloor$, which is what the certified gap actually uses.}
+\label{tab:variants}
+\begin{tabular}{lrrr}
+\toprule
+Variant & mean $\Delta$UB & wins / 30 & floor: tighter / looser \\
+\midrule
+baseline (fair split, Polyak) & +0.000 & 0 & --- \\
+incumbent seed, $\varepsilon=0.05$ & -0.415 & 14 & 6 / 8 \\
+incumbent seed, $\varepsilon=0.10$ & -0.811 & 15 & 9 / 8 \\
+incumbent seed, $\varepsilon=0.25$ & -0.858 & 12 & 6 / 8 \\
+trust region, radius 0.5 & +12.478 & 14 & 7 / 14 \\
+trust region, radius 1.0 & +1.576 & 18 & 9 / 10 \\
+dual smoothing, 0.3 & +17.328 & 5 & 1 / 23 \\
+dual smoothing, 0.6 & +53.899 & 0 & 0 / 29 \\
+seed 0.10 + trust 0.5 & +12.616 & 13 & 6 / 14 \\
+seed 0.10 + smoothing 0.3 & +13.855 & 8 & 4 / 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Seeding produces a small mean tightening ($-0.81$ for $\varepsilon=0.10$, winning on 15 instances of 30), but the median instance moves by $-0.000$---that is, not at all. The mean is carried by 10 instances with $|\Delta \text{UB}|\ge 1$, spanning $-10.0$ to $+3.0$. After flooring, the direction is a coin flip, and two of the three seeding variants are net worse. There is no usable improvement here.
+
+Smoothing is straightforwardly harmful and monotone in its weight. The trust region requires more care, and is treated separately below, because its verdict depends on the iteration budget.

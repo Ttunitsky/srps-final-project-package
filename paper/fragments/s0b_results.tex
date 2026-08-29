@@ -1,0 +1,19 @@
+S0b searches for any global ordering achieving makespan $\le L$. A \textsc{schedulable} verdict is constructive: an explicit feasible ordering is exhibited, so the selection provably cannot be cut.
+
+\begin{table}[htbp]
+\centering
+\caption{S0b schedulability over 30 instances. A schedulable selection cannot be excluded by a no-good cut without invalidating the bound.}
+\label{tab:s0b}
+\begin{tabular}{lr}
+\toprule
+Outcome & Instances \\
+\midrule
+\textsc{schedulable} (feasible ordering found) & 16 / 30 \;(53.3\%) \\
+None found (inconclusive, not a proof) & 14 / 30 \;(46.7\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On 16 of 30 instances the relaxed selection is provably schedulable, so a cut asserting its infeasibility would exclude a feasible point and invalidate every downstream certificate. The margins are narrow: the tightest feasible schedule clears the horizon by 1 time unit, and 12 of the 16 schedulable instances clear it by less than 50.
+
+That narrowness compounds the problem. A separation routine would have to distinguish ``feasible by a handful of time units'' from ``infeasible'', and in a certifying method a misclassification does not produce a weak cut: it produces an invalid upper bound and a silently wrong certified gap. The standard discipline for user cuts is explicit on this point---a valid inequality must strengthen the relaxation \emph{without excluding feasible integer points}~\cite{Crowder1983ZeroOne,Barnhart1998BranchPrice}---and this cut family cannot meet it.

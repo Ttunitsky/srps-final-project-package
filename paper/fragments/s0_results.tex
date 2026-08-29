@@ -1,0 +1,22 @@
+Table~\ref{tab:s0} summarises S0 over the 30-instance stratified subset. Both violation channels fire on essentially the whole set.
+
+\begin{table}[htbp]
+\centering
+\caption{S0 violation instrument over 30 instances. Every per-processor route respects the horizon, yet the joint structure does not.}
+\label{tab:s0}
+\begin{tabular}{lr}
+\toprule
+Quantity & Value \\
+\midrule
+Channel A: partially claimed jobs & 184 \;(184 on multi-processor jobs) \\
+Mean subgradient norm $\|g\|^2$ at $\mu^\ast$ & 72.5 \\
+Channel B: instances cyclic under per-processor optimal order & 21 / 30 \\
+Total circuits detected & 148 \\
+Acyclic instances with makespan $>L$ & 4 / 9 \\
+\quad mean / max excess over $L$ & 1401.0 \;/\; 2044.0 \\
+Every per-processor route within $L$ & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The contrast in the last two rows is the substantive finding. The decomposition certifies every individual route as fitting inside the horizon, while the joint difference-constraint system does not admit a schedule under those same routes. The per-machine subproblem cannot represent the constraint that binds, because that constraint is exactly the one the relaxation dualised.

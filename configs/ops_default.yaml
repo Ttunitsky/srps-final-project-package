@@ -1,0 +1,21 @@
+# OPS default solver configuration
+# Tune these after smoke tests confirm correct parsing and feasibility
+
+alns:
+  max_iterations: 500
+  start_temp: 100.0
+  cooling_rate: 0.985
+  lambda_decay: 0.8
+  sigma1: 33.0        # new global best
+  sigma2: 20.0        # improving
+  sigma3: 13.0        # accepted worse
+  destroy_min_frac: 0.15
+  destroy_max_frac: 0.35
+  seeds: [42, 123, 456, 789, 1000, 2000, 3000, 4000, 5000, 6000]  # 10 seeds per instance
+
+experiment:
+  time_budget_s: 100   # match published benchmark standard unless otherwise noted
+  pilot_instances:
+    easy: 3
+    medium: 3
+    hard: 3

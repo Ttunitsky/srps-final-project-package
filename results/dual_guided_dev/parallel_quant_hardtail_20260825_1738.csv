@@ -1,0 +1,5 @@
+instance,family,processors,seq_best_s,seq_spread_pct,par_best_s,speedup,lpt_ceiling,hard_ceiling,pct_of_ceiling,identical
+B_n140_021_a25_061,B,55,14.361,2.8,10.129,1.418,1.885,1.885,75.2,1
+EB_n110_006_a50_017,EB,55,6.534,1.2,6.074,1.076,1.496,1.496,71.9,1
+D_n080_041_a50_122,D,55,14.464,0.2,10.092,1.433,3.252,3.252,44.1,1
+ED_n050_011_a50_032,ED,55,0.474,1.5,0.273,1.733,3.995,6.57,43.4,1

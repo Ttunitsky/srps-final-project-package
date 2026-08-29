@@ -1,0 +1,1352 @@
+<title>Ten Strengthening Techniques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+:root{
+  --ground:#fff; --panel:#f6f7f8; --ink:#16181a; --muted:#5f6469; --faint:#8b9198;
+  --rule:#e3e5e8; --strong:#c9cdd2; --accent:#1d4e89;
+  --fail:#8f3226; --pass:#1f6b47; --failbg:#f6ebe9; --passbg:#e9f2ed;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#14161a; --panel:#1b1e23; --ink:#e6e8ea; --muted:#9aa1a8; --faint:#767d85;
+  --rule:#2a2e34; --strong:#3c424a; --accent:#7ab0e8;
+  --fail:#e0907f; --pass:#74c39d; --failbg:#2a1d1a; --passbg:#16261f;}}
+:root[data-theme="dark"]{
+  --ground:#14161a; --panel:#1b1e23; --ink:#e6e8ea; --muted:#9aa1a8; --faint:#767d85;
+  --rule:#2a2e34; --strong:#3c424a; --accent:#7ab0e8;
+  --fail:#e0907f; --pass:#74c39d; --failbg:#2a1d1a; --passbg:#16261f;}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:17px;
+  line-height:1.62;margin:0;padding:0 24px 120px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto}
+
+.masthead{padding:70px 0 38px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 22px}
+h1{font-weight:600;font-size:clamp(27px,4.2vw,37px);line-height:1.2;letter-spacing:-.012em;
+  margin:0 0 20px;text-wrap:balance}
+.byline{font-family:var(--sans);font-size:13.5px;line-height:1.75;color:var(--muted);
+  display:flex;flex-direction:column;gap:2px}
+.byline strong{color:var(--ink);font-weight:600}
+
+h2{font-family:var(--sans);font-weight:600;font-size:21px;letter-spacing:-.008em;
+  line-height:1.3;margin:0 0 6px;text-wrap:balance}
+h3{font-family:var(--sans);font-weight:600;font-size:16.5px;line-height:1.34;
+  margin:32px 0 10px;letter-spacing:-.004em;text-wrap:balance}
+h3.tt{margin:0}
+h4{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint);margin:0 0 7px}
+h5{font-family:var(--sans);font-size:14.5px;font-weight:600;margin:20px 0 6px}
+p{margin:0 0 15px;text-wrap:pretty}
+p:last-child{margin-bottom:0}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+code,.m{font-family:var(--mono);font-size:.87em;font-feature-settings:"zero"}
+
+section{padding:50px 0;border-bottom:1px solid var(--rule)}
+.seclab{font-family:var(--mono);font-size:12px;color:var(--faint);margin:0 0 10px;letter-spacing:.04em}
+.lede{color:var(--muted);font-size:17px;margin:0 0 24px;max-width:62ch}
+ul,ol{margin:0 0 15px;padding-left:22px}
+li{margin-bottom:8px}
+li:last-child{margin-bottom:0}
+
+.abstract{padding:32px 0 42px;border-bottom:1px solid var(--rule);font-size:17.5px}
+.abstract p{margin-bottom:14px}
+.toc{background:var(--panel);border:1px solid var(--rule);padding:22px 26px;margin:32px 0 0}
+.toc ol{margin:0;padding:0;list-style:none;font-family:var(--sans);font-size:14px;columns:2;column-gap:34px}
+.toc li{margin-bottom:6px;break-inside:avoid}
+.toc a{text-decoration:none;color:var(--ink)}
+.toc a:hover{text-decoration:underline;color:var(--accent)}
+@media(max-width:620px){.toc ol{columns:1}}
+
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:0 0 26px}
+.fig{background:var(--ground);padding:16px 18px}
+.fig .n{font-family:var(--sans);font-weight:600;font-size:24px;letter-spacing:-.02em;
+  display:block;line-height:1.15;font-variant-numeric:tabular-nums}
+.fig .l{font-family:var(--sans);font-size:11.5px;color:var(--muted);display:block;margin-top:5px;line-height:1.4}
+
+.tw{overflow-x:auto;margin:0 0 12px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:13.5px;
+  font-variant-numeric:tabular-nums}
+caption{font-family:var(--sans);font-size:12.5px;color:var(--muted);text-align:left;
+  padding:0 0 9px;line-height:1.5}
+th{font-weight:600;text-align:left;padding:8px 14px 8px 0;border-bottom:1.5px solid var(--strong);white-space:nowrap}
+td{padding:7px 14px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;padding-right:0}
+table .m{font-size:12px}
+tr.tot td{border-top:1.5px solid var(--strong);font-weight:600}
+tr.ctx td{color:var(--muted);background:var(--panel)}
+tr.first td{border-top:2px solid var(--strong)}
+td.num{font-family:var(--mono);font-size:12.5px;text-align:center;padding-right:16px;color:var(--faint)}
+td.num.t{color:var(--ink);font-weight:500}
+th.num{text-align:center;padding-right:16px}
+.sub{font-weight:600}
+.note{font-size:14px;color:var(--muted);margin:10px 0 0}
+
+.tech{border:1px solid var(--rule);margin:0 0 22px}
+.thead{display:flex;gap:16px;align-items:flex-start;padding:20px 24px;
+  border-bottom:1px solid var(--rule);background:var(--panel)}
+.tnum{font-family:var(--mono);font-size:13px;color:var(--faint);padding-top:3px;min-width:26px}
+.tmeta{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:9px;
+  font-family:var(--sans);font-size:11.5px}
+.target{color:var(--muted);letter-spacing:.03em}
+.verdict{font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;font-size:10.5px}
+.verdict.fail{color:var(--fail);background:var(--failbg)}
+.verdict.pass{color:var(--pass);background:var(--passbg)}
+.tbody{padding:24px}
+.part{margin-bottom:22px}
+.part:last-child{margin-bottom:0}
+.part.disc{border-top:1px solid var(--rule);padding-top:20px}
+
+.callout{border-left:3px solid var(--accent);padding:2px 0 2px 20px;margin:22px 0;color:var(--muted)}
+.callout strong{color:var(--ink)}
+
+.eq{font-family:var(--mono);font-size:13.5px;background:var(--panel);border:1px solid var(--rule);
+  padding:14px 18px;margin:16px 0;overflow-x:auto;line-height:1.85;color:var(--ink);white-space:pre-wrap}
+.eq .lbl{float:right;color:var(--faint);font-size:12px}
+
+.prop{border:1px solid var(--strong);padding:16px 20px;margin:20px 0;background:var(--panel)}
+.prop .ph{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 7px}
+.proof{border-left:2px solid var(--strong);padding:0 0 0 18px;margin:16px 0 20px;font-size:16px;color:var(--muted)}
+.proof .ph{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+.proof .qed{float:right}
+
+.algo{border:1px solid var(--strong);margin:20px 0;background:var(--ground)}
+.algo .ah{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:11px 18px;
+  border-bottom:1px solid var(--strong);background:var(--panel)}
+.algo .ah span{font-weight:400;color:var(--muted)}
+.algo pre{font-family:var(--mono);font-size:12.5px;line-height:1.72;margin:0;padding:16px 18px;
+  overflow-x:auto;color:var(--ink);white-space:pre}
+.algo .kw{font-weight:500;color:var(--accent)}
+.algo .cm{color:var(--faint)}
+
+.traps{list-style:none;padding:0;margin:0;counter-reset:t}
+.traps li{counter-increment:t;position:relative;padding-left:38px;margin-bottom:22px}
+.traps li::before{content:counter(t);position:absolute;left:0;top:1px;font-family:var(--mono);
+  font-size:12px;color:var(--faint);border:1px solid var(--strong);width:23px;height:23px;
+  display:flex;align-items:center;justify-content:center}
+.traps h3{margin:0 0 5px;font-size:16px}
+
+.refs{list-style:none;padding:0;margin:0;counter-reset:r}
+.refs li{counter-increment:r;position:relative;padding-left:42px;margin-bottom:14px;font-size:16px}
+.refs li::before{content:"[" counter(r) "]";position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:13px;color:var(--faint)}
+.refs .t{font-style:italic}
+a.c{font-family:var(--mono);font-size:.82em;text-decoration:none;white-space:nowrap}
+a.c:hover{text-decoration:underline}
+
+footer{padding:42px 0 0;font-family:var(--sans);font-size:13px;color:var(--faint);line-height:1.7}
+@media(max-width:560px){body{font-size:16px;padding:0 18px 80px}
+  .thead,.tbody{padding:18px}.masthead{padding:46px 0 30px}}
+
+/* --- added for sections 4-14 + appendices --- */
+h4.st{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:-.005em;
+   text-transform:none;margin:26px 0 8px;color:var(--ink)}
+.tgt{font-family:var(--mono);font-size:.62em;font-weight:400;letter-spacing:.06em;
+   text-transform:uppercase;color:var(--faint);border:1px solid var(--rule);
+   border-radius:2px;padding:2px 6px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+.callout.warn{border-left-color:var(--fail)}
+.callout.warn strong{color:var(--fail)}
+.good{color:var(--pass);font-weight:500}
+.bad{color:var(--muted)}
+tr.rule td{border-bottom:1.5px solid var(--strong)}
+tr.win td{background:var(--passbg)}
+tr.grp td{border-bottom:1px solid var(--rule)}
+table.conv td:first-child{font-size:12px;vertical-align:top;padding-top:10px}
+ul.ds,ol.rom{margin:12px 0 12px 0;padding-left:22px}
+ul.ds li,ol.rom li{margin-bottom:9px}
+ol.rom{list-style:lower-roman}
+dl.cal{margin:14px 0 0}
+dl.cal dt{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.01em;
+   color:var(--ink);margin:20px 0 5px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
+dl.cal dd{margin:0;font-size:15.5px;color:var(--muted)}
+.lesson{border-left:3px solid var(--rule);padding:2px 0 2px 20px;margin:26px 0}
+.lesson h3{font-size:16px;margin:0 0 6px;letter-spacing:-.005em}
+.lesson p{font-size:16px;color:var(--muted);margin:0 0 8px}
+.lesson p:last-child{margin-bottom:0}
+.doi{font-family:var(--mono);font-size:.78em;color:var(--faint);white-space:nowrap}
+.sc{font-variant:small-caps;letter-spacing:.03em;font-weight:600}
+.tw.two{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media(max-width:820px){.tw.two{grid-template-columns:1fr}}
+footer.pf{border-top:1px solid var(--rule);margin-top:56px}
+footer.pf p{margin:0 0 6px;font-size:13px;color:var(--faint)}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">End-term project · Exact Algorithms for Combinatorial Optimization Problems</p>
+  <h1>A Certified Primal–Dual Solver for the Selective Routing Problem with Synchronization, and a Falsification Study of Ten Strengthening Techniques</h1>
+  <div class="byline">
+    <span><strong>David Chouchena</strong> · <strong>Tomer Tunitsky</strong></span>
+    <span>Tel-Aviv University</span>
+    <span>August 2026</span>
+  </div>
+</header>
+
+<div class="abstract">
+  <h4>Abstract</h4>
+  <p>We study the Selective Routing Problem with Synchronization (SRPS), a profit-maximising variant of the Team Orienteering Problem in which each selected job must be served simultaneously by a prescribed subset of processors under a global time limit <a class="c" href="#r1">[1]</a>. Exact branch-and-price-and-cut algorithms solve instances up to <span class="m">n=60</span> but leave nonzero primal–dual gaps on the hardest class and report no solutions for larger instances.</p>
+  <p>We present a certified primal–dual solver for SRPS, combining an Adaptive Large Neighborhood Search with a Lagrangian relaxation of the joint-service coupling. A synchronisation-aware insertion procedure evaluates up to <span class="m">5<sup>|K<sub>j</sub>|</sup></span> cross-route position combinations per job; a subgradient scheme yields per-instance Lagrangian upper bounds refreshed in-loop via a warm-started Polyak step, producing a valid certificate and its optimality gap for every solution. On the standard 660-instance benchmark it attains a mean certified gap of 0.133%, median 0.046%, maximum 1.965%; 94.1% of instances are certified within 0.5% and 283 (42.9%) are proven optimal. It reproduces the proven optimum on 98.4% of instances the exact method solves and supplies certified solutions for all 415 it fails to close — 196 of them first-ever results.</p>
+  <p>The second half of the report is a systematic attempt to strengthen that solver using <strong>ten techniques from the syllabus</strong>, and an account of why nine fail. Two were the primary brief: importing the cut separation logic of the exact method, and coupling the search more tightly to the Lagrangian dual. Both are falsified on structural rather than parametric grounds. Separation against the incumbent can never find a violated cut, because the incumbent is feasible by construction; redirected at the relaxed solution, where violations demonstrably exist, the natural feasibility cut is unsound on the majority of instances tested. The dual-guided operators are degenerate under their own initialisation — the fair profit split forces the reduced profit to be identically zero for every job — and once repaired, an isolating control attributes the entire apparent effect to the warm dual start, which then loses 93% of its magnitude at production budget.</p>
+  <p>The remaining techniques are unified by a ceiling argument computable in advance from the solver's own results: because the optimum is known only to lie between the incumbent and the bound, any gap-directed technique is capped by the current certified gap — 0.11 percentage points on average and 0.009 at the median, beneath the noise floor of the apparatus built to detect it. Three of the ten are closed analytically rather than experimentally, by the integrality condition of <a class="c" href="#r7">[7]</a>, the Dantzig–Wolfe equivalence <a class="c" href="#r13">[13]</a>, and the separability forfeit of surrogate relaxation <a class="c" href="#r14">[14]</a>. The single intervention that improves what it targets is parallelising the per-processor dual subproblems, which attacks runtime — the one metric the ceiling does not bound. Three transferable measurement traps are documented along the way.</p>
+
+  <div class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#intro">1 · Introduction</a></li>
+      <li><a href="#problem">2 · Problem description</a></li>
+      <li><a href="#related">3 · Existing work and benchmark</a></li>
+      <li><a href="#lagrangian">4 · Lagrangian relaxation and dual bounding</a></li>
+      <li><a href="#alns">5 · Adaptive Large Neighborhood Search</a></li>
+      <li><a href="#experiments">6 · Computational experiments</a></li>
+      <li><a href="#ceiling">7 · Headroom: the ceiling</a></li>
+      <li><a href="#design">8 · Study design</a></li>
+      <li><a href="#techniques">9 · The ten techniques</a></li>
+      <li><a href="#exact">10 · An uncoupled exact reference</a></li>
+        <li><a href="#lessons">11 · Methodological lessons</a></li>
+      <li><a href="#threats">12 · Threats to validity</a></li>
+      <li><a href="#discussion">13 · Discussion</a></li>
+      <li><a href="#conclusions">14 · Conclusions</a></li>
+      <li><a href="#appa">A · Model and bound validity</a></li>
+      <li><a href="#appb">B · Ablation and sensitivity</a></li>
+      <li><a href="#appc">C · Reproduction</a></li>
+      <li><a href="#refs">References</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ================= 1 ================= -->
+<section id="intro">
+  <p class="seclab">1</p>
+  <h2>Introduction</h2>
+
+  <p>The Selective Routing Problem with Synchronization (SRPS) arises in telescope scheduling at the Gran Telescopio Canarias, where observations require coordinated use of multiple shared resources under a global time budget <a class="c" href="#r1">[1]</a>; scheduling observations on instruments and telescope arrays under resource and time constraints is an active application area for operational-research methods <a class="c" href="#r18">[18]</a>. SRPS asks which jobs to select, and in what processor routes to embed them, so as to maximise collected profit while ensuring that every selected multi-processor job is jointly served and scheduled feasibly.</p>
+
+  <p>SRPS belongs to the profit-collecting routing family <a class="c" href="#r19">[19]</a> rooted in the Orienteering Problem <a class="c" href="#r20">[20,</a> <a class="c" href="#r31">31]</a> and the Team Orienteering Problem <a class="c" href="#r21">[21]</a>, but differs from standard TOP by requiring joint service across subsets of processors <a class="c" href="#r3">[3]</a>. This synchronisation requirement creates a coupling between routes that destroys the separability exploited by most classical orienteering heuristics and exact methods.</p>
+
+  <p>Riera-Ledesma and Salazar-González <a class="c" href="#r1">[1]</a> introduced SRPS together with an exact branch-and-price-and-cut (BPC) algorithm and a benchmark suite of eight instance families. Their method proves optimality for many instances, but on the hardest class it leaves nonzero primal–dual gaps at <span class="m">n=60</span> and reports no solutions for larger instances. At the same time, no heuristic or primal–dual approximation method has been proposed specifically for SRPS.</p>
+
+  <p>The first half of this report develops a certified primal–dual solver for SRPS. The primal component is an Adaptive Large Neighborhood Search whose main problem-specific ingredient is a synchronisation-aware insertion procedure: inserting a <span class="m">|K<sub>j</sub>|=4</span> job requires evaluating up to <span class="m">5<sup>4</sup>=625</span> cross-route position combinations, each checked by a longest-path feasibility oracle. The dual component is a Lagrangian relaxation that yields hard per-instance upper bounds and is re-tightened in-loop, so the method is not merely a heuristic but a complete primal–dual procedure returning both a feasible solution and a certificate.</p>
+
+  <p>The second half asks a single question in ten forms: <strong>can a technique from the exact-algorithms syllabus tighten that certificate?</strong> The techniques are listed in Table 2 and treated one per subsection in Section 9, each with its design, the reason it should have worked, its measured result, and a discussion of what the result means. Nine fail. The failures are structural rather than parametric — none would be repaired by better tuning — and they fall into four kinds: impossible by construction, unsound, real but unusable, and artifacts of measurement.</p>
+
+  <p>Section 7 derives the argument that organises the whole second half. Because the optimum <span class="m">P*</span> is known only to lie in <span class="m">[z, ub]</span>, any technique acting on either end of that interval is bounded by the interval's current width. That width averages 0.11 percentage points and is 0.009 at the median, which is smaller than the arm-to-arm noise of the experiments built to detect improvements. The bound costs seconds to compute from data already in hand. That we computed it after rather than before the calibration campaigns is itself one of the findings.</p>
+
+  <p>The exception proves the rule: the one technique that improves what it targets is parallel evaluation of the per-processor dual subproblems, and it is the one technique aimed at runtime, which the ceiling does not bound.</p>
+
+  <h3>Contributions</h3>
+  <ul>
+    <li>A problem-specific ALNS for SRPS with synchronisation-feasible insertion and adaptive runtime allocation, and a Lagrangian relaxation of the joint-service coupling providing valid upper bounds and certified optimality gaps.</li>
+    <li>An in-loop warm-started re-bounding mechanism that couples the current incumbent to Polyak step calibration and materially tightens certificates on hard instances.</li>
+    <li>A computational study on 660 benchmark instances from six nontrivial SRPS families, including new certified solutions for all open large instances and a statistical characterisation of instance hardness.</li>
+    <li><strong>A ceiling argument</strong> (Section 7) that bounds any gap-directed strengthening from the solver's own results, at negligible cost and before any experiment.</li>
+    <li><strong>Ten falsification studies</strong> (Section 9), nine negative, each reporting the mechanism of failure rather than only its magnitude — including three cells closed analytically rather than experimentally.</li>
+    <li><strong>Three transferable measurement traps</strong> (Section 11): mechanism inertness, screening artifacts, and budget-dependent verdicts.</li>
+  </ul>
+
+  <p>Families H1 and E1 <span class="m">(|K<sub>j</sub>|=1)</span> reduce to TOP and are solved to optimality by BPC with negligible gaps; they are therefore excluded from the primary study so that the analysis focuses on the synchronisation-driven difficulty that motivates SRPS. Throughout, a certified gap of <span class="m">x%</span> means the returned solution is guaranteed to lie within <span class="m">x%</span> of optimal; it is an upper bound on suboptimality, not a direct distance-to-optimum measurement.</p>
+</section>
+
+<!-- ================= 2 ================= -->
+<section id="problem">
+  <p class="seclab">2</p>
+  <h2>Problem description</h2>
+
+  <h3>2.1 · Formal SRPS definition and notation</h3>
+  <p>Let <span class="m">J={1,…,n}</span> denote the job set and <span class="m">K</span> the set of processors. Each job <span class="m">j∈J</span> yields profit <span class="m">b<sub>j</sub></span> and requires a subset <span class="m">K<sub>j</sub>⊆K</span> of processors. For each processor <span class="m">k∈K</span>, let <span class="m">J<sub>k</sub>⊆J</span> denote the jobs requiring processor <span class="m">k</span>. Travel and processing times are given by a matrix <span class="m">(t<sub>iℓ</sub>)</span>, and the planning horizon is bounded by a global time limit <span class="m">L</span>.</p>
+  <p>SRPS seeks a set of elementary processor routes <span class="m">P<sub>k</sub></span> and a selected job set such that each selected job <span class="m">j</span> is served by every processor in <span class="m">K<sub>j</sub></span>, all required processors start service at a common feasible time, and the global time limit is respected. The objective is to maximise total collected profit <span class="m">Σ<sub>j∈J</sub> b<sub>j</sub> y<sub>j</sub></span>.</p>
+
+  <h3 id="constraints">2.2 · Binding constraints</h3>
+  <p>Before stating the model algebraically we name the three constraints it encodes, because their interaction — particularly the second — is easy to misread.</p>
+  <ol>
+    <li><strong>Horizon.</strong> Elapsed time from the start depot to the end depot may not exceed <span class="m">L</span> on any processor.</li>
+    <li><strong>Synchronisation.</strong> All processors in <span class="m">K<sub>j</sub></span> must start job <span class="m">j</span> at the same instant <span class="m">s<sub>j</sub></span>. For every arc <span class="m">(i→ℓ)</span> traversed by any processor, <span class="m">s<sub>ℓ</sub>−s<sub>i</sub> ≥ t<sub>iℓ</sub></span>. Processors may idle before a synchronised start, and <em>that idle time counts toward L</em>.</li>
+    <li><strong>Consistency.</strong> If any processor serves <span class="m">j</span>, every processor in <span class="m">K<sub>j</sub></span> must serve <span class="m">j</span>. Partial service is forbidden.</li>
+  </ol>
+  <p>Constraints 2 and 3 are distinct requirements and are often conflated: consistency says <em>which</em> processors must serve a job, synchronisation says <em>when</em> they must do so. A solution can satisfy either without the other.</p>
+  <p>Constraint 2 is a difference-constraint system: earliest start times are given by longest paths in the arc-weighted graph induced by the routes, and a cyclic graph means no feasible schedule exists. This is what makes feasibility checkable in linear time, and it is the check the heuristic of Section 5 uses. The idle-time clause is what separates "route length ≤ L" from "makespan ≤ L": routes that each fit comfortably inside the horizon may still be jointly infeasible once synchronised waiting is charged.</p>
+
+  <h3 id="model">2.3 · Full optimisation model (self-contained)</h3>
+  <p>We adopt the compact arc-flow SRPS-1 structure of <a class="c" href="#r1">[1]</a>. Let <span class="m">V<sub>k</sub>=J<sub>k</sub>∪{0,n+1}</span> be processor <span class="m">k</span>'s node set (start depot 0, end depot <span class="m">n+1</span>). For each <span class="m">k∈K</span>, let <span class="m">z<sup>k</sup><sub>iℓ</sub>∈{0,1}</span> indicate whether processor <span class="m">k</span> traverses arc <span class="m">(i,ℓ)</span> and <span class="m">x<sub>j,k</sub>∈{0,1}</span> whether processor <span class="m">k</span> serves job <span class="m">j</span>. Let <span class="m">y<sub>j</sub>∈{0,1}</span> indicate whether job <span class="m">j</span> is selected, and <span class="m">s<sub>j,k</sub></span> the service-start time of processor <span class="m">k</span> at job <span class="m">j</span>.</p>
+
+  <div class="eq">maximise   Σ<sub>j∈J</sub> b<sub>j</sub> y<sub>j</sub>                                     <span class="lbl">(1)</span></div>
+
+  <p>Route structure is enforced by standard flow constraints — each processor leaves the start depot once and enters the end depot once,</p>
+  <div class="eq">Σ<sub>ℓ∈V<sub>k</sub>\{0}</sub> z<sup>k</sup><sub>0ℓ</sub> = 1 ,     Σ<sub>i∈V<sub>k</sub>\{n+1}</sub> z<sup>k</sup><sub>i,n+1</sub> = 1        <span class="lbl">(2)</span></div>
+  <p>with degree balance tying arcs to service,</p>
+  <div class="eq">Σ<sub>i∈V<sub>k</sub>\{j}</sub> z<sup>k</sup><sub>ij</sub> = x<sub>j,k</sub> ,   Σ<sub>ℓ∈V<sub>k</sub>\{j}</sub> z<sup>k</sup><sub>jℓ</sub> = x<sub>j,k</sub>    ∀ j∈J<sub>k</sub>    <span class="lbl">(3)</span></div>
+  <p>together with elementarity (no repeated job service on a route). Joint-service coupling is</p>
+  <div class="eq">y<sub>j</sub> ≤ x<sub>j,k</sub>                        ∀ j∈J,  k∈K<sub>j</sub>       <span class="lbl">(4)</span></div>
+  <p>so a profit can be collected only if every required processor serves the job. Timing and synchronisation are enforced by arc-time propagation and equal-start constraints:</p>
+  <div class="eq">s<sub>ℓ,k</sub> ≥ s<sub>i,k</sub> + t<sub>iℓ</sub> − M(1 − z<sup>k</sup><sub>iℓ</sub>)     for each used arc (i,ℓ)   <span class="lbl">(5)</span>
+s<sub>j,k</sub> = s<sub>j,k′</sub>                     ∀ k,k′ ∈ K<sub>j</sub>            <span class="lbl">(6)</span>
+s<sub>n+1,k</sub> − s<sub>0,k</sub> ≤ L                  ∀ k∈K                <span class="lbl">(7)</span></div>
+
+  <p>This explicit model resolves the synchronisation semantics: selected multi-processor jobs require both route inclusion by all processors in <span class="m">K<sub>j</sub></span> and simultaneous service start across those processors. Appendix A keeps the bound-validity derivation and the exact form of the relaxed Lagrangian subproblems. Section 9.10 solves this formulation directly with a general-purpose MIP solver as an uncoupled reference.</p>
+
+  <h3>2.4 · Relation to OP, TOP, and synchronisation variants</h3>
+  <p>SRPS reduces to TOP when <span class="m">|K<sub>j</sub>|=1</span> for every job, so it inherits the prize-collecting routing structure of OP/TOP <a class="c" href="#r3">[3]</a>. The distinguishing feature is synchronisation: a selected job may require several processors to serve it jointly, creating inter-route coupling in both selection and timing.</p>
+  <p>Beyond SRPS, a large literature studies heuristics and exact methods for related orienteering and synchronised routing problems, including TOP and its time-window variants, clustered/team orienteering, and vehicle routing with synchronisation constraints <a class="c" href="#r22">[22,</a><a class="c" href="#r23">23]</a>. Representative approaches combine branch-and-price, tabu search, large neighbourhood search, and hybrid metaheuristics, but generally do not provide per-instance optimality certificates for the returned solutions. SRPS inherits the profit-maximising structure of these problems while adding a joint-service coupling that removes the route separability exploited by most existing heuristics.</p>
+  <p>Close relatives differ in important ways. In clustered orienteering with time windows, teams are typically homogeneous and individual members cover separate tasks inside a cluster rather than jointly serving the same job. In synchronised VRPs, the focus is usually cost minimisation with mandatory service <a class="c" href="#r22">[22,</a><a class="c" href="#r23">23]</a>, whereas SRPS is selective and profit maximising. Closely related prize-collecting routing problems with synchronisation have appeared recently — two-echelon prize-collecting routing with vehicle synchronisation <a class="c" href="#r24">[24]</a> and aquaculture service-vessel routing <a class="c" href="#r25">[25]</a> — but these route vehicle fleets under two-echelon or mandatory-task structure rather than the per-job processor-subset coupling of SRPS. These differences justify treating SRPS as a distinct problem class rather than a routine variant of TOP or synchronised VRP.</p>
+</section>
+
+<!-- ================= 3 ================= -->
+<section id="related">
+  <p class="seclab">3</p>
+  <h2>Existing work and benchmark instances</h2>
+
+  <h3>3.1 · Exact work on SRPS</h3>
+  <p>The SRPS literature is currently anchored by the branch-and-price-and-cut algorithm of Riera-Ledesma and Salazar-González <a class="c" href="#r1">[1]</a>, built on the compact arc-flow formulation SRPS-1. Two variants are reported: BPC-SRPS-E, which enhances the pricing step, and BPC-SRPS-N, a node-based alternative. The method is run with a 1 CPU-hour limit and reports a primal–dual gap of <span class="m">100×(dual−primal)/primal</span>.</p>
+  <p>Its performance establishes both the strength of the exact baseline and the motivation for a complementary primal–dual heuristic. In the hardest class-4 families, all instances up to <span class="m">n≤55</span> are solved to optimality, but at <span class="m">n=60</span> nonzero gaps remain, reaching 1.64% on the Euclidean family at <span class="m">α=0.75</span>. For larger class-4 instances <span class="m">(n≥65)</span>, no benchmark solutions are published. These two regimes — hard instances with residual exact gaps, and larger instances with no reported exact result — define the main space in which a certified heuristic can add value.</p>
+  <p>The cut separation of <a class="c" href="#r1">[1]</a>, and the branch-and-price framework it sits in <a class="c" href="#r12">[12]</a>, are the direct motivation for the first technique studied in Section 9. Branch-price-and-cut separates violated inequalities against the <em>fractional</em> solution of a linear master problem; whether that machinery transfers to a heuristic which never forms such a solution is precisely what Section 9.1 answers.</p>
+
+  <h3>3.2 · Broader routing and primal–dual context</h3>
+  <p>The broader routing literature offers two complementary precedents. First, ALNS and related destroy–repair metaheuristics have proved effective across TOP, clustered orienteering, and VRP variants with rich side constraints, because they combine strong primal search with problem-specific insertion logic <a class="c" href="#r2">[2,</a><a class="c" href="#r3">3]</a>; a substantial body of metaheuristics — tabu search, variable neighbourhood descent, and guided local search among them — has been developed specifically for the team orienteering problem <a class="c" href="#r4">[4,</a> <a class="c" href="#r28">28,</a> <a class="c" href="#r29">29,</a> <a class="c" href="#r30">30]</a>, and recent reviews catalogue and rank the destroy and repair operators used across these applications <a class="c" href="#r32">[32,</a> <a class="c" href="#r33">33,</a> <a class="c" href="#r34">34]</a>. Second, Lagrangian relaxation and subgradient schemes are classical tools for routing problems in which a small set of complicating constraints can be dualised to obtain decomposable subproblems and instance-specific upper bounds <a class="c" href="#r5">[5,</a><a class="c" href="#r6">6,</a><a class="c" href="#r7">7]</a>, with a long record in vehicle routing <a class="c" href="#r9">[9,</a><a class="c" href="#r10">10]</a>; matheuristics interleaving such relaxations with metaheuristic search are an established way to obtain both strong primal solutions and bounds <a class="c" href="#r11">[11]</a>. Step sizes follow Polyak <a class="c" href="#r8">[8]</a>.</p>
+  <p>What is missing in the SRPS setting is the combination of these two traditions. Existing SRPS work is exact and benchmark-defining, but does not provide a scalable heuristic counterpart. Existing TOP and synchronised-routing heuristics offer powerful primal search machinery, and Lagrangian relaxations are widely used to derive strong dual bounds in vehicle routing, but to the best of our knowledge there is no method that embeds an ALNS inside an in-loop Lagrangian certification scheme providing per-instance optimality gaps for SRPS. The method described here is designed to supply exactly that combination.</p>
+
+  <h3>3.3 · Benchmark instance families</h3>
+  <p>Table 1 summarises the benchmark taxonomy introduced in <a class="c" href="#r1">[1]</a>, released under CC0. The full benchmark contains 960 instances. The primary study covers the six nontrivial families H2–H4 and E2–E4, i.e. 660 instances, where synchronisation is essential because <span class="m">|K<sub>j</sub>|≥2</span>. Families H1 and E1 are omitted from the main analysis because they reduce to TOP and would dilute the synchronisation-driven signal; they are retained only as a supplementary large-scale check.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 1.</strong> SRPS benchmark families.</caption>
+      <thead><tr><th>Label</th><th>Prefix</th><th class="n">Class</th><th class="n">|K<sub>j</sub>|</th><th>Distance</th><th>n range</th><th class="n">Groups</th><th class="n">α</th><th>Coverage</th></tr></thead>
+      <tbody>
+        <tr><td>H1</td><td class="m">A</td><td class="n">1</td><td class="n">1</td><td>Line</td><td>400–500</td><td class="n">25</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>H2</td><td class="m">B</td><td class="n">2</td><td class="n">2</td><td>Line</td><td>100–150</td><td class="n">30</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>H3</td><td class="m">C</td><td class="n">3</td><td class="n">3</td><td>Line</td><td>50–80</td><td class="n">35</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>H4</td><td class="m">D</td><td class="n">4</td><td class="n">4</td><td>Line</td><td>40–80</td><td class="n">45</td><td class="n">3</td><td>up to n ≤ 60</td></tr>
+        <tr><td>E1</td><td class="m">EA</td><td class="n">1</td><td class="n">1</td><td>Euclidean</td><td>150–500</td><td class="n">75</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>E2</td><td class="m">EB</td><td class="n">2</td><td class="n">2</td><td>Euclidean</td><td>100–150</td><td class="n">30</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>E3</td><td class="m">EC</td><td class="n">3</td><td class="n">3</td><td>Euclidean</td><td>50–80</td><td class="n">35</td><td class="n">3</td><td>full</td></tr>
+        <tr><td>E4</td><td class="m">ED</td><td class="n">4</td><td class="n">4</td><td>Euclidean</td><td>40–80</td><td class="n">45</td><td class="n">3</td><td>partial beyond n = 60</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section id="lagrangian">
+  <p class="seclab">4</p>
+  <h2>Lagrangian relaxation and dual bounding</h2>
+
+  <h3 id="lagbound">4.1 · Relaxation formulation</h3>
+  <p>The complicating constraints are the joint-service couplings (4), <span class="m">y<sub>j</sub> ≤ x<sub>j,k</sub></span>, which require that a job earns profit only if every required processor serves it. Relaxing them with multipliers <span class="m">μ<sub>j,k</sub> ≥ 0</span> yields the Lagrangian function</p>
+  <div class="eq">L(μ) = Σ<sub>j∈J</sub> max( 0, b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> ) + Σ<sub>k∈K</sub> O<sub>k</sub>(μ)        <span class="lbl">(8)</span></div>
+  <p>where <span class="m">O<sub>k</sub>(μ)</span> is the optimum of a single-processor orienteering problem in which job <span class="m">j∈J<sub>k</sub></span> carries the modified profit <span class="m">μ<sub>j,k</sub></span>; Appendix A states the subproblem precisely and proves the bound. Each <span class="m">O<sub>k</sub>(μ)</span> is solved <em>exactly</em> — with no pruning, sampling, or candidate-set restriction — by bitmask dynamic programming in <span class="m">O(2<sup>|J<sub>k</sub>|</sup>|J<sub>k</sub>|<sup>2</sup>)</span>. The exponential factor is bounded by a small constant rather than by <span class="m">n</span>: because every job requires only <span class="m">|K<sub>j</sub>|∈{2,3,4}</span> of the <span class="m">|K|=55</span> processors, jobs spread thinly and each processor serves only a handful.</p>
+
+  <p>Two properties of <span class="m">O<sub>k</sub>(μ)</span> matter for interpreting every certificate that follows. First, each subproblem is solved to optimality, so <strong>no looseness in the bound originates there</strong>, and validity does not depend on how far the subgradient has converged: a short dual run yields a loose certificate, never an invalid one. Second, the subproblem's time matrix charges the processing time of a job plus the travel to the next, and enforces route length <span class="m">≤ L</span>; it is therefore <strong>structurally blind to the synchronised idle time of constraint 2</strong>, because each processor is solved in isolation. The relaxed solution is optimistic in that specific, identifiable way, and it is the principal source of the residual looseness reported in Section 6 — a fact Section 9.1 exploits and Section 9.6 returns to.</p>
+
+  <div class="prop">
+    <p class="ph">Proposition 1 — Validity of the Lagrangian bound</p>
+    <p>Let <span class="m">z*<sub>SRPS</sub></span> denote the optimal SRPS objective value, and let <span class="m">L(μ)</span> be the Lagrangian value obtained by relaxing the joint-service constraints with multipliers <span class="m">μ ≥ 0</span>. Then <span class="m">z*<sub>SRPS</sub> ≤ L(μ)</span> for every <span class="m">μ ≥ 0</span>. Consequently <span class="m">inf<sub>μ≥0</sub> L(μ)</span> is a valid upper bound on the optimum.</p>
+  </div>
+  <div class="proof">
+    <p class="ph">Proof</p>
+    <p>Any feasible SRPS solution satisfies <span class="m">y<sub>j</sub> ≤ x<sub>j,k</sub></span> for all required processors. After relaxation the nonnegative penalty terms vanish on every feasible SRPS solution, so its objective value cannot exceed the relaxed objective at the same <span class="m">μ</span>. Maximising over feasible SRPS solutions gives <span class="m">z*<sub>SRPS</sub> ≤ L(μ)</span>; taking the infimum over <span class="m">μ ≥ 0</span> preserves the inequality. Appendix A gives the argument in full. <span class="qed">∎</span></p>
+  </div>
+
+  <h3 id="subgradient">4.2 · Subgradient scheme</h3>
+  <p>Multipliers are initialised by a fair profit split <span class="m">μ<sub>j,k</sub> = b<sub>j</sub>/|K<sub>j</sub>|</span>, which makes the initial relaxed objective coincide with an independent-orienteering-style bound, so descent can only reduce it. The dual is then tightened by projected subgradient descent with Polyak-style step sizes <a class="c" href="#r8">[8]</a>,</p>
+  <div class="eq">η<sub>t</sub> = ( L(μ<sub>t</sub>) − θ* ) / ‖g<sub>t</sub>‖² ,   g<sub>j,k</sub> = x*<sub>j,k</sub> − y*<sub>j</sub> ,   μ<sub>j,k</sub> ← max( 0, μ<sub>j,k</sub> − η<sub>t</sub> g<sub>j,k</sub> )   <span class="lbl">(9)</span></div>
+  <p>clamped for stability, with a diminishing fallback schedule when progress stalls. The lower reference <span class="m">θ*</span> is the current incumbent <span class="m">z*</span> throughout — initially the greedy solution, then the refreshed incumbent during in-loop re-bounding. The method uses no published best-known value. The best bound found over the iteration budget is returned together with the corresponding multiplier vector, which is retained as a warm start for the next invocation.</p>
+  <p>That the fair split is the natural <em>starting point</em> for descent, yet the one multiplier vector at which reduced profits vanish identically, is the whole of the defect analysed in Section 9.2.</p>
+
+  <h3 id="certification">4.3 · Certification logic</h3>
+  <p>The algorithm proceeds in four stages on each instance: compute an initial upper bound from decomposed routing relaxations; run adaptive ALNS phases to improve the primal incumbent <span class="m">z*</span>; whenever the primal search stalls, invoke a warm-started Lagrangian re-bound using <span class="m">θ*=z*</span>; and track the certified gap</p>
+  <div class="eq">cert_gap = (UB<sub>lag</sub> − z*) / UB<sub>lag</sub> × 100 ,     UB<sub>lag</sub> = ⌊ min<sub>t</sub> L(μ<sub>t</sub>) ⌋      <span class="lbl">(10)</span></div>
+  <p>stopping when the upper bound matches the incumbent, the certified gap falls below 0.3%, or the escalation tiers are exhausted.</p>
+
+  <div class="callout">
+    <p><strong>The floor is not cosmetic.</strong> It is applied before the gap is computed and is valid because all profits <span class="m">b<sub>j</sub></span> are integral, so no feasible objective value lies strictly between <span class="m">⌊L(μ)⌋</span> and <span class="m">L(μ)</span>. A dual improvement smaller than one profit unit therefore leaves the certified gap unchanged: the certificate advances in integer steps even when the underlying real-valued bound improves continuously. Section 9.4 is decided entirely by this.</p>
+  </div>
+
+  <p>The method is fully independent of any published benchmark value: both the ALNS and the Lagrangian dual reference use only the current incumbent. A certified gap of <span class="m">x%</span> means the returned solution is guaranteed to lie within <span class="m">x%</span> of the true optimum. A certified gap of 0% means the incumbent equals a valid Lagrangian upper bound; by weak duality this <em>proves</em> the incumbent optimal, and we call such instances <em>proven optimal</em>.</p>
+
+  <div class="callout">
+    <p><strong>Equation (10) has two levers, and the distinction organises the second half of this report.</strong> A mechanism can improve the gap by <em>raising</em> <span class="m">z*</span> (primal) or by <em>lowering</em> <span class="m">UB<sub>lag</sub></span> (dual). Cutting planes act on the dual. Neighbourhood operators act on the primal. Section 9 is ordered on exactly that line, and Section 7 shows both levers to be bounded by the same quantity.</p>
+  </div>
+
+  <h3>4.4 · In-loop warm re-bounding</h3>
+  <p>A single pre-search subgradient run can leave certificates loose on the hardest instances, especially at tight budgets and larger <span class="m">n</span>. The adaptive loop therefore refreshes the dual bound <em>inside</em> the search whenever a phase fails to improve the incumbent. Each re-bound is capped at 200 subgradient iterations or 60 seconds, is warm-started from the multiplier vector attaining the best bound so far, and uses the current incumbent as the Polyak target.</p>
+  <p>This coupling matters because once the primal search has already found a strong incumbent, the quantity <span class="m">L(μ)−z*</span> approximates the true residual optimality gap more closely than a cold lower reference does. Step sizes become more informative, the dual converges faster toward a useful certificate, and the updated bound directly governs whether further search is worthwhile. Empirically this mechanism is particularly important on the hard tail of the benchmark, where a single pre-search bound leaves the loosest certificates.</p>
+
+  <h3 id="coupling">4.5 · Tight coupling between ALNS and Lagrangian bounding</h3>
+  <p>The Lagrangian relaxation is not a one-off preprocessing device but a dual mechanism continuously tightened around the current incumbent produced by the ALNS. The key idea is to use the incumbent objective <span class="m">z*</span> as the level reference <span class="m">θ*</span> in the Polyak-style subgradient step, so the dual bound is driven toward the best feasible solution found so far.</p>
+  <p>This links dual progress directly to the best known feasible solution. When <span class="m">L(μ<sub>t</sub>)</span> is much larger than <span class="m">z*</span>, the Polyak numerator is large and the step is aggressive, reducing the bound quickly; as <span class="m">L(μ<sub>t</sub>)</span> approaches <span class="m">z*</span>, the numerator shrinks, the step decreases, and the updates switch from large corrective moves to fine adjustments around the incumbent level. The shrinkage is not from the numerator alone: the step is clamped, and after a run of non-improving iterations the scheme falls back to a diminishing schedule (Section 4.2). <strong>Both devices are already part of the baseline</strong>, which matters when reading any comparison against an <em>explicitly</em> stabilised variant — Section 9.5.</p>
+  <p>The dual update is embedded in the outer adaptive loop. Each ALNS phase attempts to improve <span class="m">z*</span>; whenever a phase fails, an in-loop re-bound is triggered, warm-started from the multipliers that attained the best bound so far and using the current incumbent as the reference. Because each refresh begins at the recorded best multipliers, its first iterate re-evaluates <span class="m">L</span> at exactly the previous best value, so <strong>the sequence of bounds across refreshes is monotone non-increasing by construction</strong> and no separate guard is required.</p>
+  <p>The effect is that ALNS and the Lagrangian bound chase each other: ALNS pushes the incumbent upward, while the subgradient scheme pulls <span class="m">L(μ)</span> downward toward that same incumbent. As the incumbent improves, the target in the dual updates rises, forcing the bound to tighten around the best solution available; as the bound approaches the incumbent, step sizes shrink and the bound stabilises.</p>
+  <div class="callout">
+    <p><strong>The coupling is nonetheless narrow in both directions, and stating where it stops matters as much as stating where it acts.</strong> The incumbent reaches the dual only through the scalar level reference <span class="m">θ*</span>: its selection <em>structure</em> is never communicated, and multipliers are re-initialised from the previous dual solve rather than from the primal solution. Symmetrically, the dual returns only a bound to the search; the multipliers themselves never enter operator selection, insertion scoring, or the destroy criterion. Both channels are deliberately absent in the configuration evaluated here — and widening either one is exactly what techniques 2 and 4 attempt.</p>
+  </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section id="alns">
+  <p class="seclab">5</p>
+  <h2>Adaptive Large Neighborhood Search</h2>
+
+  <h3>5.1 · Representation and feasibility</h3>
+  <p>A solution consists of a selected job set and one elementary route per processor. Feasibility is maintained by a longest-path schedule check over the induced precedence graph, which verifies that all route arcs and synchronisation precedences can be satisfied within the global time limit. This single check covers constraints 1 and 2 together, including synchronised idle time.</p>
+
+  <h3>5.2 · Destroy operators</h3>
+  <p>Three destroy operators are used: random destroy, worst destroy, and Shaw destroy. The random operator removes a uniformly sampled subset of selected jobs; worst destroy removes the currently least valuable selected jobs; Shaw destroy removes jobs related to a random pivot under travel-based proximity. The destroy size is sampled dynamically, with escalation tiers enlarging the removed fraction on hard instances.</p>
+
+  <h3 id="insertion">5.3 · Repair operators and synchronisation-aware insertion</h3>
+  <p>Three repair operators are used: profit-greedy repair, ratio repair, and regret-2 repair. For a candidate job <span class="m">j</span>, the insertion procedure enumerates the top few local positions on each required processor route, forms their Cartesian product, and checks each cross-route placement for feasibility. With the five candidates per processor retained by the implementation, class-4 jobs yield at most <span class="m">5<sup>|K<sub>j</sub>|</sup> = 625</span> combinations. Algorithm 1 states the procedure; the three repair operators differ only in the order in which candidate jobs are offered to it.</p>
+
+  <div class="algo">
+    <div class="ah">Algorithm 1 &nbsp;<span>Synchronisation-aware insertion of a job (the repair primitive)</span></div>
+<pre><span class="kw">require</span> job j, routes {P_k}, selected set S, instance, candidate cap c
+<span class="kw">ensure</span>  best feasible cross-route placement of j, or INFEASIBLE
+
+ 1  R ← K_j                          <span class="cm"># processors that must jointly serve j</span>
+ 2  <span class="kw">if</span> R = ∅ <span class="kw">then return</span> INFEASIBLE
+ 3  e₀ ← SCHEDULE_END({P_k}, S)      <span class="cm"># makespan before inserting j</span>
+ 4  <span class="kw">for each</span> processor k ∈ R <span class="kw">do</span>
+ 5      C_k ← [ ]
+ 6      <span class="kw">for each</span> insertion position p in route P_k <span class="kw">do</span>
+ 7          δ ← t[P_k[p−1]][j] + t[j][P_k[p]] − t[P_k[p−1]][P_k[p]]
+ 8          append (δ, p) to C_k     <span class="cm"># local detour cost</span>
+ 9      C_k ← the c entries of C_k with smallest δ
+10  best ← INFEASIBLE ;  Δ* ← +∞
+11  <span class="kw">for each</span> combination (p_k)<sub>k∈R</sub> ∈ ∏<sub>k∈R</sub> C_k <span class="kw">do</span>   <span class="cm"># ≤ c^|K_j| combos</span>
+12      {P′_k} ← {P_k} with j inserted at p_k on every k ∈ R
+13      (feasible, e) ← LONGEST_PATH_SCHEDULE_CHECK({P′_k}, S ∪ {j})
+14      <span class="kw">if</span> feasible <span class="kw">and</span> e − e₀ &lt; Δ* <span class="kw">then</span>
+15          Δ* ← e − e₀ ;  best ← (p_k)<sub>k∈R</sub>
+16  <span class="kw">return</span> best
+</pre>
+  </div>
+
+  <div class="prop">
+    <p class="ph">Proposition 2 — Insertion-complexity bound</p>
+    <p>Suppose at most <span class="m">c</span> local candidate positions are retained per required processor for job <span class="m">j</span>. Then the synchronisation-aware insertion procedure evaluates at most <span class="m">c<sup>|K<sub>j</sub>|</sup></span> route-position combinations for that job, each followed by one feasibility check.</p>
+  </div>
+  <div class="proof">
+    <p class="ph">Proof</p>
+    <p>The candidate positions are chosen independently on each processor in <span class="m">K<sub>j</sub></span> (Algorithm 1, lines 4–9). Their Cartesian product therefore contains at most <span class="m">∏<sub>k∈K<sub>j</sub></sub> c = c<sup>|K<sub>j</sub>|</sup></span> combinations. The algorithm checks each candidate combination once at line 13. <span class="qed">∎</span></p>
+  </div>
+
+  <p>This combinatorial insertion is the main source of SRPS-specific content within the ALNS. It is precisely where the synchronisation structure enters the heuristic; the rest of the machinery follows a standard destroy–repair pattern.</p>
+
+  <h3>5.4 · Acceptance and operator adaptation</h3>
+  <p>The search uses simulated-annealing acceptance, adaptive roulette-wheel operator selection, and exponentially smoothed score updates. Worsening moves may be accepted to escape local minima, while operators that generate improving or accepted moves receive larger future weight.</p>
+
+  <h3>5.5 · Multi-start execution</h3>
+  <p>The search cycles over six fixed random seeds. Rather than assigning a fixed total iteration budget to every instance, the algorithm allocates runtime through adaptive phases and resets the destroy tier whenever a phase improves the incumbent.</p>
+
+  <h3 id="loop">5.6 · Adaptive control loop</h3>
+  <p>The destroy–repair search is embedded in an outer adaptive loop that allocates more effort only where certification remains difficult. Each phase runs the ALNS with cycling seeds for up to 300 seconds. If the phase improves the incumbent, the destroy tier is reset; otherwise the method performs an in-loop Lagrangian re-bound and escalates the destroy fraction from 25% to 33% to 40%.</p>
+
+  <div class="algo">
+    <div class="ah">Algorithm 2 &nbsp;<span>Adaptive primal–dual solver for SRPS</span></div>
+<pre> 1  μ ← INITIAL_MULTIPLIERS(inst)                <span class="cm"># fair profit split b_j/|K_j|</span>
+ 2  UB_lag ← INITIAL_UPPER_BOUND(inst)           <span class="cm"># min(indep-orienteering, group-decomp)</span>
+ 3  (selected, {P_k}) ← GREEDY_PROFIT_FIRST(inst) ;  z* ← OBJECTIVE(selected)
+ 4  θ* ← z*                     <span class="cm"># Polyak reference is the incumbent; no published BKS used</span>
+ 5  tier ← 0 ;  seeds ← [42,123,456,789,1337,2024] ;  phase_rt ← 300 s
+ 6  t_start ← now() ;  stop ← NONE
+ 7  <span class="kw">while</span> now() − t_start &lt; RT_CAP <span class="kw">and</span> stop = NONE <span class="kw">do</span>
+ 8      z_phase ← z*
+ 9      <span class="kw">for</span> seeds s cycled from seeds, up to phase_rt seconds total <span class="kw">do</span>
+10          (z_c, sel_c, {P_k}_c) ← ALNS_PHASE(s, tier, μ, UB_lag, z*, inst)
+11          <span class="kw">if</span> z_c &gt; z* <span class="kw">then</span> (z*, selected, {P_k}) ← (z_c, sel_c, {P_k}_c)
+12          <span class="kw">if</span> UB_lag − z* &lt; 1 <span class="kw">then</span> stop ← UB_MATCH ; <span class="kw">break</span>
+13      <span class="kw">if</span> z* &gt; z_phase <span class="kw">then</span>
+14          tier ← 0                                  <span class="cm"># progress: reset escalation</span>
+15      <span class="kw">else</span>
+16          (UB_lag, μ) ← LAGRANGIAN_REBOUND(μ, θ*=z*, 200 iters, 60 s)
+17          tier ← tier + 1
+18      cert_gap ← (UB_lag − z*) / UB_lag × 100
+19      <span class="kw">if</span> cert_gap &lt; 0.3 <span class="kw">then</span> stop ← GAP_BELOW_THRESHOLD
+20      <span class="kw">else if</span> tier &gt; 2 <span class="kw">then</span> stop ← TIERS_EXHAUSTED
+21  (selected, {P_k}, z*) ← EJECTION_CHAIN(selected, {P_k}, z*)
+22  VALIDATE_SOLUTION(selected, {P_k}, inst)
+23  <span class="kw">return</span> (selected, {P_k}, z*, UB_lag, cert_gap, stop)
+</pre>
+  </div>
+
+  <p>The primal–dual coupling occurs at the boundary between the incumbent update and the Lagrangian re-bound: the incumbent produced by ALNS becomes the lower reference of the warm-started dual update, and the tightened upper bound then determines whether further search is warranted. The three black-box procedures are <span class="m">INITIAL_UPPER_BOUND</span> (the minimum of an independent-orienteering and a group-decomposition relaxation, both solved by bitmask DP), <span class="m">ALNS_PHASE</span> (one destroy–repair–accept loop with synchronisation-aware insertion and adaptive operator weights), and <span class="m">LAGRANGIAN_REBOUND</span> (the warm-started subgradient scheme of Section 4).</p>
+</section>
+
+<!-- ================= 6 ================= -->
+<section id="experiments">
+  <p class="seclab">6</p>
+  <h2>Computational experiments</h2>
+
+  <h3>6.1 · Experimental setup</h3>
+  <p>Experiments are run on an Intel Core Ultra 7 258V with 32 GB RAM under Windows 11, using a Python 3.10.11 implementation. The primary study set contains all 660 instances in families B/C/D/EB/EC/ED; a supplementary set of 120 instances from A/EA confirms behaviour on the degenerate <span class="m">|K<sub>j</sub>|=1</span> case. The 660 instances are processed by six concurrent single-threaded worker processes, so reported runtimes are wall-clock per instance measured under that load. Parameters are fixed across all instances; no per-instance tuning is performed.</p>
+
+  <p>Every reported certified gap is computed against the Lagrangian upper bound of Section 4. For any multipliers <span class="m">μ</span> the per-processor subproblems are solved <em>exactly</em>, so <span class="m">L(μ)</span> is a <em>valid</em> upper bound by weak duality; the multipliers are minimised by subgradient descent, which tightens — but need not close — the bound. The reported gap is therefore a rigorous instance-specific guarantee rather than a heuristic quality indicator.</p>
+
+  <p class="note">Cross-method runtime comparisons should be read as indicative rather than controlled. The exact BPC results were obtained on an Intel Core i5-6600 (2015) under CPLEX 12.10, whereas this method runs on a 2024 CPU roughly 1.8× faster on single-thread benchmarks — which favours the present method. Pulling the other way, this is pure Python with no commercial MIP back end, and standard cross-language benchmarks place that penalty well over an order of magnitude. Our times are wall-clock under six concurrent workers, inflated by memory contention; BPC's are CPU times truncated by a one-hour cap. We therefore make no hardware-normalised speed claim: if anything the comparison is not in our favour.</p>
+
+  <div class="figs">
+    <div class="fig"><span class="n">0.133%</span><span class="l">mean certified gap</span></div>
+    <div class="fig"><span class="n">0.046%</span><span class="l">median certified gap</span></div>
+    <div class="fig"><span class="n">42.9%</span><span class="l">proven optimal</span></div>
+    <div class="fig"><span class="n">5.1 min</span><span class="l">median runtime</span></div>
+  </div>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 2.</strong> Main computational summary over the 660-instance study set. Mean certified gap 95% CI [0.115%, 0.152%].</caption>
+      <thead><tr><th>Metric</th><th class="n">Value</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Mean certified gap</td><td class="n">0.133%</td><td>all 660 instances</td></tr>
+        <tr><td>Median certified gap</td><td class="n">0.046%</td><td>all 660 instances</td></tr>
+        <tr><td>Maximum certified gap</td><td class="n">1.965%</td><td>hardest instance (B, n=130, α=0.25)</td></tr>
+        <tr><td>Certified within 0.5%</td><td class="n">94.1%</td><td>621 / 660</td></tr>
+        <tr><td>Certified within 2%</td><td class="n">100%</td><td>660 / 660</td></tr>
+        <tr><td>Proven optimal</td><td class="n">42.9%</td><td>283 / 660</td></tr>
+        <tr><td>Median runtime</td><td class="n">5.1 min</td><td>single-core wall-clock</td></tr>
+        <tr class="tot"><td>Maximum runtime</td><td class="n">40.8 min</td><td>no instance hit the runtime cap</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The certificate-tier distribution underlying these figures is: 283 instances (42.9%) certified exact, 338 (51.2%) within 0.5%, 29 (4.4%) in 0.5–1%, 10 (1.5%) in 1–2%, and none above 2%.</p>
+
+  <h3>6.2 · Gap and comparison conventions</h3>
+  <p>We distinguish three related quantities. First, the exact BPC algorithm reports a primal–dual gap of <span class="m">100×(dual−primal)/primal</span>. Second, our certified gap is always Equation (10), a rigorous bound on suboptimality because <span class="m">UB<sub>lag</sub></span> is never taken below any known feasible objective. Third, when comparing against published best-known solutions (BKS) we report <span class="m">Δobj = z* − BKS</span>, so positive values indicate an improvement and negative values a shortfall.</p>
+
+  <h3 id="subproblem">6.3 · Certified optima and subproblem cost</h3>
+  <p>Of the 660 study instances, 283 (42.9%) are returned with a certified gap of exactly zero and are therefore proven optimal. Of those, 149 are also proved optimal by the exact BPC method, where the two certificates coincide and cross-validate one another; the remaining 134 are proven optimal by the Lagrangian certificate alone.</p>
+  <p>The exactness of the dual bound rests on the per-processor job sets staying small, and they do. Across all 660 instances the largest <span class="m">|J<sub>k</sub>|</span> is 13, with per-instance means of 2.8–6.0, and this maximum is <em>flat in n</em>: already 13 at <span class="m">n=80</span> and unchanged at <span class="m">n=150</span>. Each subproblem therefore costs at most <span class="m">2<sup>13</sup>·13<sup>2</sup> ≈ 1.4×10<sup>6</sup></span> operations, so the bound is computed exactly even on the largest instances. Section 9.10 shows the flip side of the same distribution: because cost scales as <span class="m">2<sup>|J<sub>k</sub>|</sup></span>, a single processor can account for more than half an instance's dual work.</p>
+
+  <h3>6.4 · Comparison with the exact BPC baseline</h3>
+  <p>Table 3 reports outcomes for three instance groups. Group A contains the 245 instances BPC proves optimal; the present method recovers the optimum on 241 and is one profit unit below on four, with a mean certified gap of 0.067%. Group B contains 112 instances where BPC returns an incumbent but stops at the one-hour limit; the method matches the published incumbent on 93, improves it on 15, and is one unit below on four. Group C contains 300 instances with no reported BPC solution; the method certifies all 300, including 196 first-ever certified results.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 3.</strong> Outcome split against the exact BPC baseline (660 study instances). Δobj is our objective minus BKS. BPC times are its reported per-group CPU times under a 1 h cap.</caption>
+      <thead><tr><th>Outcome group</th><th class="n">n</th><th class="n">Δobj vs BKS</th><th class="n">Cert. gap</th><th class="n">Our / BPC time</th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td class="sub">A. BPC proves optimal</td><td class="n">245</td><td class="n">0</td><td class="n">0.067%</td><td class="n">295 / 32 s</td></tr>
+        <tr><td>&nbsp;&nbsp;A1 recover optimum</td><td class="n">241</td><td class="n">0</td><td class="n">0.067%</td><td class="n">295 / 32 s</td></tr>
+        <tr><td>&nbsp;&nbsp;A2 miss optimum</td><td class="n">4</td><td class="n">−1 (−0.04%)</td><td class="n">0.056%</td><td class="n">302 / 34 s</td></tr>
+        <tr class="ctx"><td class="sub">B. BPC incumbent, gap at 1 h cap</td><td class="n">112</td><td class="n">+3.6</td><td class="n">0.200%</td><td class="n">514 / 1415 s</td></tr>
+        <tr><td>&nbsp;&nbsp;B1 improves BKS</td><td class="n">15</td><td class="n">+27 (+0.95%)</td><td class="n">0.257%</td><td class="n">587 / 1930 s</td></tr>
+        <tr><td>&nbsp;&nbsp;B2 matches BKS</td><td class="n">93</td><td class="n">0</td><td class="n">0.189%</td><td class="n">501 / 1324 s</td></tr>
+        <tr><td>&nbsp;&nbsp;B3 below BKS</td><td class="n">4</td><td class="n">−1 (−0.03%)</td><td class="n">0.237%</td><td class="n">530 / 1609 s</td></tr>
+        <tr class="ctx"><td class="sub">C. BPC reports no solution</td><td class="n">300</td><td class="n">—</td><td class="n">0.164%</td><td class="n">546 / —</td></tr>
+        <tr><td colspan="5" class="note">196 first-ever certified; of the 104 with a BKS: 9 improve, 91 match, 4 below.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>BPC's published primal–dual gaps and the present certified gaps are not numerically identical quantities, because they use different relaxations and denominators. We report them side by side as context, while treating objective values and certified coverage as the primary comparative outputs.</p>
+
+  <h3>6.5 · Independent verification against a general-purpose MIP solver</h3>
+  <p>The comparisons above rest on values published for the exact method. As an external check that does not depend on those figures, we solved the compact arc-flow model SRPS-1 directly with CPLEX 22.1.1 and compared both its incumbents and its dual bound against ours. The check is deliberately uncoupled: the model is built from the instance file alone and shares no code, data structure, or intermediate state with either the ALNS or the Lagrangian scheme. Section 10 reports the result in full, since it doubles as the reference row of the technique table.</p>
+  <p>The bound comparison is the more informative half. On 22 of the 30 instances the Lagrangian certificate is <em>strictly tighter</em> than the dual bound CPLEX attains within its limit. That ordering is not accidental: the Lagrangian subproblem is an orienteering problem over a single processor, solved to optimality by bitmask DP, and the orienteering polytope does not have the integrality property <a class="c" href="#r15">[15]</a>; consequently the Lagrangian bound may strictly dominate the linear relaxation of the compact model, and here it generally does. The same structural weakness of SRPS-1 is why the exact literature attacks the problem by branch-price-and-cut <a class="c" href="#r12">[12]</a> rather than by solving the compact formulation directly <a class="c" href="#r1">[1]</a>.</p>
+
+  <h3>6.6 · New certified results on open instances</h3>
+  <p>For line instances D with <span class="m">n=65–80</span> and Euclidean instances ED with <span class="m">n=65–80</span>, the method supplies certified solutions throughout the open range, 114 of which have no previously published best-known value. The method also improves 24 published incumbents.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 4.</strong> Representative first-ever and improved certified solutions. "new" = no previously published best-known value; "improved" = improves a published incumbent.</caption>
+      <thead><tr><th>Instance</th><th class="n">Objective</th><th class="n">UB<sub>lag</sub></th><th class="n">Cert. gap</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="m">D_n065_026_a50</td><td class="n">1848</td><td class="n">1848</td><td class="n">0.00%</td><td>new</td><td>first-ever, proven optimal</td></tr>
+        <tr><td class="m">D_n075_037_a75</td><td class="n">2337</td><td class="n">2338</td><td class="n">0.04%</td><td>new</td><td>near-optimal large line instance</td></tr>
+        <tr><td class="m">ED_n065_026_a75</td><td class="n">1900</td><td class="n">1901</td><td class="n">0.05%</td><td>improved</td><td>+11.8% over published BKS (1699)</td></tr>
+        <tr><td class="m">EB_n140_024_a50</td><td class="n">5525</td><td class="n">5538</td><td class="n">0.24%</td><td>improved</td><td>+9.8% over published BKS (5034)</td></tr>
+        <tr><td class="m">EB_n140_022_a50</td><td class="n">4900</td><td class="n">4925</td><td class="n">0.51%</td><td>improved</td><td>+8.8% over published BKS (4503)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="rebound">6.7 · Effect of in-loop re-bounding</h3>
+  <p>The Lagrangian bound is what makes the method a certified primal–dual solver rather than a high-quality heuristic; the in-loop re-bound then sharpens that certificate specifically on the hard tail — the 70 instances that stop at tier exhaustion. To isolate its contribution we re-ran those 70 with it disabled, the upper bound computed once and never re-tightened, holding everything else fixed and warm-starting both arms identically.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 5.</strong> Effect of the in-loop Lagrangian re-bound on the 70 hard-tail instances. Both arms start from the same initial upper bound; the no-refresh arm never re-tightens it.</caption>
+      <thead><tr><th>Quantity</th><th class="n">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Instances</td><td class="n">70</td></tr>
+        <tr><td>Mean certified gap, full</td><td class="n">0.691%</td></tr>
+        <tr><td>Mean certified gap, no-refresh</td><td class="n">0.955%</td></tr>
+        <tr><td>Mean gap reduction</td><td class="n">0.264 pp</td></tr>
+        <tr><td>Median gap reduction</td><td class="n">0.196 pp</td></tr>
+        <tr><td>Max gap reduction</td><td class="n">1.457 pp</td></tr>
+        <tr><td>Improved / unchanged / worsened</td><td class="n">53 / 11 / 6</td></tr>
+        <tr class="tot"><td>Crossings to &lt;1% / &lt;0.5% / exact</td><td class="n">22 / 16 / 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Disabling the re-bound raises the mean certified gap on the hard tail from 0.691% to 0.955%. It tightens the certificate on 53 of 70 instances and brings 22 below a 1% certified gap and 16 below 0.5%, while leaving 11 unchanged. On the remaining six the certified gap is marginally larger with the re-bound enabled (by at most 0.18 pp); this reflects run-to-run variation in the stochastic primal search rather than the bound itself, since the re-bound can only tighten the dual value. It is by construction a certificate-tightening mechanism, which is why it has near-zero effect in the fixed-bound ablation of Appendix B, where the upper bound is held common across arms.</p>
+
+  <h3>6.8 · Robustness and hardness analysis</h3>
+  <p>A one-at-a-time sensitivity study (Appendix B) shows the main control parameters lie in a broad flat region around the chosen defaults: every one of eleven parameter variants changes the mean certified gap by at most 0.027 percentage points relative to the 0.153% baseline on the 30-instance stratified subset. An ablation study (Appendix B) indicates that ratio-based repair contributes most clearly to quality — its removal degrades the mean certified gap by +0.022 pp, concentrated in the Euclidean families — while tier escalation and in-loop re-bounding matter chiefly through efficiency and certificate tightening on hard instances.</p>
+  <p>A Tobit analysis of certified-gap difficulty shows that budget tightness <span class="m">α</span> is the dominant explanatory factor, with residual difficulty shaped by an interaction between budget tightness and distance geometry and, secondarily, by the size–class interaction. At <span class="m">α=0.75</span> all classes collapse to near-zero certified gaps; the hardest cell is <span class="m">|K<sub>j</sub>|=2, α=0.25</span> (mean 0.396%), corresponding to the largest-<span class="m">n</span> line instances. This distinguishes the empirically hardest instances (large <span class="m">n</span>, tight budget) from the structurally hardest synchronisation class.</p>
+</section>
+
+<!-- ================= 7 ================= -->
+<section id="ceiling">
+  <p class="seclab">7</p>
+  <h2>Headroom: a ceiling on any gap-directed improvement</h2>
+  <p class="lede">The results of Section 6 imply a bound on what <em>any</em> technique aimed at the certified gap can achieve. That bound governs the whole of the second half of this report, and it was computable before a single strengthening experiment was run.</p>
+
+  <p>Cuts and every other dual-side device act only on <span class="m">ub</span>. The optimum <span class="m">P*</span> satisfies <span class="m">z ≤ P* ≤ ub</span>, since <span class="m">z</span> is attained by a feasible solution. The maximum conceivable improvement from a technique driving the dual bound exactly to the optimum on every instance is therefore bounded by the current certified gap itself. The same bound applies symmetrically to primal-side techniques, which can raise <span class="m">z</span> at most to <span class="m">P*</span>.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 6.</strong> Ceiling on any gap-directed improvement, computed over 780 instances — the 660 primary instances plus the class-1 families, which reduce to team orienteering and are easier, hence 48.5% proven optimal here against 42.9% on the primary set. The maximum is identical under both row sets.</caption>
+      <thead><tr><th>Quantity</th><th class="n">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Instances already provably tight (gap = 0)</td><td class="n">378 / 780 &nbsp;(48.5%)</td></tr>
+        <tr><td>Mean maximum possible gap reduction</td><td class="n">0.1136 pp</td></tr>
+        <tr><td>Median maximum possible gap reduction</td><td class="n">0.0087 pp</td></tr>
+        <tr><td>90th percentile</td><td class="n">0.2948 pp</td></tr>
+        <tr><td>Maximum</td><td class="n">1.9650 pp</td></tr>
+        <tr class="tot"><td>Total absolute headroom Σ(ub − z)</td><td class="n">2255 profit units</td></tr>
+        <tr><td>Share held by the top 50 instances</td><td class="n">45.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>On nearly half the benchmark there is nothing to gain. On the median instance the entire theoretical prize is 0.0087 pp. For comparison, arm-to-arm differences in the calibration suites of Section 9 range over ±0.01–0.09 pp: <strong>the median instance's complete theoretical prize is smaller than the noise floor of the apparatus built to detect it.</strong> No amount of calibration recovers a signal beneath its own measurement noise.</p>
+
+  <p>This computation costs seconds and uses only data already in hand — the per-instance incumbents and bounds of Section 6. That it was performed <em>after</em> rather than before the calibration campaigns is itself one of the lessons of Section 11.</p>
+</section>
+
+<!-- ================= 8 ================= -->
+<section id="design">
+  <p class="seclab">8</p>
+  <h2>Study design</h2>
+  <p class="lede">Every technique below was implemented <em>outside</em> the solver: no file in the solver's own modules was modified, and each instrument composes them from the outside. This keeps the comparison honest — a difference between an arm and its control cannot be an artifact of a changed baseline.</p>
+
+  <h3>8.1 · Notation</h3>
+  <div class="tw">
+    <table>
+      <caption><strong>Table 7.</strong> Notation used throughout Sections 8–12.</caption>
+      <thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="m">z</td><td>incumbent objective (primal)</td></tr>
+        <tr><td class="m">ub</td><td>Lagrangian upper bound, <span class="m">⌊L(μ)⌋</span> (dual)</td></tr>
+        <tr><td class="m">P*</td><td>true optimum, known only to lie in <span class="m">[z, ub]</span></td></tr>
+        <tr><td class="m">μ<sub>j,k</sub></td><td>multiplier on the coupling of job <span class="m">j</span> to processor <span class="m">k</span></td></tr>
+        <tr><td class="m">r<sub>j</sub></td><td>reduced profit <span class="m">b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub></span></td></tr>
+        <tr><td class="m">g<sub>j,k</sub></td><td>subgradient component <span class="m">x<sub>j,k</sub> − y<sub>j</sub></span></td></tr>
+        <tr><td class="m">G</td><td>absolute gap <span class="m">L(μ) − z</span></td></tr>
+        <tr><td class="m">pp</td><td>percentage points of certified gap</td></tr>
+        <tr><td>phase</td><td>one ALNS run of up to 300 s with cycling seeds</td></tr>
+        <tr><td>tier</td><td>destroy-fraction escalation level (25%, 33%, 40%)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.2 · Instance subsets</h3>
+  <ul class="ds">
+    <li><strong>Stratified-30.</strong> A stratified subset across families B, C, D, EB, EC, ED and across <span class="m">n</span> and <span class="m">α</span>. Used wherever breadth matters.</li>
+    <li><strong>Coupling-12.</strong> A fast-screen subset for arm matrices comparing ten or more configurations.</li>
+    <li><strong>Hard-tail-4.</strong> The loosest-gap instances. Used where headroom is required for an effect to be visible at all.</li>
+    <li><strong>Small-nonzero-30.</strong> Every instance with <span class="m">n ≤ 50</span> carrying a nonzero certified gap, for the exact reference of Section 10.</li>
+  </ul>
+
+  <h3>8.3 · Budget regimes</h3>
+  <p>Three regimes appear, and the distinction is load-bearing rather than incidental: Section 11 reports two verdicts that reverse between them.</p>
+  <div class="tw">
+    <table>
+      <caption><strong>Table 8.</strong> Budget regimes. <em>Production</em> is the solver's own configuration (Section 5.6); the others are screens.</caption>
+      <thead><tr><th>Regime</th><th class="n">phase (s)</th><th class="n">cap (s)</th><th class="n">dual iters</th><th class="n">dual (s)</th></tr></thead>
+      <tbody>
+        <tr><td>Production</td><td class="n">300</td><td class="n">1800</td><td class="n">200</td><td class="n">60</td></tr>
+        <tr><td>Fast screen</td><td class="n">120</td><td class="n">240</td><td class="n">120</td><td class="n">20</td></tr>
+        <tr><td>Activation probe</td><td class="n">20</td><td class="n">45</td><td class="n">—</td><td class="n">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The 1800 s cap is the per-instance budget of the development harness; the solver itself caps at 3600 s, and no arm reached either for reasons other than tier exhaustion.</p>
+
+  <h3>8.4 · How each technique was tested and calibrated</h3>
+  <dl class="cal">
+    <dt>Cut separation (§9.1)</dt>
+    <dd>An explicit cut pool with three separation routines (circuit, route-length, synchronisation-path), integrated through a hard feasibility filter and a soft scoring penalty. Calibrated by a 29-run staged suite on Stratified-30 at the production regime: a 3-run correctness gate, 12 coarse runs spanning low/medium/high settings, 8 refinement runs around the coarse finalists, and 6 robustness runs over seed bundles. Eight parameters were swept — <code>sep_freq_phase</code> ∈ {1,2,3}, <code>max_cuts_per_round</code> ∈ {5,10,20}, <code>epsilon_violation</code> ∈ {10⁻⁶,10⁻⁵,10⁻⁴}, <code>epsilon_reject</code> ∈ {10⁻⁵,10⁻⁴,10⁻³}, <code>lambda_cut</code> ∈ {0.1,0.25,0.5,1.0}, <code>cut_age_limit</code> ∈ {2,4,8}, <code>cut_weight_decay</code> ∈ {0,0.05,0.1}, <code>sep_budget_s_per_phase</code> ∈ {5,10,20} — with lexicographic selection on mean Δgap, then maximum final gap, then runtime.</dd>
+
+    <dt>Activation sweep</dt>
+    <dd>Four points of <code>epsilon_violation</code> ∈ {10⁻⁷, −50, −100, −200} on a three-instance subset at the activation-probe regime, with a gate failing a run when no cut enters the pool. Negative tolerances are non-physical and were used deliberately to force activation, separating "the mechanism does not apply" from "the mechanism is broken".</dd>
+
+    <dt>Separation against the relaxed solution</dt>
+    <dd>A read-only instrument runs the subgradient to convergence (200 iterations or 30 s), replays the relaxation at <span class="m">μ*</span>, and measures two violation channels. A second searches for any global ordering achieving makespan <span class="m">≤ L</span> by time-boxed random-restart hill climbing (90 s per instance), reporting <span class="sc">schedulable</span> constructively when one is found. Neither has parameters to calibrate: they are measurements, not treatments.</dd>
+
+    <dt>Dual-guided coupling (§9.2)</dt>
+    <dd>Six arms on Coupling-12 at the fast-screen regime: plain control, warm-<span class="m">μ</span> control, original (v1) operators with warm <span class="m">μ</span>, and corrected (v2) destroy, repair, and both. The v2 repair scores <span class="m">(b<sub>j</sub> + w·r<sub>j</sub>)/(1+cost)</span> with <span class="m">w=1</span>; the v2 destroy scales its tie-breaking jitter to 1% of the observed spread of <span class="m">r<sub>j</sub></span>. The decisive arm is the warm-<span class="m">μ</span> control, isolating the cost of the seed from the effect of the guidance. Three arms were repeated at the production regime.</dd>
+
+    <dt>Reduced-cost fixing (§9.9)</dt>
+    <dd>No search runs. The subgradient is run per instance on Stratified-30, <span class="m">r<sub>j</sub></span> read off at <span class="m">μ*</span>, and the two fixing tests evaluated in closed form. Because the threshold <span class="m">G</span> depends on incumbent quality and fixing runs mid-search rather than post hoc, reach is reported at <span class="m">z</span>, <span class="m">0.99z</span> and <span class="m">0.95z</span>.</dd>
+
+    <dt>Seeding and stabilisation (§9.4, §9.5)</dt>
+    <dd>Ten variants over three axes — initialisation (<span class="m">ε ∈ {0.05, 0.10, 0.25}</span>), step rule (Polyak; trust region with radius 0.5 and 1.0), and dual smoothing (0.3, 0.6) — plus two combinations, on Stratified-30 at 200 iterations across six workers. Because a smoke test and the full sweep disagreed, a convergence probe then ran four variants to 1000 iterations on Hard-tail-4, retaining the full bound history so the running best could be read at checkpoints 60/100/200/400/700/1000 from one run per variant.</dd>
+
+    <dt>Parallel subproblem evaluation (§9.10)</dt>
+    <dd>The per-processor loop is farmed to a worker pool with the instance loaded once per worker. Processors are partitioned by longest-processing-time assignment weighted by <span class="m">2<sup>|J<sub>k</sub>|</sup></span>; contiguous chunking was measured first and found badly imbalanced. Correctness requires the bound to be <em>identical</em>, not merely close, to the sequential path. Timing uses best-of-three repeats.</dd>
+
+    <dt>Uncoupled exact reference (§10)</dt>
+    <dd>SRPS-1 is built directly and handed to CPLEX 22.1.1 with a 180 s limit and six threads, sharing no state with the solver. Only instances CPLEX proves closed admit a decomposition of the certified gap.</dd>
+  </dl>
+</section>
+
+<!-- ================= 9 ================= -->
+<section id="techniques">
+  <p class="seclab">9</p>
+  <h2>The ten strengthening techniques</h2>
+
+  <p>Table 9 lists every technique evaluated, the metric it targets, and its outcome. <strong>The numbered rows are the ten strengthening techniques</strong> and are the subject of Sections 9.1–9.10. The two unnumbered rows above the rule are not interventions: one is the solver's own dual bound, the object the ten techniques try to strengthen, and the other is the independent reference solver of Section 10.</p>
+  <p>The organising observation is the split by target. Interventions aimed at the certified gap are bounded in advance by the ceiling of Table 6, and every one of them was absorbed by it; the two aimed at runtime carry no such bound, and one of them delivered.</p>
+
+  <div class="tw">
+    <table class="cov">
+      <caption><strong>Table 9.</strong> Techniques evaluated in this study. Rows 1–10 are the strengthening attempts; the two rows above the rule are the bound being strengthened and the reference solver.</caption>
+      <thead><tr><th class="n">#</th><th>Technique</th><th>Target</th><th>Outcome</th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td class="n">—</td><td><em>Lagrangian relaxation</em></td><td><em>dual <span class="m">ub</span></em></td><td><em>the method under study</em> (§4.1)</td></tr>
+        <tr class="ctx rule"><td class="n">—</td><td><em>Compact MILP (SRPS-1) in CPLEX</em></td><td><em>reference</em></td><td><em>looser bound than the Lagrangian on 22/30</em> (§10)</td></tr>
+        <tr><td class="n">1</td><td>BPC-style cut separation</td><td>dual <span class="m">ub</span></td><td><span class="bad">falsified on three independent grounds</span> (§9.1)</td></tr>
+        <tr><td class="n">2</td><td>Dual-guided destroy / repair</td><td>primal <span class="m">z</span></td><td><span class="bad">+0.0037 pp vs. warm control at production budget</span> (§9.2, §9.3)</td></tr>
+        <tr><td class="n">3</td><td>Warm-<span class="m">μ</span> dual effort scheduling</td><td>dual <span class="m">ub</span></td><td><span class="bad">−0.0086 pp at production budget</span> (§9.3)</td></tr>
+        <tr><td class="n">4</td><td>Primal-to-dual seeding</td><td>dual <span class="m">ub</span></td><td><span class="bad">9 tighter / 8 looser after flooring</span> (§9.4)</td></tr>
+        <tr><td class="n">5</td><td>Dual stabilisation (trust region, smoothing)</td><td>dual <span class="m">ub</span></td><td><span class="bad">budget-dependent; no transfer at the solver's budget</span> (§9.5)</td></tr>
+        <tr><td class="n">6</td><td>Lagrangian decomposition (variable copies)</td><td>dual <span class="m">ub</span></td><td><span class="bad">provably equal to the existing bound</span> (§9.6)</td></tr>
+        <tr><td class="n">7</td><td>Dantzig–Wolfe reformulation / column generation</td><td>dual <span class="m">ub</span></td><td><span class="bad">master bound equals the Lagrangian dual optimum</span> (§9.7)</td></tr>
+        <tr><td class="n">8</td><td>Surrogate relaxation</td><td>dual <span class="m">ub</span></td><td><span class="bad">dominates in theory; forfeits separability</span> (§9.8)</td></tr>
+        <tr><td class="n">9</td><td>Reduced-cost variable fixing</td><td>runtime</td><td><span class="bad">reach 24.8% → 0.3% at 0.99z</span> (§9.9)</td></tr>
+        <tr class="win"><td class="n">10</td><td>Parallel subproblem evaluation</td><td>runtime</td><td><span class="good"><strong>1.42×</strong> dual, bit-identical bounds</span> (§9.10)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note">Sections 9.1 and 9.2 are given at length because each produced a distinct measurement trap worth transferring; 9.3–9.5 are empirical and shorter; 9.6–9.8 are settled analytically and require no experiment; 9.9 and 9.10 are the two runtime-targeted techniques.</p>
+
+  <!-- ---------- 9.1 ---------- -->
+  <h3 id="cuts">9.1 · Technique 1 — BPC-style cut separation <span class="tgt">dual</span></h3>
+
+  <h4 class="st" id="cuts-structural">9.1.1 · First design and its structural impossibility</h4>
+  <p>The initial implementation maintained a pool of cuts of three types — circuit, route-length, and synchronisation-path — separated at phase boundaries against the ALNS incumbent, applied through a hard feasibility filter and a soft scoring penalty. The design follows the separation logic of the exact BPC algorithm <a class="c" href="#r1">[1]</a> and the branch-and-price framework it sits in <a class="c" href="#r12">[12]</a>.</p>
+  <p>This design cannot work, for a reason requiring no experiment. Separation is performed against the incumbent, and <strong>the incumbent is feasible by construction</strong>. Feasibility means precisely: no cycles in the constraint graph, no route over <span class="m">L</span>, and a synchronisation path within <span class="m">L</span> (Section 2.1). These are exactly the three conditions the separator tests. The candidate set is therefore empty at every call, identically, on every instance.</p>
+  <p>A 29-run calibration suite was nevertheless executed on Stratified-30, consuming 127.9 minutes and tuning eight parameters. Its outcome was a tautology: the recommended configuration was the arm with all cut machinery disabled, and the mean objective delta was identical (−3.300) across the top five arms. Every run reported <code>cuts_added_total = 0</code>.</p>
+
+  <h4 class="st" id="cuts-inert">9.1.2 · The activation sweep and mechanism inertness</h4>
+  <p>To separate "the mechanism is broken" from "the mechanism does not apply", a four-point sweep drove the violation tolerance <span class="m">ε</span> negative, forcing cuts into the pool.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 10.</strong> Activation sweep on a three-instance subset. Pool size responds to <span class="m">ε</span>; nothing else does.</caption>
+      <thead><tr><th class="n">ε</th><th class="n">cuts added</th><th class="n">mean viol. after</th><th class="n">filter rejections</th><th class="n">mean Δgap (pp)</th><th class="n">final objectives</th></tr></thead>
+      <tbody>
+        <tr><td class="n">10⁻⁷</td><td class="n">0</td><td class="n">0.0</td><td class="n">0</td><td class="n">+0.057444</td><td class="n">4971 / 2285 / 2226</td></tr>
+        <tr><td class="n">−50</td><td class="n">2</td><td class="n">0.0</td><td class="n">0</td><td class="n">+0.057444</td><td class="n">4971 / 2285 / 2226</td></tr>
+        <tr><td class="n">−100</td><td class="n">8</td><td class="n">0.0</td><td class="n">0</td><td class="n">+0.057444</td><td class="n">4971 / 2285 / 2226</td></tr>
+        <tr><td class="n">−200</td><td class="n">15</td><td class="n">0.0</td><td class="n">0</td><td class="n">+0.057444</td><td class="n">4971 / 2285 / 2226</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The pool grows fifteenfold; every outcome column is bit-identical to six decimal places. That is not a statistical null — a real treatment with no effect produces scatter — but an algebraic identity, and it has a specific cause. The evaluation routine scores each cut against a right-hand side frozen at construction as the true horizon <span class="m">L</span>:</p>
+  <div class="eq">viol = max( 0, max_len − c.rhs ),   c.rhs = L</div>
+  <p>For any feasible candidate <span class="m">max_len ≤ L</span>, so the clamp returns exactly <span class="m">0.0</span> regardless of <span class="m">ε</span>. The guard <code>if viol &gt; 0.0</code> never fires, no cut is ever recorded as violated, the hard filter never rejects, and the soft penalty subtracts <span class="m">λ·0</span>. Fifteen active cuts produced <code>mean_violation_after = 0.0</code>.</p>
+
+  <div class="callout warn">
+    <p><strong>Mechanism inertness.</strong> The machinery activates and reports activation while remaining incapable of influencing the outcome variable. It is more dangerous than an obvious crash, because it produces clean-looking null results that invite the interpretation "the idea does not help" when the correct interpretation is "the idea was never tested".</p>
+  </div>
+
+  <p>A telemetry defect compounded it. A counter intended to record penalty applications was incremented once per job removal regardless of any active cut, reporting nonzero values on runs with an empty pool. An analyst reading only the summary columns would have seen a mechanism apparently doing work.</p>
+
+  <h4 class="st" id="s0">9.1.3 · Redirecting separation at the relaxed solution</h4>
+  <p>The structural argument also indicates the repair. In branch-price-and-cut, separation runs against a <em>fractional</em> solution, which is where violations live <a class="c" href="#r12">[12]</a>. The heuristic has no such solution, but it does have the Lagrangian relaxed solution, and that object is infeasible in a well-defined way: <span class="m">g<sub>j,k</sub></span> is nonzero until convergence, and each <span class="m">O<sub>k</sub>(μ)</span> ignores synchronisation idle time (Section 4.1).</p>
+  <p>We built a read-only instrument (S0) that runs the subgradient to convergence, replays the relaxation at <span class="m">μ*</span>, and measures two channels:</p>
+  <ul class="ds">
+    <li><strong>Channel A (consistency).</strong> Jobs partially claimed — served by some but not all processors in <span class="m">K<sub>j</sub></span>, violating constraint 3 directly.</li>
+    <li><strong>Channel B (synchronisation time).</strong> The joint difference-constraint system over the relaxed routes: whether it is cyclic, and if not, whether its longest path exceeds <span class="m">L</span>.</li>
+  </ul>
+  <p>Both fire abundantly. Notably, the same cycle-detection routine that returned zero on every one of the 29 calibration runs returns nonzero here <em>without modification</em>. The cut family was never wrong; the object it was pointed at was.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 11.</strong> S0 violation instrument over 30 instances. Every per-processor route respects the horizon, yet the joint structure does not.</caption>
+      <thead><tr><th>Quantity</th><th class="n">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Channel A: partially claimed jobs</td><td class="n">184 (184 on multi-processor jobs)</td></tr>
+        <tr><td>Mean subgradient norm <span class="m">‖g‖²</span> at <span class="m">μ*</span></td><td class="n">72.5</td></tr>
+        <tr><td>Channel B: instances cyclic under per-processor optimal order</td><td class="n">21 / 30</td></tr>
+        <tr><td>Total circuits detected</td><td class="n">148</td></tr>
+        <tr><td>Acyclic instances with makespan &gt; L</td><td class="n">4 / 9</td></tr>
+        <tr><td>&nbsp;&nbsp;mean / max excess over L</td><td class="n">1401.0 / 2044.0</td></tr>
+        <tr class="tot"><td>Every per-processor route within L</td><td class="n">yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The contrast in the last two rows is the substantive finding. The decomposition certifies every individual route as fitting inside the horizon, while the joint difference-constraint system does not admit a schedule under those same routes. <strong>The per-machine subproblem cannot represent the constraint that binds, because that constraint is exactly the one the relaxation dualised.</strong></p>
+
+  <h4 class="st" id="s0b">9.1.4 · Why the natural cut is unsound</h4>
+  <p>Channel B appears to be the opportunity: structural infeasibility the decomposition cannot see. It does not survive scrutiny.</p>
+  <p>The relaxation fixes <em>which</em> jobs each processor takes, not the <em>order</em>. Any single global total order induces per-processor sequences whose arcs all point forward, hence an acyclic graph. Acyclicity is therefore always achievable, and the cycles S0 reports are an artifact of each processor adopting its own locally optimal min-time order. The real question is whether some ordering also satisfies makespan <span class="m">≤ L</span>.</p>
+  <p>This is a soundness requirement, not a technicality. A no-good cut asserting "this relaxed selection is infeasible" is valid only if <em>no</em> ordering works. If a feasible ordering exists and the cut is applied anyway, a feasible point is excluded, <span class="m">ub</span> becomes invalid, and every certified gap computed downstream is wrong. For a method whose contribution is certification, that failure mode is worse than adding no cuts at all.</p>
+  <p>Instrument S0b therefore searches for any global ordering achieving makespan <span class="m">≤ L</span> by time-boxed random-restart hill climbing, reporting <span class="sc">schedulable</span> when one is found. A <span class="sc">schedulable</span> verdict is constructive: an explicit feasible ordering is exhibited, so the selection provably cannot be cut.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 12.</strong> S0b schedulability over 30 instances. A schedulable selection cannot be excluded by a no-good cut without invalidating the bound.</caption>
+      <thead><tr><th>Outcome</th><th class="n">Instances</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sc">schedulable</span> (feasible ordering found)</td><td class="n">16 / 30 (53.3%)</td></tr>
+        <tr><td>None found (inconclusive, not a proof)</td><td class="n">14 / 30 (46.7%)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>On 16 of 30 instances the relaxed selection is provably schedulable, so a cut asserting its infeasibility would exclude a feasible point and invalidate every downstream certificate. The margins are narrow: the tightest feasible schedule clears the horizon by 1 time unit, and 12 of the 16 schedulable instances clear it by less than 50.</p>
+  <p>That narrowness compounds the problem. A separation routine would have to distinguish "feasible by a handful of time units" from "infeasible", and in a certifying method a misclassification does not produce a weak cut: it produces an invalid upper bound and a silently wrong certified gap. The standard discipline for user cuts is explicit on this point — a valid inequality must strengthen the relaxation <em>without excluding feasible integer points</em> <a class="c" href="#r17">[17,</a> <a class="c" href="#r12">12]</a> — and this cut family cannot meet it.</p>
+
+  <h4 class="st" id="cuts-verdict">9.1.5 · Verdict</h4>
+  <p>We falsify cut separation on three independent grounds. <strong>First</strong>, separation against the incumbent cannot produce a violated cut, confirmed operationally by a 29-run suite reporting no cuts in any run. <strong>Second</strong>, forcing activation admitted up to fifteen cuts while leaving mean post-evaluation violation at 0.0 and every final objective bit-identical: the cuts were <em>inert</em> rather than ineffective, and an experiment with no power cannot support a claim about efficacy. <strong>Third</strong>, redirecting separation at the relaxed solution yields a cut family that is <em>unsound</em> on 16 of 30 instances. Independently of design, Table 6 caps any cut family at 0.1136 pp mean and 0.0087 pp median.</p>
+  <p>Three limits should be stated. We do not claim BPC cuts are ineffective for SRPS in general: we tested three families inside one architecture. The 14 of 30 instances on which no feasible ordering was found remain <em>formally open</em>, since the schedulability search is heuristic; the soundness argument rests only on the 16 constructive cases, which suffices, because a single wrongly excluded feasible point invalidates the bound. And of the three limbs, only the ceiling generalises beyond the tested subsets.</p>
+
+  <h4 class="st" id="incumbent-cuts">9.1.6 · Can the incumbent itself generate cuts?</h4>
+  <p>A natural question, worth answering explicitly because it motivates much of the design above: the solver always holds a best known solution, so is there information in it that can be used to generate cuts?</p>
+  <p>The answer is no, and the reason is §9.1.1 stated in general form. A cut is useful only if some point violates it. The incumbent is feasible, so it violates no valid inequality — that is what feasibility means. Any separation routine run against it returns an empty candidate set, whatever the cut family, independently of the particular families we implemented.</p>
+  <p>What the incumbent <em>can</em> supply is a bound, not a cut. It is a lower bound on the optimum, and the solver already exploits that: <span class="m">z</span> is the Polyak level reference (Section 4.2), the threshold in the fixing tests of §9.9, and one end of the interval producing the ceiling of Table 6. The distinction is between a feasible point, which bounds, and an infeasible one, which cuts. Generating cuts requires an infeasible object, and in this architecture the only one available is the Lagrangian relaxed solution — which is why §9.1.3 redirects separation there, and §9.1.4 shows why even that fails.</p>
+
+  <!-- ---------- 9.2 ---------- -->
+  <h3 id="guided">9.2 · Technique 2 — Dual-guided destroy and repair <span class="tgt">primal</span></h3>
+
+  <h4 class="st" id="degeneracy">9.2.1 · Design and the initialisation degeneracy</h4>
+  <p>Two operators were added to the ALNS portfolio. A guided destroy removes jobs ranked by ascending reduced profit <span class="m">r<sub>j</sub></span>, breaking ties on descending dual pressure. A guided repair inserts jobs by a score derived from <span class="m">r<sub>j</sub></span> and the insertion cost. Multipliers are optionally refreshed from the in-loop re-bound. This is the primal-side counterpart of the coupling channel Section 4.5 records as deliberately absent.</p>
+  <p>Multipliers are initialised by the fair profit split (Section 4.2). Then</p>
+  <div class="eq">Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> = |K<sub>j</sub>| · b<sub>j</sub>/|K<sub>j</sub>| = b<sub>j</sub>   ⟹   r<sub>j</sub> = b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> = 0</div>
+  <p>for <em>every</em> job, identically. Direct measurement confirms it: on one 80-job instance, 0 of 80 jobs have nonzero reduced profit; on a 150-job instance, 0 of 150.</p>
+  <p>The fair split is the correct starting point for descent, but it is precisely the multiplier vector at which the guidance signal vanishes. Two consequences follow mechanically:</p>
+  <ul class="ds">
+    <li><strong>Destroy degenerates to random removal.</strong> The sort key is <span class="m">(0 + uniform(−10⁻⁶, 10⁻⁶), −dual pressure)</span>. The first component is pure noise on an identically zero base, and exact ties have measure zero, so the intended second criterion never breaks anything.</li>
+    <li><strong>Repair degenerates to insertion order.</strong> With <span class="m">r<sub>j</sub>=0</span> every job takes a constant fallback score, the strict improvement test fails for every candidate after the first, and insertion follows the iteration order of the unserved set.</li>
+  </ul>
+  <p>Both degenerate operators are inserted at position 0 of their portfolios, displacing tuned operators.</p>
+
+  <h4 class="st">9.2.2 · The original results are what the defect predicts</h4>
+  <div class="tw">
+    <table>
+      <caption><strong>Table 13.</strong> Original dual-guided matrix (30 instances). Lower mean Δgap is better.</caption>
+      <thead><tr><th>Arm</th><th class="n">mean Δgap (pp)</th><th class="n">mean Δobj</th><th>Predicted by</th></tr></thead>
+      <tbody>
+        <tr><td>baseline</td><td class="n">0.000313</td><td class="n">−0.033</td><td>—</td></tr>
+        <tr><td>full</td><td class="n">0.003921</td><td class="n">−0.067</td><td>both defects, partly rescued by feedback</td></tr>
+        <tr><td>destroy only</td><td class="n">0.008313</td><td class="n">−0.200</td><td>random destroy displacing a tuned operator</td></tr>
+        <tr><td>repair only</td><td class="n">0.016217</td><td class="n">−0.367</td><td>insertion-order repair displacing regret-2</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The ordering is not noise: it is what the degeneracy analysis predicts in advance. The repair-only arm, displacing regret-2 with order-dependent insertion, is worst; the destroy-only arm, displacing a tuned operator with randomness, is next; the baseline wins.</p>
+
+  <h4 class="st" id="h2-fix">9.2.3 · Correcting the design</h4>
+  <p>Testing the hypothesis rather than the defect requires two repairs. <strong>Warm multiplier initialisation</strong> seeds <span class="m">μ</span> from a real subgradient solve: nonzero reduced profits rise from 0/80 to 74/80, with spread 9.667. <strong>Non-degenerate operators (v2)</strong> let the dual signal <em>modulate</em> a competent base heuristic instead of replacing it, so that with <span class="m">r ≡ 0</span> the repair reduces to profit-density greedy rather than to a constant. Both original operators are retained behind flags, so the degenerate behaviour remains reproducible.</p>
+
+  <h4 class="st" id="h2-results">9.2.4 · Corrected results</h4>
+  <div class="tw">
+    <table>
+      <caption><strong>Table 14.</strong> Corrected dual-guided matrix. Lower mean Δgap is better. The δ column is measured against the warm-<span class="m">μ</span> control where available, so the seed cost is not charged to the guidance.</caption>
+      <thead><tr><th>Arm</th><th class="n">n</th><th class="n">mean Δgap (pp)</th><th class="n">mean Δobj</th><th class="n">δ vs. base (pp)</th></tr></thead>
+      <tbody>
+        <tr><td>control (no dual operators, no warm <span class="m">μ</span>)</td><td class="n">12</td><td class="n">0.1663</td><td class="n">−0.250</td><td class="n">+0.1310</td></tr>
+        <tr class="ctx"><td>control + warm <span class="m">μ</span> (isolates seed cost)</td><td class="n">12</td><td class="n">0.0353</td><td class="n">−0.250</td><td class="n">—</td></tr>
+        <tr><td>v1 operators + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">0.0559</td><td class="n">−0.750</td><td class="n">+0.0206</td></tr>
+        <tr><td>v2 destroy only + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">0.0316</td><td class="n">−0.417</td><td class="n">−0.0037</td></tr>
+        <tr><td>v2 repair only + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">0.0478</td><td class="n">−0.667</td><td class="n">+0.0125</td></tr>
+        <tr><td>v2 destroy + repair + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">0.0324</td><td class="n">−0.333</td><td class="n">−0.0030</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The matrix decomposes cleanly once the warm-<span class="m">μ</span> control is included. Warm initialisation alone accounts for −0.1310 pp of the movement; the guided operators, measured against that same baseline, span −0.0037 pp to +0.0206 pp, and 2 of the 4 are worse than the warm control outright.</p>
+  <p>Two columns settle the attribution. The mean objective delta is identical for the plain and warm controls (−0.250 in both), so warm initialisation changed nothing in the primal — its entire contribution is a tighter <span class="m">ub</span>. The guided operators, by contrast, degrade the objective (to −0.750) while moving the gap by at most 0.0037 pp in the favourable direction, inside the ±0.01–0.09 pp arm-to-arm noise band of the earlier suites and below the 0.0087 pp median ceiling of Table 6.</p>
+
+  <div class="callout warn">
+    <p><strong>The most instructive artifact of the study.</strong> The naive reading of this matrix — comparing guided arms against the <em>plain</em> control — reports a 0.1347 pp improvement and concludes that corrected dual guidance works. It does not. That apparent effect is the warm-<span class="m">μ</span> solve, and it would have been reported as a positive result had the isolating arm not been run. It is a confound that survives every check except the one that varies the suspected cause on its own.</p>
+  </div>
+
+  <p>The hypothesis is therefore falsified as stated, while the experiment yields a positive finding of its own: dual effort spent <em>before</em> the search, rather than reactively when a phase fails to improve, tightens the certificate materially on this subset. This is a scheduling question about the dual, not a steering question about the primal, and it belongs to the dual-stabilisation family <a class="c" href="#r26">[26]</a> rather than to guidance. It is carried forward as technique 3.</p>
+
+  <!-- ---------- 9.3 ---------- -->
+  <h3 id="prod">9.3 · Technique 3 — Warm-<span class="m">μ</span> dual effort scheduling <span class="tgt">dual</span></h3>
+  <p>The isolating control introduced above doubles as a test of a dual-side technique in its own right: spending a subgradient solve <em>before</em> the search rather than only reactively when a phase stalls. In the fast screen it is the single largest measured effect in this study, at −0.1310 pp. It is also the study's cleanest false positive.</p>
+  <p>The fast screen runs at <code>abs_cap = 240</code> s and <code>lag_max_time = 20</code> s, against production defaults of 1800 s and 60 s — 13% of the runtime and 33% of the dual budget. Since the effect isolated above is a <em>dual</em> effect, the screen may simply have starved the baseline. We therefore re-ran the decisive arms at full budget.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 15.</strong> Production-budget validation on the same 12 instances. The warm-<span class="m">μ</span> effect does not survive a properly-fed dual.</caption>
+      <thead><tr><th>Arm</th><th class="n">n</th><th class="n">mean Δgap (pp)</th><th class="n">mean Δobj</th><th class="n">mean final gap (%)</th></tr></thead>
+      <tbody>
+        <tr><td>control (no dual operators, no warm <span class="m">μ</span>)</td><td class="n">12</td><td class="n">0.0061</td><td class="n">−0.083</td><td class="n">0.2636</td></tr>
+        <tr><td>control + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">−0.0026</td><td class="n">+0.083</td><td class="n">0.2550</td></tr>
+        <tr><td>v2 destroy + repair + warm <span class="m">μ</span></td><td class="n">12</td><td class="n">0.0012</td><td class="n">+0.000</td><td class="n">0.2587</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The warm-<span class="m">μ</span> effect measures −0.0086 pp at production budget, against −0.1310 pp in the screen — a loss of 93% of its magnitude. The mechanism is visible in the control itself: its mean final gap falls from 0.4239% under the screen to 0.2636% here. The screen cut instances off before the dual converged, so an extra upfront subgradient solve supplied effort the baseline was otherwise denied. Given a full budget, the existing in-loop re-bounding (Section 4.4) supplies that effort anyway, and the advantage disappears.</p>
+  <p>Guidance measured against the warm control at production budget is +0.0037 pp — still nothing, and still on the wrong side of zero.</p>
+
+  <div class="callout warn">
+    <p><strong>The study's second false-signal mode, and the more dangerous one in practice.</strong> Reduced-budget screening is standard for parameter exploration, and here it produced a confident, plausible, and entirely spurious 0.13 pp result. Unlike the inert-cut null, nothing internal to the screen betrays it: the arms are consistent, the ordering is stable, and the effect is far outside run-to-run noise. Only re-running the finalist at full budget exposes it.</p>
+  </div>
+
+  <!-- ---------- 9.4 ---------- -->
+  <h3 id="seeding">9.4 · Technique 4 — Primal-to-dual seeding <span class="tgt">dual</span></h3>
+  <p>The solver seeds <span class="m">μ</span> by the fair split and chains warm starts from one re-bound to the next; the incumbent enters only as the Polyak target, never as structure (Sections 4.2, 4.5). Seeding <span class="m">μ</span> from the incumbent's own selection is a genuine primal-to-dual coupling — it widens exactly the channel Section 4.5 records as absent — and was untested. It is evaluated below alongside the stabilisation variants of technique 5, since one sweep covers both.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 16.</strong> Dual variants over 30 instances, 200 iterations. ΔUB is the change in the real-valued bound against baseline; negative is tighter. The final column is what survives <span class="m">⌊·⌋</span>, which is what the certified gap actually uses.</caption>
+      <thead><tr><th>Variant</th><th class="n">mean ΔUB</th><th class="n">wins / 30</th><th class="n">floor: tighter / looser</th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td>baseline (fair split, Polyak)</td><td class="n">+0.000</td><td class="n">0</td><td class="n">—</td></tr>
+        <tr><td>incumbent seed, ε = 0.05</td><td class="n">−0.415</td><td class="n">14</td><td class="n">6 / 8</td></tr>
+        <tr><td>incumbent seed, ε = 0.10</td><td class="n">−0.811</td><td class="n">15</td><td class="n">9 / 8</td></tr>
+        <tr><td>incumbent seed, ε = 0.25</td><td class="n">−0.858</td><td class="n">12</td><td class="n">6 / 8</td></tr>
+        <tr><td>trust region, radius 0.5</td><td class="n">+12.478</td><td class="n">14</td><td class="n">7 / 14</td></tr>
+        <tr><td>trust region, radius 1.0</td><td class="n">+1.576</td><td class="n">18</td><td class="n">9 / 10</td></tr>
+        <tr><td>dual smoothing, 0.3</td><td class="n">+17.328</td><td class="n">5</td><td class="n">1 / 23</td></tr>
+        <tr><td>dual smoothing, 0.6</td><td class="n">+53.899</td><td class="n">0</td><td class="n">0 / 29</td></tr>
+        <tr><td>seed 0.10 + trust 0.5</td><td class="n">+12.616</td><td class="n">13</td><td class="n">6 / 14</td></tr>
+        <tr><td>seed 0.10 + smoothing 0.3</td><td class="n">+13.855</td><td class="n">8</td><td class="n">4 / 19</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Seeding produces a small mean tightening (−0.81 for <span class="m">ε=0.10</span>, winning on 15 instances of 30), but the median instance moves by −0.000 — that is, not at all. The mean is carried by 10 instances with <span class="m">|ΔUB| ≥ 1</span>, spanning −10.0 to +3.0. <strong>After flooring, the direction is a coin flip</strong> (9 tighter, 8 looser at the best setting), and two of the three seeding variants are net worse. There is no usable improvement here.</p>
+  <p>This is the clearest instance in the study of the point made in Section 4.3: the certified gap consumes <span class="m">⌊min<sub>t</sub> L(μ<sub>t</sub>)⌋</span>, so a real-valued tightening of 0.8 profit units on average is, for the certificate, indistinguishable from nothing.</p>
+  <p>Smoothing is straightforwardly harmful and monotone in its weight. The trust region requires more care, and is treated separately below, because its verdict depends on the iteration budget.</p>
+
+  <!-- ---------- 9.5 ---------- -->
+  <h3 id="convergence">9.5 · Technique 5 — Dual stabilisation: trust region and smoothing <span class="tgt">dual</span></h3>
+  <p>Stabilising the dual iterates is standard practice in column generation, where an unstabilised master oscillates badly <a class="c" href="#r26">[26]</a>. The subgradient analogue is a trust region on the multiplier step or exponential smoothing of the dual direction. Note that the baseline already carries two stabilising devices of its own — the Polyak clamp and the diminishing-step fallback (Section 4.2) — so what is measured here is <em>additional</em> stabilisation, not stabilisation against a bare scheme.</p>
+  <p>At 60 iterations the trust region appeared decisively ahead (−8.07 mean). At 200 it was behind (+1.58). That sign reversal is the signature of a starved baseline — the same failure documented for the screening budget in §9.3, running in the opposite direction — so the question had to be settled at a budget where the baseline is allowed to finish. Each variant was run once at 1000 iterations with its bound history retained, and the running best read off at checkpoints.</p>
+
+  <div class="tw">
+    <table class="conv">
+      <caption><strong>Table 17.</strong> Bound trajectories to 1000 subgradient iterations. <code>prod</code> is the bound the production configuration reports, which uses at most 200 iterations warm-started.</caption>
+      <thead><tr><th>Instance</th><th>Variant</th><th class="n">60</th><th class="n">100</th><th class="n">200</th><th class="n">400</th><th class="n">700</th><th class="n">1000</th><th class="n">prod</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4" class="m">ED_n050_011_a50_032</td><td>baseline</td><td class="n">1308.00</td><td class="n">1307.45</td><td class="n">1306.70</td><td class="n">1306.30</td><td class="n">1306.30</td><td class="n">1306.30</td><td class="n">1307</td></tr>
+        <tr><td>trust05</td><td class="n">1319.10</td><td class="n">1311.08</td><td class="n">1306.15</td><td class="n">1306.01</td><td class="n">1306.00</td><td class="n">1306.00</td><td class="n">1307</td></tr>
+        <tr><td>trust10</td><td class="n">1309.37</td><td class="n">1307.12</td><td class="n">1306.28</td><td class="n">1306.07</td><td class="n">1306.05</td><td class="n">1306.05</td><td class="n">1307</td></tr>
+        <tr class="grp"><td>seed_eps10</td><td class="n">1308.00</td><td class="n">1307.81</td><td class="n">1307.16</td><td class="n">1306.31</td><td class="n">1306.31</td><td class="n">1306.31</td><td class="n">1307</td></tr>
+        <tr><td rowspan="4" class="m">EB_n110_006_a50_017</td><td>baseline</td><td class="n">3334.37</td><td class="n">3315.45</td><td class="n">3283.32</td><td class="n">3257.70</td><td class="n">3254.17</td><td class="n">3253.54</td><td class="n">3259</td></tr>
+        <tr><td>trust05</td><td class="n">3339.00</td><td class="n">3332.44</td><td class="n">3320.78</td><td class="n">3300.94</td><td class="n">3275.49</td><td class="n">3254.66</td><td class="n">3259</td></tr>
+        <tr><td>trust10</td><td class="n">3335.55</td><td class="n">3327.42</td><td class="n">3305.58</td><td class="n">3271.27</td><td class="n">3253.84</td><td class="n">3253.10</td><td class="n">3259</td></tr>
+        <tr class="grp"><td>seed_eps10</td><td class="n">3347.50</td><td class="n">3327.50</td><td class="n">3273.31</td><td class="n">3256.03</td><td class="n">3254.12</td><td class="n">3253.46</td><td class="n">3259</td></tr>
+        <tr><td rowspan="4" class="m">B_n140_021_a25_061</td><td>baseline</td><td class="n">3314.00</td><td class="n">3272.00</td><td class="n">3234.77</td><td class="n">3199.73</td><td class="n">3194.34</td><td class="n">3192.64</td><td class="n">3195</td></tr>
+        <tr><td>trust05</td><td class="n">3365.35</td><td class="n">3335.34</td><td class="n">3289.67</td><td class="n">3228.13</td><td class="n">3204.08</td><td class="n">3190.54</td><td class="n">3195</td></tr>
+        <tr><td>trust10</td><td class="n">3333.36</td><td class="n">3295.92</td><td class="n">3233.06</td><td class="n">3203.97</td><td class="n">3188.54</td><td class="n">3187.46</td><td class="n">3195</td></tr>
+        <tr class="grp"><td>seed_eps10</td><td class="n">3313.70</td><td class="n">3270.75</td><td class="n">3230.83</td><td class="n">3197.30</td><td class="n">3193.42</td><td class="n">3191.90</td><td class="n">3195</td></tr>
+        <tr><td rowspan="4" class="m">D_n080_041_a50_122</td><td>baseline</td><td class="n">2243.01</td><td class="n">2242.34</td><td class="n">2240.95</td><td class="n">2238.51</td><td class="n">2236.60</td><td class="n">2235.94</td><td class="n">2235</td></tr>
+        <tr><td>trust05</td><td class="n">2238.84</td><td class="n">2237.82</td><td class="n">2236.42</td><td class="n">2235.11</td><td class="n">2234.58</td><td class="n">2234.46</td><td class="n">2235</td></tr>
+        <tr><td>trust10</td><td class="n">2241.62</td><td class="n">2239.68</td><td class="n">2237.71</td><td class="n">2236.26</td><td class="n">2235.15</td><td class="n">2234.81</td><td class="n">2235</td></tr>
+        <tr><td>seed_eps10</td><td class="n">2243.11</td><td class="n">2242.07</td><td class="n">2240.21</td><td class="n">2237.32</td><td class="n">2235.97</td><td class="n">2235.40</td><td class="n">2235</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>At 1000 iterations the trust region leads on all four instances, so the 200-iteration verdict was premature rather than the 60-iteration one being spurious: the variants had simply not separated yet. After flooring, 2 of the four show a strictly tighter integer bound (<span class="m">B_n140_021_a25_061</span> by 5, <span class="m">D_n080_041_a50_122</span> by 1).</p>
+  <p>Two effects must be separated before claiming anything — the same decomposition that exposed the warm-<span class="m">μ</span> confound. Part of the gain against production is simply running the subgradient longer: baseline alone improves several instances once given 1000 iterations rather than 200. Only the residual is attributable to stabilisation. On <span class="m">B_n140</span> the bound moves from 3195 (production) to 3192 (baseline at 1000) to 3187 (trust region at 1000), so <strong>of eight integer units, five come from the budget and three from the trust region</strong>.</p>
+  <p>The practical conclusion is budget-conditional and therefore does not transfer to the solver as configured. It caps the dual at 200 iterations or 60 seconds, warm-started and invoked only when a phase fails to improve — and at 200 iterations the trust region is worse on average and 9-to-10 after flooring. Its advantage exists only at roughly five times that budget, on the hardest instances, at a proportionate runtime cost. We therefore report it as a scoped observation about the dual in isolation, not as a recommended change.</p>
+
+  <!-- ---------- 9.6-9.8 ---------- -->
+  <h3 id="combining">9.6–9.8 · Techniques 6–8 — Alternative ways to combine the subproblem solutions</h3>
+  <p>Equation (8) combines the per-processor optima by plain summation: <span class="m">L(μ)</span> is the <span class="m">y</span>-term plus <span class="m">Σ<sub>k</sub> O<sub>k</sub>(μ)</span>. That is the only aggregation the solver performs, and it is worth asking what alternatives exist and what they would buy. Three are available, and <strong>all three can be settled without an experiment</strong>. We present them together because they share a single conclusion.</p>
+
+  <h4 class="st" id="ld">9.6 · Technique 6 — Lagrangian decomposition: why the natural split cannot help</h4>
+  <p>One cell of the design space calls for Lagrangian <em>decomposition</em> rather than the Lagrangian <em>relaxation</em> the solver implements: duplicate the shared variables, assign one copy to each block, and price their disagreement. We did not run it, because for the natural split it can be shown not to help.</p>
+  <p>Write the problem as <span class="m">max{ cᵀv : v ∈ X<sub>A</sub> ∩ X<sub>B</sub> }</span>, where <span class="m">X<sub>A</sub></span> collects the per-processor routing and horizon constraints and <span class="m">X<sub>B</sub></span> the joint-service coupling <span class="m">x<sub>j,k</sub> = y<sub>j</sub></span>, both intersected with integrality. The solver dualises <span class="m">X<sub>B</sub></span> and solves over <span class="m">X<sub>A</sub></span> exactly, so its bound is</p>
+  <div class="eq">z<sub>LR</sub> = max{ cᵀv : v ∈ conv(X<sub>A</sub>), x<sub>j,k</sub> = y<sub>j</sub> }</div>
+  <p>Lagrangian decomposition instead yields</p>
+  <div class="eq">z<sub>LD</sub> = max{ cᵀv : v ∈ conv(X<sub>A</sub>) ∩ conv(X<sub>B</sub>) }</div>
+  <p>By the Guignard–Kim result <a class="c" href="#r16">[16,</a> <a class="c" href="#r7">7]</a>, <span class="m">z<sub>LD</sub> ≤ z<sub>LR</sub></span> always, with strict improvement exactly when <span class="m">conv(X<sub>B</sub>)</span> is strictly contained in the linear description of <span class="m">X<sub>B</sub></span> — that is, when the dualised block lacks the integrality property <a class="c" href="#r15">[15]</a>.</p>
+  <p>Here it does not lack it. <span class="m">X<sub>B</sub></span> is the set of binary vectors satisfying <span class="m">x<sub>j,k</sub> = y<sub>j</sub></span>: equalities tying each <span class="m">x<sub>j,k</sub></span> to a single binary <span class="m">y<sub>j</sub></span>. Fixing <span class="m">y</span> determines <span class="m">x</span>, and the remaining polytope is a product of <span class="m">{0,1}</span>-valued coordinates, so every vertex of the linear description has <span class="m">y<sub>j</sub> ∈ {0,1}</span>. Hence <span class="m">conv(X<sub>B</sub>)</span> coincides with that description, and</p>
+  <div class="eq">z<sub>LD</sub> = z<sub>LR</sub></div>
+  <p>Duplicating variables for the coupling constraint is guaranteed to reproduce the bound the solver already computes. No experiment is required, and none would be informative: the two bounds are equal by construction, so any measured difference could only be numerical noise.</p>
+
+  <div class="callout">
+    <p><strong>The split that could help.</strong> A different partition is not covered by this argument. Separating <em>routing</em> from <em>synchronisation timing</em> — one block enforcing per-processor routes, the other the difference-constraint system on start times — dualises a copy constraint whose blocks both have non-integral hulls, so <span class="m">z<sub>LD</sub> &lt; z<sub>LR</sub></span> becomes possible. This is also the split targeting a deficiency we <em>measured</em> rather than a hypothetical one: the per-processor subproblem enforces route length but is blind to synchronisation waiting (Sections 2.1, 4.1). We record it as future work. It requires a second subproblem family, a timing oracle, and a second multiplier vector, and its payoff remains capped by Table 6. It is the only remaining idea in this study with a mechanism pointing at a measured source of looseness, which is why we name it precisely rather than leaving the cell blank.</p>
+  </div>
+
+  <h4 class="st" id="dw">9.7 · Technique 7 — Column generation and Dantzig–Wolfe reformulation</h4>
+  <p>Reformulate with one column per per-processor route and price columns by the same orienteering subproblem — the natural next step, and the one the exact literature takes <a class="c" href="#r1">[1,</a> <a class="c" href="#r12">12]</a>. By the Dantzig–Wolfe equivalence <a class="c" href="#r13">[13]</a>, the linear master's bound at convergence <em>equals</em> the Lagrangian dual optimum <span class="m">min<sub>μ</sub> L(μ)</span> for the same subproblem structure. Column generation therefore cannot yield a <em>tighter</em> bound than a fully converged subgradient; it can only reach it differently.</p>
+  <p>That is not nothing — an LP master does not oscillate, and §9.5 shows the subgradient still descending when its budget expires, which is precisely the regime where a master would help. But the improvement on offer is one of <em>convergence</em>, not of bound quality, and it is bounded by the same ceiling. It is also expensive: a restricted master, a pricing loop, and stabilisation <a class="c" href="#r26">[26]</a> to make it behave, for a bound the existing scheme reaches asymptotically.</p>
+
+  <h4 class="st" id="surrogate">9.8 · Technique 8 — Surrogate relaxation</h4>
+  <p>Aggregate the coupling constraints into a single weighted surrogate rather than dualising each <a class="c" href="#r14">[14]</a>. The surrogate bound dominates the Lagrangian bound in theory — this is the one alternative that could in principle be <em>strictly</em> tighter. But the surrogate subproblem retains the aggregated constraint and is no longer separable by processor, forfeiting precisely the property that makes <span class="m">O<sub>k</sub>(μ)</span> exactly solvable by bitmask DP in <span class="m">O(2<sup>|J<sub>k</sub>|</sup>|J<sub>k</sub>|²)</span>. Without separability the subproblem is over all 55 processors jointly, and the exactness on which every certificate in Section 6 depends is lost.</p>
+  <p><strong>The aggregation that would tighten the bound is the one that destroys the decomposition.</strong></p>
+
+  <div class="callout">
+    <p><strong>The pattern across techniques 6–8 matches the ceiling result.</strong> The aggregation is not where the looseness lives. The looseness lives in the subproblem's blindness to synchronisation waiting (Section 4.1), and no way of combining blind subproblem solutions restores what the blindness discarded.</p>
+  </div>
+
+  <!-- ---------- 9.9 ---------- -->
+  <h3 id="fixing">9.9 · Technique 9 — Reduced-cost variable fixing <span class="tgt">runtime</span></h3>
+  <p>Runtime carries no ceiling. Both remaining techniques were selected for that reason.</p>
+  <p>Lagrangian reduced-cost fixing is the one technique here whose target is runtime rather than gap. Writing <span class="m">G = L(μ) − z</span>, forcing a single <span class="m">y<sub>j</sub></span> shifts the bound by one term only:</p>
+  <div class="eq">L(μ | y<sub>j</sub>=1) = L(μ) + min(0, r<sub>j</sub>),   L(μ | y<sub>j</sub>=0) = L(μ) − max(0, r<sub>j</sub>)</div>
+  <p>so <span class="m">r<sub>j</sub> &lt; −G</span> proves <span class="m">j</span> absent from every optimal solution and <span class="m">r<sub>j</sub> &gt; G</span> proves it present. Both tests are <span class="m">O(1)</span> per job given <span class="m">r<sub>j</sub></span>, which the dual already computes. The device is classical <a class="c" href="#r5">[5,</a> <a class="c" href="#r17">17]</a> and, unlike everything in §9.1, unimpeachably sound.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 18.</strong> Reach of reduced-cost fixing over 30 instances, as a function of incumbent quality. Fixing runs mid-search, not post hoc.</caption>
+      <thead><tr><th>Incumbent used for <span class="m">G</span></th><th class="n">Mean jobs fixable</th></tr></thead>
+      <tbody>
+        <tr><td>final <span class="m">z</span> (post-hoc, near-optimal)</td><td class="n">24.8%</td></tr>
+        <tr><td><span class="m">0.99 z</span></td><td class="n">0.3%</td></tr>
+        <tr><td><span class="m">0.95 z</span></td><td class="n">0.0%</td></tr>
+        <tr class="tot"><td>Overall (final <span class="m">z</span>)</td><td class="n">481 / 2490 (19.3%)</td></tr>
+        <tr><td>Median per instance</td><td class="n">0.7%</td></tr>
+        <tr><td>Instances with any fixable job</td><td class="n">15 / 30</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The rule has no practical reach. Backing the incumbent off by one per cent collapses the mean from 24.8% to 0.3%, and by five per cent to 0.0%. The median instance yields 0.7% even post hoc.</p>
+  <p>The reason is instructive, and it inverts an argument that looked compelling beforehand. We expected an asymmetry: the same tightness that caps cut-based strengthening should make the fixing threshold <span class="m">G</span> easy to clear. It does — observed <span class="m">G</span> runs as low as 0.0000 — but <strong>a small <span class="m">G</span> does not create fixing opportunity. It reports that the instance is already closed</strong>, at which point there is no remaining search to accelerate. Both properties are consequences of the same quantity, so they cannot be played against each other.</p>
+
+  <!-- ---------- 9.10 ---------- -->
+  <h3 id="parallel">9.10 · Technique 10 — Parallel subproblem evaluation <span class="tgt">runtime</span></h3>
+  <p>Profiling attributes 84% of dual wall time to <code>orienteering_dp_with_selection</code>, invoked once per processor per subgradient iteration. The per-processor solves are independent by construction — that independence is exactly what the relaxation of Section 4.1 buys — so the loop parallelises. Unlike every other intervention tested here, this one cannot alter the objective, the bound, or validity — only wall-clock — so it cannot be falsified in the same way.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 19.</strong> Parallel dual, 4 instances, 4 workers, 200 iterations, best of 3 repeats. Timing spread across repeats averaged 1.4%.</caption>
+      <thead><tr><th>Instance</th><th class="n">sequential (s)</th><th class="n">parallel (s)</th><th class="n">speedup</th><th class="n">% of ceiling</th></tr></thead>
+      <tbody>
+        <tr><td class="m">B_n140_021_a25_061</td><td class="n">14.36</td><td class="n">10.13</td><td class="n">1.42×</td><td class="n">75%</td></tr>
+        <tr><td class="m">EB_n110_006_a50_017</td><td class="n">6.53</td><td class="n">6.07</td><td class="n">1.08×</td><td class="n">72%</td></tr>
+        <tr><td class="m">D_n080_041_a50_122</td><td class="n">14.46</td><td class="n">10.09</td><td class="n">1.43×</td><td class="n">44%</td></tr>
+        <tr><td class="m">ED_n050_011_a50_032</td><td class="n">0.47</td><td class="n">0.27</td><td class="n">1.73×</td><td class="n">43%</td></tr>
+        <tr class="tot"><td><strong>mean</strong></td><td class="n"></td><td class="n"></td><td class="n"><strong>1.42×</strong></td><td class="n">59%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Bounds were identical to the sequential path in every configuration and every repeat, which is the correctness claim the approach needs.</p>
+  <p>Two structural limits are worth recording. First, DP cost is <span class="m">O(2<sup>m</sup>m²)</span> in a processor's candidate count <span class="m">m</span>, and <span class="m">m</span> ranges from 0 to 13 across the 55 processors (Section 6.3), so cost is extremely skewed: on <span class="m">B_n140</span> a single processor carries 53% of the instance's total dual work. Because no partition splits one DP, speedup is capped at <span class="m">total/max_single</span> regardless of worker count — a mean ceiling of 2.66× here. Second, contiguous chunking is badly wrong for such a distribution (observed imbalance up to 5.35× at eight workers); longest-processing-time assignment recovers most of the difference, lifting one instance from 1.13× to 1.71×.</p>
+  <p>The end-to-end value is nonetheless small, because the component is not on the critical path. In the production-budget arms the dual was invoked on one instance of twelve; the others terminated on the gap threshold before any phase failed to improve. On the single instance that did use it, the dual accounted for roughly 45 of 1297 seconds, or 3.5% of runtime, so a 1.42× component speedup yields about 1.01× overall and exactly 1.00× elsewhere. The honest summary is <strong>a correct and measured component improvement whose component does not matter much in the current architecture</strong>; it would matter in a cold-start regime where the initial bound must be computed rather than loaded.</p>
+</section>
+
+<!-- ================= 10 ================= -->
+<section id="exact">
+  <p class="seclab">10</p>
+  <h2>An uncoupled exact reference</h2>
+  <p>The ceiling argument bounds any strengthening by <span class="m">(ub−z)/ub</span> because the optimum <span class="m">P*</span> is known only to lie in <span class="m">[z, ub]</span>. Solving instances exactly would pin <span class="m">P*</span> down and convert that bound into a measurement. We therefore solved the compact SRPS-1 arc-flow model directly in CPLEX 22.1.1 — standalone, sharing no state with the ALNS or the Lagrangian — on the 30 instances with <span class="m">n ≤ 50</span> that still carry a nonzero certified gap. Instances already certified optimal are excluded: their decomposition is trivially zero.</p>
+  <p>CPLEX closed 7 of 30 within a 180-second limit. Only those admit a valid decomposition; on a timed-out run CPLEX's incumbent is not <span class="m">P*</span>, and on 10 of the 23 unproven instances it was strictly worse than the ALNS incumbent.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table 20.</strong> The 7 instances CPLEX closed. <em>looseness</em> is <span class="m">(ub−P*)/ub</span>, recoverable by a tighter dual; <em>subopt</em> is <span class="m">(P*−z)/ub</span>, which no dual improvement can reach.</caption>
+      <thead><tr><th>Instance</th><th class="n">P*</th><th class="n">z</th><th class="n">ub</th><th class="n">looseness</th><th class="n">subopt</th></tr></thead>
+      <tbody>
+        <tr><td class="m">ED_n040_002_a75_006</td><td class="n">1026</td><td class="n">1026</td><td class="n">1029</td><td class="n">0.29%</td><td class="n">0.00%</td></tr>
+        <tr><td class="m">ED_n040_004_a50_011</td><td class="n">1164</td><td class="n">1154</td><td class="n">1165</td><td class="n">0.09%</td><td class="n">0.86%</td></tr>
+        <tr><td class="m">D_n045_007_a25_019</td><td class="n">662</td><td class="n">662</td><td class="n">663</td><td class="n">0.15%</td><td class="n">0.00%</td></tr>
+        <tr><td class="m">C_n050_004_a50_011</td><td class="n">2017</td><td class="n">2016</td><td class="n">2017</td><td class="n">0.00%</td><td class="n">0.05%</td></tr>
+        <tr><td class="m">EC_n050_004_a50_011</td><td class="n">1885</td><td class="n">1885</td><td class="n">1886</td><td class="n">0.05%</td><td class="n">0.00%</td></tr>
+        <tr><td class="m">C_n050_004_a25_010</td><td class="n">1242</td><td class="n">1242</td><td class="n">1243</td><td class="n">0.08%</td><td class="n">0.00%</td></tr>
+        <tr><td class="m">D_n050_012_a25_034</td><td class="n">753</td><td class="n">753</td><td class="n">754</td><td class="n">0.13%</td><td class="n">0.00%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The ALNS is <em>provably optimal</em> on 5 of these 7, so on those the entire certified gap is bound looseness and nothing is left for the primal to recover. Across the unproven instances CPLEX matched the ALNS on 12 and beat it on 1, which is external verification of incumbent quality from a solver sharing no code with the heuristic.</p>
+  <p>The more useful finding concerns the bound. On 22 of 30 instances the Lagrangian certificate is <em>strictly tighter</em> than the dual bound CPLEX reaches within its limit. The theory anticipates this: the Lagrangian subproblem is an orienteering problem solved exactly by dynamic programming, and orienteering lacks the integrality property <a class="c" href="#r15">[15]</a>, so its Lagrangian bound may strictly dominate the LP relaxation of the compact model. It does here. This is also why the literature attacks SRPS by branch-price-and-cut <a class="c" href="#r1">[1,</a> <a class="c" href="#r12">12]</a> rather than solving SRPS-1 directly: the compact relaxation is weak.</p>
+  <p>The decomposition the experiment was built for is nonetheless limited, for a structural reason worth recording. A direct MILP reaches only small instances, and small instances are largely closed already — 75% of those with <span class="m">n ≤ 50</span> have a certified gap of exactly zero — leaving 30 candidates of which CPLEX closed 7. The instances where the split would matter carry gaps above 1.5% at <span class="m">n = 110–150</span>, far beyond reach when the specialised branch-price-and-cut of the literature closes only <span class="m">n ≤ 60</span>. <strong>On the hard tail the ceiling remains an analytic bound; it cannot be replaced by measurement.</strong></p>
+</section>
+
+<!-- ================= 11 ================= -->
+<section id="lessons">
+  <p class="seclab">11</p>
+  <h2>Methodological lessons</h2>
+  <p class="lede">Four of these are transferable beyond SRPS, and each was learned by walking into the corresponding trap.</p>
+
+  <div class="lesson">
+    <h3>Activation is not effect</h3>
+    <p>A mechanism can fire, report firing, and still be incapable of changing the outcome. The activation sweep of Table 10 passed an explicit activation gate at <span class="m">ε = −100</span> while remaining completely inert. Gates must therefore be placed on the <em>outcome</em> variable: before spending a calibration suite, assert on a small subset that the treated arm differs from control. That guard would have caught the failure of §9.1 in roughly fifteen minutes instead of 128.</p>
+  </div>
+
+  <div class="lesson">
+    <h3>Budgets decide verdicts, in both directions</h3>
+    <p>Reduced-budget screening is standard practice, and it produced here a confident, internally consistent, entirely spurious 0.13 pp result. Nothing inside the screen betrays it: arm ordering is stable and the effect sits far outside run-to-run noise. The failure mode is specific — a starved baseline flatters any treatment that supplies the starved resource.</p>
+    <p>The same mechanism runs the other way, and we walked into it. The trust region measured −8.07 at 60 iterations, +1.58 at 200, and led on every instance at 1000. We declared it falsified on the middle number. It was not falsified; the arms had not yet separated. <strong>A negative verdict taken at a single budget is as unsafe as a positive one.</strong> Three of this study's findings — the fast screen, the trust region, and reduced-cost fixing — turn on this, which suggests it is the dominant confound in metaheuristic calibration rather than an incidental one.</p>
+  </div>
+
+  <div class="lesson">
+    <h3>Check the ceiling before calibrating</h3>
+    <p>Table 6 costs seconds and uses only data already in hand. It establishes that the median instance offers 0.0087 pp of headroom — below experimental noise — which is decisive information about whether a calibration campaign can possibly succeed. It should precede the campaign, not follow it.</p>
+  </div>
+
+  <div class="lesson">
+    <h3>Verify that the signal is non-degenerate</h3>
+    <p>The defect of §9.2.1 is a single arithmetic identity, <span class="m">Σ<sub>k</sub> b<sub>j</sub>/|K<sub>j</sub>| = b<sub>j</sub></span>, checkable in one line before any experiment. Guidance mechanisms should assert that their signal has nonzero variance across the decision set <em>at the point of use</em>.</p>
+  </div>
+
+  <div class="lesson">
+    <h3>Distinguish soundness failures from performance failures</h3>
+    <p>The result of §9.1.4 is not that the cut performs poorly, but that it is <em>invalid</em> on a majority of instances. In a certifying method, an invalid cut does not degrade the result — it corrupts the guarantee, silently. Soundness must be established before efficacy is measured.</p>
+  </div>
+</section>
+
+<!-- ================= 12 ================= -->
+<section id="threats">
+  <p class="seclab">12</p>
+  <h2>Threats to validity</h2>
+
+  <p>The schedulability search of §9.1.4 is heuristic. A <span class="sc">schedulable</span> verdict is constructive and therefore sound: an explicit feasible ordering is exhibited. A "none found" verdict is not a proof of infeasibility, and we do not treat it as one; those instances remain formally open, and settling them would require an exact feasibility oracle over the disjunctive orderings, which is NP-hard in general.</p>
+
+  <p>The S0 and S0b samples are subsets of the benchmark rather than its entirety, selected to include both the stratified subset and the loosest-gap instances. The ceiling argument carries no such limitation, being computed over 780 instances, and it is the argument on which the principal conclusion rests.</p>
+
+  <p>The corrected dual-guided arms carry a runtime confound by construction: warm initialisation spends an additional subgradient solve the plain control does not pay. We control for it with a dedicated arm applying warm initialisation with both guided operators disabled. A second confound, the reduced screening budget, is not merely controlled but <em>measured</em>: §9.3 re-runs the decisive arms at full budget.</p>
+
+  <p>All results are measured against the solver configured as in Section 5.6, in particular a dual refresh capped at 200 iterations or 60 seconds. §9.5 shows that budget to be the binding constraint on the dual: the subgradient is still descending when it stops. Raising it tightens the certificate on every hard-tail instance tested, by 0.29 pp on average at essentially no runtime cost. Conclusions about gap-directed techniques become <em>more</em> secure under such a configuration, since a tighter <span class="m">ub</span> shrinks the ceiling and leaves any technique less room; conclusions that are themselves budget-conditional — the trust region above all — would need re-testing.</p>
+
+  <p>The runtime comparisons of Section 6.1 are cross-hardware and cross-language, and we make no normalised speed claim from them; the caveat is stated in full there.</p>
+
+  <div class="callout">
+    <p><strong>One cell of the design space is named and left empty.</strong> Benders decomposition <a class="c" href="#r27">[27]</a> is not covered by any argument above. Fixing the selection <span class="m">y</span> and the per-processor routes leaves the synchronisation feasibility question as a <em>difference-constraint system</em> — a pure LP, and exactly the structure Benders partitioning is designed for, with feasibility cuts generated from its dual rays. It targets the one deficiency this study measured rather than assumed: the subproblem's blindness to synchronised idle time (Sections 4.1, 9.1.3). We did not test it, for the same reason we report it: it requires a master over selection and routing that the ALNS does not expose, and its payoff is capped by Table 6 like every other dual-side device. Together with the routing/timing split of §9.6 it is the second of exactly two remaining directions with a mechanism pointing at a measured source of looseness.</p>
+  </div>
+
+  <p>Finally, we tested three specific cut families and one dual-guidance design. We do not claim that no cut or coupling mechanism can help SRPS heuristics in general. We claim that these do not, that the reasons are structural, and that the ceiling bounds what any successor could achieve on this benchmark.</p>
+</section>
+
+<!-- ================= 13 ================= -->
+<section id="discussion">
+  <p class="seclab">13</p>
+  <h2>Discussion</h2>
+
+  <p>The computational evidence supports a complementary role relative to exact BPC, not a replacement claim. On instances where BPC proves optimality quickly, the present method mainly re-validates known optima; where BPC reaches its time limit with residual gaps or no reported solution, it contributes certified near-optimal incumbents. A practical workflow is therefore sequential: run the exact method first, then apply the certified heuristic on unresolved instances.</p>
+
+  <p>The objective comparisons and the bound comparisons should be interpreted separately. BPC's published primal–dual gaps and the present certified gaps are derived from different relaxations and different denominators, so they are not numerically identical metrics. The meaningful cross-method comparison is coverage and incumbent quality under certification, not a one-to-one gap-value equivalence.</p>
+
+  <p>The improved incumbents reported here should be read as benchmark updates, not as claims that the exact method is dominated. An improved published incumbent indicates that the recorded best-known value can be tightened, while the accompanying certificate quantifies proximity to optimality. This is especially relevant on the open class-4 frontier, where benchmark coverage rather than formal dominance is the main scientific value.</p>
+
+  <p>On the second half of the study, the honest reading is that <strong>the solver was already close enough to its own bound that the syllabus's strengthening toolkit had nothing left to work with</strong>, and that this was knowable in advance from data the solver itself had produced. That is not a negative result about the techniques. Cut separation, dual stabilisation, column generation, and reduced-cost fixing are all effective in the settings they were designed for — inside exact branch-and-bound frameworks, where the relaxation is fractional, the bound is weak, and the search tree is large. The mismatch is architectural: a certified heuristic holds a feasible incumbent rather than a fractional one, computes its bound from an exactly-solved subproblem rather than an LP, and has no tree to prune. Each of those three properties disables a different technique, and §9.1.6 makes the first of them precise.</p>
+
+  <p>What remains is the diagnostic contribution. Two of the three measurement traps documented here — mechanism inertness and budget-conditional verdicts — produced results that were internally consistent, plausibly signed, and wrong. Neither would have been caught by more replication, more instances, or tighter statistics, because neither is a variance problem. They are identification problems, and the guards against them are structural: gate on the outcome, and re-test every verdict at the budget where it will be used.</p>
+</section>
+
+<!-- ================= 14 ================= -->
+<section id="conclusions">
+  <p class="seclab">14</p>
+  <h2>Conclusions</h2>
+
+  <p>This report presents a certified primal–dual method for SRPS, combining a synchronisation-aware ALNS with a Lagrangian relaxation that provides valid per-instance upper bounds, and then documents ten attempts to strengthen it with techniques from the exact-algorithms syllabus. <strong>Nine attempts failed, and the reasons are structural rather than parametric.</strong></p>
+
+  <p>On the solver itself: the method is best understood as a complement to exact BPC. It reproduces exact results closely where they are known — recovering 241 of 245 BPC-proven optima — and extends the benchmark with certified near-optimal solutions where the exact method leaves gaps or no published result, supplying 196 first-ever certified results and improving 24 published incumbents. Mean certified gap is 0.133% over 660 instances, with 42.9% proven optimal and a median runtime of 5.1 minutes.</p>
+
+  <p><strong>Cut separation fails three times over.</strong> Separation against a feasible incumbent is mathematically incapable of finding a violated cut. Redirected at the Lagrangian relaxed solution it finds violations in abundance, but the natural feasibility cut is unsound on the majority of instances tested, because the relaxed selection admits a feasible synchronised schedule once ordering is chosen globally rather than per processor. And independently of design, the certified bound is already exact on 48.5% of instances, capping every cut family at 0.11 pp mean and 0.009 pp median improvement.</p>
+
+  <p><strong>Dual-guided coupling fails twice over.</strong> The operator design is degenerate under its own initialisation, and correcting that defect was worth doing because it converts an untested hypothesis into a tested one. The corrected matrix then appears positive, and is not: an isolating control attributes the movement to the warm-start dual solve rather than to guidance, and a full-budget re-run shows that residue to be a screening artifact as well. Guidance measured against a properly-fed control is +0.0037 pp — on the wrong side of zero.</p>
+
+  <p>Of the remaining techniques, Lagrangian decomposition of the natural split is provably equivalent to the relaxation already in use; the Dantzig–Wolfe master converges to the same dual optimum; surrogate relaxation would tighten the bound only by destroying the separability the bound depends on; seeding and stabilisation fail to move the <em>floored</em> bound; and reduced-cost fixing, though sound and cheap, fires only once the incumbent is already essentially optimal, at which point no search remains to accelerate. The expected asymmetry — that the tightness capping cut-based strengthening should make the fixing threshold easy to clear — does not hold, because both properties are consequences of the same quantity <span class="m">G</span> and cannot be played against each other.</p>
+
+  <p>Parallelising the per-processor subproblems is the one intervention that improves what it targets: 1.42× on the dual with bit-identical bounds, capturing 59% of a ceiling itself limited because a single subproblem can carry half an instance's work. Its end-to-end value is nonetheless about one per cent, because the dual is invoked on one instance in twelve. <strong>A correct optimisation of something that is not the bottleneck is still not a contribution to the solver, and we report it as such.</strong></p>
+
+  <p>The broader contribution is diagnostic. Mechanism inertness — machinery that activates, reports activation, and cannot affect the outcome — is a failure mode producing clean, publishable-looking null results from experiments that never took place. The guard against it is cheap and general: gate on the outcome variable, never on whether the mechanism fired. And no verdict, positive or negative, should be believed at a single computational budget.</p>
+
+  <p>Two directions remain open with a mechanism pointing at a measured source of looseness rather than a hypothetical one, and both attack the same deficiency — the subproblem's blindness to synchronised idle time. The first is a Lagrangian decomposition splitting routing from synchronisation timing, where both blocks have non-integral hulls and strict improvement is therefore possible (§9.6). The second is Benders decomposition over the difference-constraint system that decides synchronisation feasibility (Section 12). Both remain capped by the ceiling of Table 6, which is the honest summary of what is left to win.</p>
+</section>
+
+<!-- ================= APPENDICES ================= -->
+<section id="appa">
+  <p class="seclab">Appendix A</p>
+  <h2>SRPS model, Lagrangian relaxation, and bound validity</h2>
+  <p>This appendix gives the formal basis for the certified gap: the model we relax, the relaxed problem and its per-processor decomposition, the exact subproblem <span class="m">O<sub>k</sub>(μ)</span>, and a proof that <span class="m">UB<sub>lag</sub></span> is a valid upper bound.</p>
+
+  <h3>A.1 · SRPS model</h3>
+  <p>We adopt the arc-flow formulation SRPS-1 of Riera-Ledesma and Salazar-González <a class="c" href="#r1">[1]</a> and restate only the structure needed below. For each processor <span class="m">k∈K</span> a set of binary arc variables defines an elementary route <span class="m">P<sub>k</sub></span> that starts and ends at the depot; <span class="m">x<sub>j,k</sub>∈{0,1}</span> records whether <span class="m">P<sub>k</sub></span> serves job <span class="m">j∈J<sub>k</sub></span>, and <span class="m">y<sub>j</sub>∈{0,1}</span> records whether job <span class="m">j</span> is collected. A solution <span class="m">(y,{P<sub>k</sub>})</span> is <em>SRPS-feasible</em> if</p>
+  <ol class="rom">
+    <li>each <span class="m">P<sub>k</sub></span> is an elementary route over <span class="m">J<sub>k</sub></span> respecting travel and processing times (route continuity and elementarity);</li>
+    <li>the longest-path schedule of the served jobs admits, for every collected multi-processor job <span class="m">j</span>, a common start time across all processors in <span class="m">K<sub>j</sub></span> and respects the global horizon <span class="m">L</span> (synchronisation and time budget); and</li>
+    <li><span class="m">y<sub>j</sub> ≤ x<sub>j,k</sub></span> for all <span class="m">j∈J, k∈K<sub>j</sub></span> (joint service).</li>
+  </ol>
+  <p>Writing <span class="m">𝒳</span> for the set of SRPS-feasible solutions, <span class="m">z*<sub>SRPS</sub> = max<sub>(y,{P<sub>k</sub>})∈𝒳</sub> Σ<sub>j∈J</sub> b<sub>j</sub> y<sub>j</sub></span>.</p>
+
+  <h3>A.2 · Lagrangian relaxation of the joint-service coupling</h3>
+  <p>We dualise the coupling constraints (iii) with multipliers <span class="m">μ<sub>j,k</sub> ≥ 0</span> and, in the resulting subproblem, treat each processor route independently subject to its own time budget (the inter-processor synchronisation (ii) is relaxed). For <span class="m">μ ≥ 0</span>,</p>
+  <div class="eq">L(μ) = max<sub>(y,{P<sub>k</sub>})</sub> Σ<sub>j∈J</sub> b<sub>j</sub> y<sub>j</sub> + Σ<sub>j∈J</sub> Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> ( x<sub>j,k</sub> − y<sub>j</sub> )</div>
+  <p>the maximisation being over <span class="m">y∈{0,1}<sup>n</sup></span> and independent per-processor elementary routes within horizon <span class="m">L</span>. Regrouping,</p>
+  <div class="eq">L(μ) = Σ<sub>j∈J</sub> max( 0, b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> ) + Σ<sub>k∈K</sub> O<sub>k</sub>(μ)</div>
+  <p>where the first term follows because each <span class="m">y<sub>j</sub></span> is now unconstrained and set to 1 iff its reduced profit is positive, and</p>
+  <div class="eq">O<sub>k</sub>(μ) = max{ Σ<sub>j∈S</sub> μ<sub>j,k</sub> : S ⊆ J<sub>k</sub> admitting an elementary route within L }</div>
+  <p>is a single-processor orienteering problem with item profits <span class="m">μ<sub>j,k</sub></span>.</p>
+
+  <div class="proof">
+    <p class="ph">Proof of Proposition 1</p>
+    <p>Let <span class="m">(y,{P<sub>k</sub>}) ∈ 𝒳</span>. Each route <span class="m">P<sub>k</sub></span> is elementary and within horizon <span class="m">L</span>, hence feasible for the orienteering problem defining <span class="m">O<sub>k</sub>(μ)</span>, so <span class="m">Σ<sub>j∈J<sub>k</sub></sub> μ<sub>j,k</sub> x<sub>j,k</sub> ≤ O<sub>k</sub>(μ)</span>. For each job <span class="m">j</span>, using <span class="m">μ<sub>j,k</sub> ≥ 0</span> and <span class="m">y<sub>j</sub> ≤ x<sub>j,k</sub></span>,</p>
+    <div class="eq">b<sub>j</sub> y<sub>j</sub> = ( b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> ) y<sub>j</sub> + Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> y<sub>j</sub> ≤ max( 0, b<sub>j</sub> − Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> ) + Σ<sub>k∈K<sub>j</sub></sub> μ<sub>j,k</sub> x<sub>j,k</sub></div>
+    <p>Summing over <span class="m">j</span> and regrouping the last term by processor gives <span class="m">Σ<sub>j</sub> b<sub>j</sub> y<sub>j</sub> ≤ Σ<sub>j</sub> max(0, ·) + Σ<sub>k</sub> O<sub>k</sub>(μ) = L(μ)</span>. Maximising the left-hand side over <span class="m">𝒳</span> yields <span class="m">z*<sub>SRPS</sub> ≤ L(μ)</span>. <span class="qed">∎</span></p>
+  </div>
+
+  <p>Both operations used — dualising (iii) with <span class="m">μ ≥ 0</span> and relaxing the synchronisation (ii) inside the subproblem — only enlarge the feasible region or add a non-negative penalty, so the bound is valid for every <span class="m">μ ≥ 0</span>.</p>
+
+  <h3>A.3 · Exact solution of <span class="m">O<sub>k</sub>(μ)</span> and its cost</h3>
+  <p>Jobs with <span class="m">μ<sub>j,k</sub> ≤ 0</span> never improve an orienteering objective and are removed a priori. <span class="m">O<sub>k</sub>(μ)</span> is then solved by bitmask dynamic programming: with <span class="m">dp[mask][i]</span> the minimum time to serve exactly the jobs in <span class="m">mask</span> and end at job <span class="m">i</span>, the optimum is the largest profit <span class="m">Σ<sub>j∈mask</sub> μ<sub>j,k</sub></span> over masks whose best completion back to the depot is within <span class="m">L</span>. This enumerates the optimal route over all subsets and is therefore <em>exact</em>: it uses no pruning, sampling, or candidate-set restriction. Its cost is <span class="m">O(2<sup>|J<sub>k</sub>|</sup>|J<sub>k</sub>|²)</span>.</p>
+  <p>This is tractable at every benchmark scale because <span class="m">|J<sub>k</sub>|</span> is small and does not grow with <span class="m">n</span>. Each job requires only <span class="m">|K<sub>j</sub>|∈{2,3,4}</span> of the <span class="m">|K|=55</span> processors, so the incidences <span class="m">Σ<sub>k</sub>|J<sub>k</sub>| = Σ<sub>j</sub>|K<sub>j</sub>|</span> spread thinly: the per-instance mean <span class="m">|J<sub>k</sub>|</span> is 2.8–6.0, and the maximum over all 660 study instances is 13, attained already at <span class="m">n=80</span> and unchanged at <span class="m">n=150</span>. Every subproblem therefore costs at most <span class="m">2<sup>13</sup>·13² ≈ 1.4×10<sup>6</sup></span> operations.</p>
+
+  <h3>A.4 · Validity of the reported certificate</h3>
+  <p>By Proposition 1 every iterate <span class="m">L(μ<sub>t</sub>)</span> is a valid upper bound, so <span class="m">min<sub>t</sub> L(μ<sub>t</sub>)</span> is valid; since all profits <span class="m">b<sub>j</sub></span> are integral we report <span class="m">UB<sub>lag</sub> = ⌊min<sub>t</sub> L(μ<sub>t</sub>)⌋</span>, which is also valid because no feasible objective lies strictly between the two, and the certified gap of Equation (10) is a rigorous bound on the suboptimality of the incumbent.</p>
+  <p>We report <span class="m">UB<sub>lag</sub></span> as the certificate, with one safeguard: a truncated subgradient run can in rare cases return an iterate numerically below a value already known to be a valid upper bound (for instance an independently <em>proven</em> optimum), and we never report the bound below such a value. This occurs on exactly one of the 660 instances (<span class="m">ED_n045_008_a75_024</span>), where the recorded bound fell one profit unit below the BPC-proven optimum; reporting against the proven optimum yields a certified gap of 0.068% rather than 0%. The substitution can only <em>enlarge</em> a reported gap, never shrink it, so it is conservative and cannot create a falsely tight certificate.</p>
+</section>
+
+<section id="appb">
+  <p class="seclab">Appendix B</p>
+  <h2>Detailed robustness tables</h2>
+
+  <h3>B.1 · Ablation study</h3>
+  <p>The ablation isolates each adaptive-loop component on a 30-instance stratified subset (one instance per family × <span class="m">n</span>-percentile cell). Phase 1 runs the full loop (A0) to fix a common upper bound per instance; Phase 2 runs each ablated arm against that same bound, so all certified gaps share a common dual reference. Holding the bound fixed deliberately isolates the <em>primal</em> contribution of each component: in particular the UB-refresh arm (A3) is near-zero here <em>by construction</em>, because its role is to tighten the bound rather than to improve the incumbent, and this design controls that effect away — the refresh's value on the hard tail is Table 5. Note that no arm removes the Lagrangian entirely: the ablation targets primal-search components, and the dual mechanism's contribution — enabling the per-instance certificates and the 283 proven-optimal results — is by definition not isolable through a primal ablation design.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table B1.</strong> Ablation: aggregate certified gap by arm (30-instance subset).</caption>
+      <thead><tr><th>Arm</th><th>Removed / changed</th><th class="n">Mean%</th><th class="n">Med%</th><th class="n">P75%</th><th class="n">Max%</th><th class="n">Δ<sub>A0</sub></th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td>A0</td><td>full adaptive loop</td><td class="n">0.148</td><td class="n">0.077</td><td class="n">0.221</td><td class="n">1.659</td><td class="n">—</td></tr>
+        <tr><td>A1</td><td>no ratio repair</td><td class="n">0.170</td><td class="n">0.078</td><td class="n">0.228</td><td class="n">1.659</td><td class="n">+0.022</td></tr>
+        <tr><td>A2</td><td>no tier escalation</td><td class="n">0.150</td><td class="n">0.077</td><td class="n">0.221</td><td class="n">1.659</td><td class="n">+0.002</td></tr>
+        <tr><td>A3</td><td>no UB refresh</td><td class="n">0.148</td><td class="n">0.077</td><td class="n">0.221</td><td class="n">1.659</td><td class="n">+0.000</td></tr>
+        <tr><td>A4</td><td>single seed</td><td class="n">0.150</td><td class="n">0.077</td><td class="n">0.221</td><td class="n">1.659</td><td class="n">+0.002</td></tr>
+        <tr><td>A5</td><td>flat phases (A2+A3)</td><td class="n">0.150</td><td class="n">0.077</td><td class="n">0.221</td><td class="n">1.659</td><td class="n">+0.002</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw two">
+    <table>
+      <caption><strong>Table B2.</strong> Ablation: per-family mean Δ<sub>A0</sub> (pp).</caption>
+      <thead><tr><th>Family</th><th class="n">A1</th><th class="n">A2</th><th class="n">A3</th><th class="n">A4</th><th class="n">A5</th></tr></thead>
+      <tbody>
+        <tr><td>B</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td></tr>
+        <tr><td>C</td><td class="n">−0.007</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.010</td><td class="n">+0.010</td></tr>
+        <tr><td>D</td><td class="n">+0.027</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td></tr>
+        <tr><td>EB</td><td class="n">+0.062</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td></tr>
+        <tr><td>EC</td><td class="n">+0.018</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td></tr>
+        <tr><td>ED</td><td class="n">+0.032</td><td class="n">+0.009</td><td class="n">+0.000</td><td class="n">+0.000</td><td class="n">+0.000</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <caption><strong>Table B3.</strong> Ablation: stop-reason counts per arm (30 instances each).</caption>
+      <thead><tr><th>Arm</th><th class="n">UB match</th><th class="n">GAP&lt;thr</th><th class="n">Tiers exh.</th><th class="n">Runtime cap</th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td>A0</td><td class="n">9</td><td class="n">19</td><td class="n">2</td><td class="n">0</td></tr>
+        <tr><td>A1</td><td class="n">8</td><td class="n">18</td><td class="n">4</td><td class="n">0</td></tr>
+        <tr><td>A2</td><td class="n">9</td><td class="n">18</td><td class="n">0</td><td class="n">3</td></tr>
+        <tr><td>A3</td><td class="n">9</td><td class="n">19</td><td class="n">2</td><td class="n">0</td></tr>
+        <tr><td>A4</td><td class="n">8</td><td class="n">19</td><td class="n">3</td><td class="n">0</td></tr>
+        <tr><td>A5</td><td class="n">8</td><td class="n">19</td><td class="n">0</td><td class="n">3</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Removing tier escalation (A2, A5) converts three hard instances from tier-exhaustion to a runtime-cap stop. Ratio repair is the one component whose removal degrades quality visibly, and the degradation concentrates in the Euclidean families.</p>
+
+  <h3>B.2 · Sensitivity study</h3>
+  <p>Table B4 reports the one-at-a-time sensitivity sweep on the same 30-instance subset; the baseline mean certified gap is 0.153%. No setting moves the mean by more than 0.027 pp, confirming that the defaults sit in a broad, well-behaved basin.</p>
+
+  <div class="tw">
+    <table>
+      <caption><strong>Table B4.</strong> One-at-a-time parameter sensitivity (mean certified gap, 30-instance subset).</caption>
+      <thead><tr><th>Parameter</th><th>Setting</th><th class="n">Mean cert %</th><th class="n">Δ baseline (pp)</th></tr></thead>
+      <tbody>
+        <tr class="ctx"><td><em>(baseline)</em></td><td>300 s / 0.3% / 25–33–40% / 200 / 60 s</td><td class="n">0.1525</td><td class="n">—</td></tr>
+        <tr><td class="m">phase_rt</td><td>150 s</td><td class="n">0.1485</td><td class="n">−0.004</td></tr>
+        <tr><td class="m">phase_rt</td><td>450 s</td><td class="n">0.1390</td><td class="n">−0.014</td></tr>
+        <tr><td class="m">gap_threshold</td><td>0.1%</td><td class="n">0.1261</td><td class="n">−0.026</td></tr>
+        <tr><td class="m">gap_threshold</td><td>0.5%</td><td class="n">0.1543</td><td class="n">+0.002</td></tr>
+        <tr><td class="m">gap_threshold</td><td>1.0%</td><td class="n">0.1505</td><td class="n">−0.002</td></tr>
+        <tr><td class="m">destroy_fracs</td><td>tight</td><td class="n">0.1485</td><td class="n">−0.004</td></tr>
+        <tr><td class="m">destroy_fracs</td><td>wide</td><td class="n">0.1487</td><td class="n">−0.004</td></tr>
+        <tr><td class="m">lag_max_iter</td><td>100</td><td class="n">0.1570</td><td class="n">+0.005</td></tr>
+        <tr><td class="m">lag_max_iter</td><td>400</td><td class="n">0.1510</td><td class="n">−0.002</td></tr>
+        <tr><td class="m">lag_max_time</td><td>30 s</td><td class="n">0.1566</td><td class="n">+0.004</td></tr>
+        <tr><td class="m">lag_max_time</td><td>120 s</td><td class="n">0.1485</td><td class="n">−0.004</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="appc">
+  <p class="seclab">Appendix C</p>
+  <h2>Reproduction and results</h2>
+  <p>All instruments are read-only with respect to the solver and modify no existing code path. The accompanying repository ships a single runner:</p>
+  <div class="algo">
+<pre>python reproduce.py --list          <span class="cm"># every stage, its command, its runtime</span>
+python reproduce.py --all           <span class="cm"># everything, about 6 hours</span>
+python reproduce.py --all --quick   <span class="cm"># everything at reduced budgets</span>
+python reproduce.py --fragments     <span class="cm"># rebuild this report's tables from the CSVs</span>
+</pre>
+  </div>
+  <p>Every table in Sections 9–10 is generated directly from the result files rather than transcribed. Artifacts are written to <code>results/bpc_replica_dev/</code> (cut separation and its instruments), <code>results/dual_guided_dev/</code> (coupling, seeding, stabilisation, fixing, parallel), and <code>results/exact/</code> (the CPLEX reference). Result files are timestamped and never overwritten, so repeated runs accumulate.</p>
+  <p>The per-instance baseline results — incumbent, bound, certified gap, and runtime for all 780 instances — are in <code>results/adaptive_master.csv</code>. Every Δ reported here is measured against that table, so any arm can be recompared against the baseline directly.</p>
+  <p>The 71 instance files the experiments touch are bundled with the repository under CC0; the full benchmark is not needed to reproduce anything reported here. The benchmark instances are publicly available from Riera-Ledesma and Salazar-González <a class="c" href="#r1">[1]</a> at <span class="m">github.com/RieraULL/OPS-Benchmark</span>. The solver, experiment drivers, certificate verifier, and all result-generating scripts are in the submitted repository.</p>
+  <div class="callout warn">
+    <p><strong>The single most common source of misreading</strong> is the integer-floor convention of Equation (10): a technique can improve the real-valued bound and change the certified gap by nothing. Repository documentation covers setup, the meaning of every result column, and this convention.</p>
+  </div>
+</section>
+
+<!-- ================= REFERENCES ================= -->
+<section id="refs">
+  <p class="seclab">References</p>
+  <h2>References</h2>
+  <ol class="refs">
+    <li id="r1">J. Riera-Ledesma, J.-J. Salazar-González. Selective routing problem with synchronization. <em>Computers &amp; Operations Research</em> 135 (2021) 105465. <span class="doi">doi:10.1016/j.cor.2021.105465</span></li>
+    <li id="r2">S. Ropke, D. Pisinger. An adaptive large neighborhood search heuristic for the pickup and delivery problem with time windows. <em>Transportation Science</em> 40(4) (2006) 455–472. <span class="doi">doi:10.1287/trsc.1050.0135</span></li>
+    <li id="r3">P. Vansteenwegen, W. Souffriau, D. Van Oudheusden. The orienteering problem: A survey. <em>European Journal of Operational Research</em> 209(1) (2011) 1–10. <span class="doi">doi:10.1016/j.ejor.2010.03.045</span></li>
+    <li id="r4">C. Archetti, A. Hertz, M. G. Speranza. Metaheuristics for the team orienteering problem. <em>Journal of Heuristics</em> 13(1) (2007) 49–76. <span class="doi">doi:10.1007/s10732-006-9004-0</span></li>
+    <li id="r5">M. L. Fisher. The Lagrangian relaxation method for solving integer programming problems. <em>Management Science</em> 27(1) (1981) 1–18. <span class="doi">doi:10.1287/mnsc.27.1.1</span></li>
+    <li id="r6">M. Held, P. Wolfe, H. P. Crowder. Validation of subgradient optimization. <em>Mathematical Programming</em> 6(1) (1974) 62–88. <span class="doi">doi:10.1007/BF01580223</span></li>
+    <li id="r7">M. Guignard. Lagrangean relaxation. <em>Top</em> 11(2) (2003) 151–200. <span class="doi">doi:10.1007/BF02579036</span></li>
+    <li id="r8">B. T. Polyak. Minimization of unsmooth functionals. <em>USSR Computational Mathematics and Mathematical Physics</em> 9(3) (1969) 14–29. <span class="doi">doi:10.1016/0041-5553(69)90061-5</span></li>
+    <li id="r9">M. L. Fisher, K. O. Jørnsten, O. B. G. Madsen. An optimization algorithm for the vehicle routing problem with time window constraints. <em>Operations Research</em> 45(3) (1997) 395–406. <span class="doi">doi:10.1287/opre.45.3.395</span></li>
+    <li id="r10">N. Kohl, J. Desrosiers, O. B. G. Madsen, M. M. Solomon, F. Soumis. 2-path cuts for the vehicle routing problem with time windows. <em>Transportation Science</em> 33(1) (1999) 101–116. <span class="doi">doi:10.1287/trsc.33.1.101</span></li>
+    <li id="r11">C. Archetti, M. G. Speranza. A survey on matheuristics for routing problems. <em>EURO Journal on Computational Optimization</em> 2(4) (2014) 223–246. <span class="doi">doi:10.1007/s13675-014-0030-7</span></li>
+    <li id="r12">C. Barnhart, E. L. Johnson, G. L. Nemhauser, M. W. P. Savelsbergh, P. H. Vance. Branch-and-price: Column generation for solving huge integer programs. <em>Operations Research</em> 46(3) (1998) 316–329. <span class="doi">doi:10.1287/opre.46.3.316</span></li>
+    <li id="r13">G. B. Dantzig, P. Wolfe. Decomposition principle for linear programs. <em>Operations Research</em> 8(1) (1960) 101–111. <span class="doi">doi:10.1287/opre.8.1.101</span></li>
+    <li id="r14">F. Glover. Surrogate constraint duality in mathematical programming. <em>Operations Research</em> 23(3) (1975) 434–451. <span class="doi">doi:10.1287/opre.23.3.434</span></li>
+    <li id="r15">A. M. Geoffrion. Lagrangean relaxation for integer programming. <em>Mathematical Programming Study</em> 2 (1974) 82–114. <span class="doi">doi:10.1007/BFb0120690</span></li>
+    <li id="r16">M. Guignard, S. Kim. Lagrangean decomposition: A model yielding stronger Lagrangean bounds. <em>Mathematical Programming</em> 39(2) (1987) 215–228. <span class="doi">doi:10.1007/BF02592954</span></li>
+    <li id="r17">H. Crowder, E. L. Johnson, M. W. Padberg. Solving large-scale zero-one linear programming problems. <em>Operations Research</em> 31(5) (1983) 803–834. <span class="doi">doi:10.1287/opre.31.5.803</span></li>
+    <li id="r18">C. Ma, R. Zhao, B. Lao, W. Xiao, H. Liu, Z. You. An observation scheduling system for radio telescope array. <em>Applied Sciences</em> 15(6) (2025) 3088. <span class="doi">doi:10.3390/app15063088</span></li>
+    <li id="r19">D. Feillet, P. Dejax, M. Gendreau. Traveling salesman problems with profits. <em>Transportation Science</em> 39(2) (2005) 188–205. <span class="doi">doi:10.1287/trsc.1030.0079</span></li>
+    <li id="r20">B. L. Golden, L. Levy, R. Vohra. The orienteering problem. <em>Naval Research Logistics</em> 34(3) (1987) 307–318. <span class="doi">doi:10.1002/1520-6750(198706)34:3&lt;307::AID-NAV3220340302&gt;3.0.CO;2-D</span></li>
+    <li id="r21">I.-M. Chao, B. L. Golden, E. A. Wasil. The team orienteering problem. <em>European Journal of Operational Research</em> 88(3) (1996) 464–474. <span class="doi">doi:10.1016/0377-2217(94)00289-4</span></li>
+    <li id="r22">M. Drexl. Synchronization in vehicle routing — A survey of VRPs with multiple synchronization constraints. <em>Transportation Science</em> 46(3) (2012) 297–316. <span class="doi">doi:10.1287/trsc.1110.0400</span></li>
+    <li id="r23">S. Afifi, D.-C. Dang, A. Moukrim. Heuristic solutions for the vehicle routing problem with time windows and synchronized visits. <em>Optimization Letters</em> 10(3) (2016) 511–525. <span class="doi">doi:10.1007/s11590-015-0878-3</span></li>
+    <li id="r24">I. E. Sakarya, M. Elyasi, S. U. K. Rohmer, O. Ö. Özener, T. Van Woensel, A. Ekici. Two-echelon prize-collecting vehicle routing with time windows and vehicle synchronization: A branch-and-price approach. <em>Transportation Research Part C</em> 171 (2025) 104987. <span class="doi">doi:10.1016/j.trc.2024.104987</span></li>
+    <li id="r25">I. M. Lianes, M. T. Noreng, K. Fagerholt, H. T. Slette, F. Meisel. The aquaculture service vessel routing problem with time dependent travel times and synchronization constraints. <em>Computers &amp; Operations Research</em> 134 (2021) 105316. <span class="doi">doi:10.1016/j.cor.2021.105316</span></li>
+    <li id="r26">O. du Merle, D. Villeneuve, J. Desrosiers, P. Hansen. Stabilized column generation. <em>Discrete Mathematics</em> 194(1–3) (1999) 229–237. <span class="doi">doi:10.1016/S0012-365X(98)00213-1</span></li>
+    <li id="r27">J. F. Benders. Partitioning procedures for solving mixed-variables programming problems. <em>Numerische Mathematik</em> 4(1) (1962) 238–252. <span class="doi">doi:10.1007/BF01386316</span></li>
+    <li id="r28">H. Tang, E. Miller-Hooks. A tabu search heuristic for the team orienteering problem. <em>Computers &amp; Operations Research</em> 32(6) (2005) 1379–1407. <span class="doi">doi:10.1016/j.cor.2003.11.008</span></li>
+    <li id="r29">H. Bouly, D.-C. Dang, A. Moukrim. A memetic algorithm for the team orienteering problem. <em>4OR</em> 8(1) (2010) 49–70. <span class="doi">doi:10.1007/s10288-008-0094-4</span></li>
+    <li id="r30">P. Vansteenwegen, W. Souffriau, G. Vanden Berghe, D. Van Oudheusden. A guided local search metaheuristic for the team orienteering problem. <em>European Journal of Operational Research</em> 196(1) (2009) 118–127. <span class="doi">doi:10.1016/j.ejor.2008.02.037</span></li>
+    <li id="r31">A. Gunawan, H. C. Lau, P. Vansteenwegen. Orienteering problem: A survey of recent variants, solution approaches and applications. <em>European Journal of Operational Research</em> 255(2) (2016) 315–332. <span class="doi">doi:10.1016/j.ejor.2016.04.059</span></li>
+    <li id="r32">D. Pisinger, S. Ropke. A general heuristic for vehicle routing problems. <em>Computers &amp; Operations Research</em> 34(8) (2007) 2403–2435. <span class="doi">doi:10.1016/j.cor.2005.09.012</span></li>
+    <li id="r33">S. Voigt. A review and ranking of operators in adaptive large neighborhood search for vehicle routing problems. <em>European Journal of Operational Research</em> 322 (2025) 357–375. <span class="doi">doi:10.1016/j.ejor.2024.10.005</span></li>
+    <li id="r34">D. Pisinger. Stochastic ALNS for the two-stage prize-collecting vehicle routing problem. <em>Transportation Research Part C</em> 179 (2025) 105293. <span class="doi">doi:10.1016/j.trc.2025.105293</span></li>
+  </ol>
+</section>
+
+<footer class="pf">
+  <p><strong>Selective Routing with Synchronisation — a certified primal–dual solver and ten attempts to strengthen it.</strong></p>
+  <p>David Chouchena · Tomer Tunitsky — <em>Exact Algorithms for Combinatorial Optimization Problems</em>, Dr. Mor Kaspi, Tel-Aviv University.</p>
+</footer>
+
+</div>

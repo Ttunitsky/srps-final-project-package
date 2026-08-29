@@ -1,0 +1,2 @@
+instance,family,n,alpha,group_id,ref_obj,final_obj,delta_ref,bks,delta_bks,ub,final_gap_pct,ec_gain,phases,lag_calls,lag_iters,stop_reason,total_rt_s
+B_n100_001_a25_001,B,100,0.25,001,2142.0,2142.0,0.0,2142.0,0.0,2144,0.093284,0,1,0,0,GAP<0.3%,300.3

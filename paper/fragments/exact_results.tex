@@ -1,0 +1,28 @@
+The ceiling argument bounds any strengthening by $(ub-z)/ub$ because the optimum $P^\ast$ is known only to lie in $[z,ub]$. Solving instances exactly would pin $P^\ast$ down and convert that bound into a measurement. We therefore solved the compact SRPS-1 arc-flow model directly in CPLEX~22.1.1---standalone, sharing no state with the ALNS or the Lagrangian---on the 30 instances with $n\le 50$ that still carry a nonzero certified gap. Instances already certified optimal are excluded: their decomposition is trivially zero.
+
+CPLEX closed 7 of 30 within a 180-second limit. Only those admit a valid decomposition; on a timed-out run CPLEX's incumbent is not $P^\ast$, and on 10 of the 23 unproven instances it was strictly worse than the ALNS incumbent.
+
+\begin{table}[htbp]
+\centering
+\caption{The 7 instances CPLEX closed. \emph{looseness} is $(ub-P^\ast)/ub$, recoverable by a tighter dual; \emph{subopt} is $(P^\ast-z)/ub$, which no dual improvement can reach.}
+\label{tab:exact}
+\begin{tabular}{lrrrrr}
+\toprule
+Instance & $P^\ast$ & $z$ & $ub$ & looseness & subopt \\
+\midrule
+\texttt{ED\_n040\_002\_a75\_006} & 1026 & 1026 & 1029 & 0.29\% & 0.00\% \\
+\texttt{ED\_n040\_004\_a50\_011} & 1164 & 1154 & 1165 & 0.09\% & 0.86\% \\
+\texttt{D\_n045\_007\_a25\_019} & 662 & 662 & 663 & 0.15\% & 0.00\% \\
+\texttt{C\_n050\_004\_a50\_011} & 2017 & 2016 & 2017 & 0.00\% & 0.05\% \\
+\texttt{EC\_n050\_004\_a50\_011} & 1885 & 1885 & 1886 & 0.05\% & 0.00\% \\
+\texttt{C\_n050\_004\_a25\_010} & 1242 & 1242 & 1243 & 0.08\% & 0.00\% \\
+\texttt{D\_n050\_012\_a25\_034} & 753 & 753 & 754 & 0.13\% & 0.00\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ALNS is \emph{provably optimal} on 5 of these 7, so on those the entire certified gap is bound looseness and nothing is left for the primal to recover. Across the unproven instances CPLEX matched the ALNS on 12 and beat it on 1, which is external verification of incumbent quality from a solver sharing no code with the heuristic.
+
+The more useful finding concerns the bound. On 22 of 30 instances the Lagrangian certificate is \emph{strictly tighter} than the dual bound CPLEX reaches within its limit. The theory anticipates this: the Lagrangian subproblem is an orienteering problem solved exactly by dynamic programming, and orienteering lacks the integrality property, so its Lagrangian bound may strictly dominate the LP relaxation of the compact model. It does here. This is also why the literature attacks SRPS by branch-price-and-cut rather than solving SRPS-1 directly: the compact relaxation is weak.
+
+The decomposition the experiment was built for is nonetheless limited, for a structural reason worth recording. A direct MILP reaches only small instances, and small instances are largely closed already---75\% of those with $n\le 50$ have a certified gap of exactly zero---leaving 30 candidates of which CPLEX closed 7. The instances where the split would matter carry gaps above 1.5\% at $n=110$--$150$, far beyond reach when the specialised branch-price-and-cut of the literature closes only $n\le 60$. On the hard tail the ceiling remains an analytic bound; it cannot be replaced by measurement.

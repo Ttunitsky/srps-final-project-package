@@ -1,0 +1,2 @@
+instance,family,L,num_processors,lag_ub,lag_iters,lag_s,jobs_total,jobs_multiproc,y_selected,relaxed_claimed_jobs,A_partial_jobs,A_partial_multiproc,A_under_claimed,A_over_claimed,A_subgrad_nonzero,A_subgrad_sq,B_max_dp_route_len,B_sync_makespan,B_sync_excess_over_L,B_sync_excess_pct_L,B_graph_acyclic,B_arc_count,B_coupled_nodes,order_dp_fallbacks
+C_n080_031_a50_092,C,5315.0,55,2307.0000000000005,40,0.27,80,80,56,50,14,14,20,8,60,60.0,5190.0,NA,NA,NA,0,114,42,0

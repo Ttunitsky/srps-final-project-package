@@ -1,0 +1,38 @@
+At 60 iterations the trust region appeared decisively ahead ($-8.07$ mean). At 200 it was behind ($+1.58$). That sign reversal is the signature of a starved baseline, the same failure this study documents for the screening budget, so the question had to be settled at a budget where the baseline is allowed to finish. Each variant was therefore run once at 1000 iterations with its bound history retained, and the running best read off at checkpoints.
+
+\begin{table}[htbp]
+\centering
+\caption{Bound trajectories to 1000 subgradient iterations. \texttt{prod} is the bound the production configuration reports, which uses at most 200 iterations warm-started.}
+\label{tab:convergence}
+\begin{tabular}{llrrrrrr}
+\toprule
+Instance & Variant & 60 & 100 & 200 & 400 & 700 & 1000 & prod \\
+\midrule
+\texttt{ED\_n050\_011\_a50\_032} & baseline & 1308.00 & 1307.45 & 1306.70 & 1306.30 & 1306.30 & 1306.30 & 1307 \\
+\texttt{} & trust05 & 1319.10 & 1311.08 & 1306.15 & 1306.01 & 1306.00 & 1306.00 & 1307 \\
+\texttt{} & trust10 & 1309.37 & 1307.12 & 1306.28 & 1306.07 & 1306.05 & 1306.05 & 1307 \\
+\texttt{} & seed\_eps10 & 1308.00 & 1307.81 & 1307.16 & 1306.31 & 1306.31 & 1306.31 & 1307 \\
+\midrule
+\texttt{EB\_n110\_006\_a50\_017} & baseline & 3334.37 & 3315.45 & 3283.32 & 3257.70 & 3254.17 & 3253.54 & 3259 \\
+\texttt{} & trust05 & 3339.00 & 3332.44 & 3320.78 & 3300.94 & 3275.49 & 3254.66 & 3259 \\
+\texttt{} & trust10 & 3335.55 & 3327.42 & 3305.58 & 3271.27 & 3253.84 & 3253.10 & 3259 \\
+\texttt{} & seed\_eps10 & 3347.50 & 3327.50 & 3273.31 & 3256.03 & 3254.12 & 3253.46 & 3259 \\
+\midrule
+\texttt{B\_n140\_021\_a25\_061} & baseline & 3314.00 & 3272.00 & 3234.77 & 3199.73 & 3194.34 & 3192.64 & 3195 \\
+\texttt{} & trust05 & 3365.35 & 3335.34 & 3289.67 & 3228.13 & 3204.08 & 3190.54 & 3195 \\
+\texttt{} & trust10 & 3333.36 & 3295.92 & 3233.06 & 3203.97 & 3188.54 & 3187.46 & 3195 \\
+\texttt{} & seed\_eps10 & 3313.70 & 3270.75 & 3230.83 & 3197.30 & 3193.42 & 3191.90 & 3195 \\
+\midrule
+\texttt{D\_n080\_041\_a50\_122} & baseline & 2243.01 & 2242.34 & 2240.95 & 2238.51 & 2236.60 & 2235.94 & 2235 \\
+\texttt{} & trust05 & 2238.84 & 2237.82 & 2236.42 & 2235.11 & 2234.58 & 2234.46 & 2235 \\
+\texttt{} & trust10 & 2241.62 & 2239.68 & 2237.71 & 2236.26 & 2235.15 & 2234.81 & 2235 \\
+\texttt{} & seed\_eps10 & 2243.11 & 2242.07 & 2240.21 & 2237.32 & 2235.97 & 2235.40 & 2235 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At 1000 iterations the trust region leads on all four instances, so the 200-iteration verdict was premature rather than the 60-iteration one being spurious: the variants had simply not separated yet. After flooring, 2 of the four show a strictly tighter integer bound (B\_n140\_021\_a25\_061 by 5, D\_n080\_041\_a50\_122 by 1).
+
+Two effects must be separated before claiming anything, the same decomposition that exposed the warm-$\mu$ confound. Part of the gain against production is simply running the subgradient longer: baseline alone improves several instances once given 1000 iterations rather than 200. Only the residual is attributable to stabilisation. On \texttt{B\_n140} the bound moves from 3195 (production) to 3192 (baseline at 1000) to 3187 (trust region at 1000), so of eight integer units, five come from the budget and three from the trust region.
+
+The practical conclusion is budget-conditional and therefore does not transfer to the solver as configured. It caps the dual at 200 iterations or 60 seconds, warm-started and invoked only when a phase fails to improve---and at 200 iterations the trust region is worse on average and 9-to-10 after flooring. Its advantage exists only at roughly five times that budget, on the hardest instances, at a proportionate runtime cost. We therefore report it as a scoped observation about the dual in isolation, not as a recommended change.

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Benchmark instances: the 71-instance subset needed to reproduce every
+# experiment is included (CC0 1.0). The full 189 MB benchmark is not.
+benchmarks/ops_raw/*.zip
+benchmarks/ops_raw/OPS-Benchmark-master/output/
+
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
