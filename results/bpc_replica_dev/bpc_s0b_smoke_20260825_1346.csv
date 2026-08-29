@@ -1,0 +1,2 @@
+instance,family,L,claimed_jobs,active_processors,makespan_lb,best_makespan_found,excess_over_L,excess_pct_L,feasible_schedule_found,restarts,evals,verdict
+C_n080_031_a50_092,C,5315.0,50,52,5190.0,5725.0,410.0,7.714,0,14179,927821,"none found (inconclusive, not a proof)"

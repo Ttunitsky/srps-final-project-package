@@ -1,0 +1,31 @@
+Lagrangian reduced-cost fixing is the one syllabus technique whose target is runtime rather than gap, and runtime carries no ceiling. Writing $G=L(\mu)-z$, forcing a single $y_j$ shifts the bound by one term only:
+
+\[
+L(\mu \mid y_j{=}1)=L(\mu)+\min(0,r_j),\qquad
+L(\mu \mid y_j{=}0)=L(\mu)-\max(0,r_j),
+\]
+
+so $r_j<-G$ proves $j$ absent from every optimal solution and $r_j>G$ proves it present. Both tests are $O(1)$ per job given $r_j$, which the dual already computes.
+
+\begin{table}[htbp]
+\centering
+\caption{Reach of reduced-cost fixing over 30 instances, as a function of incumbent quality. Fixing runs mid-search, not post-hoc.}
+\label{tab:fixing}
+\begin{tabular}{lr}
+\toprule
+Incumbent used for $G$ & Mean jobs fixable \\
+\midrule
+final $z$ (post-hoc, near-optimal) & 24.8\% \\
+$0.99\,z$ & 0.3\% \\
+$0.95\,z$ & 0.0\% \\
+\midrule
+Overall (final $z$) & 481 / 2490 \;(19.3\%) \\
+Median per instance & 0.7\% \\
+Instances with any fixable job & 15 / 30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The rule has no practical reach. Backing the incumbent off by one per cent collapses the mean from 24.8\% to 0.3\%, and by five per cent to 0.0\%. The median instance yields 0.7\% even post-hoc.
+
+The reason is instructive, and it inverts an argument that looked compelling beforehand. We expected an asymmetry: the same tightness that caps cut-based strengthening should make the fixing threshold $G$ easy to clear. It does---observed $G$ runs as low as 0.0000---but a small $G$ does not create fixing opportunity. It reports that the instance is already closed, at which point there is no remaining search to accelerate. Both properties are consequences of the same quantity, so they cannot be played against each other.

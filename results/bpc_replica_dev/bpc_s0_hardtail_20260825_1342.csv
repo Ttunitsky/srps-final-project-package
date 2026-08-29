@@ -1,0 +1,5 @@
+instance,family,L,num_processors,lag_ub,lag_iters,lag_s,jobs_total,jobs_multiproc,y_selected,relaxed_claimed_jobs,A_partial_jobs,A_partial_multiproc,A_under_claimed,A_over_claimed,A_subgrad_nonzero,A_subgrad_sq,B_max_dp_route_len,B_sync_makespan,B_sync_excess_over_L,B_sync_excess_pct_L,B_graph_acyclic,B_cycle_count,B_arc_count,B_coupled_nodes,order_dp_fallbacks
+B_n140_021_a25_061,B,3072.0,55,3243.0,200,14.4,140,140,53,49,3,3,21,16,71,71.0,3071.0,NA,NA,NA,0,1,95,46,0
+EB_n110_006_a50_017,EB,5735.0,55,3284.0,200,6.58,110,110,75,59,4,4,28,8,68,68.0,5715.0,NA,NA,NA,0,1,118,55,0
+D_n080_041_a50_122,D,7490.0,55,2247.5,200,14.68,80,80,61,51,11,11,21,8,88,88.0,7233.0,NA,NA,NA,0,11,124,42,0
+ED_n050_011_a50_032,ED,4725.0,55,1309.5,200,0.48,50,50,27,25,4,4,7,3,32,32.0,4705.0,NA,NA,NA,0,1,57,21,0

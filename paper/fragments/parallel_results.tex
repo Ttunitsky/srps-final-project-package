@@ -1,0 +1,25 @@
+Profiling attributes 84\% of dual wall time to \texttt{orienteering\_dp\_with\_selection}, invoked once per processor per subgradient iteration. The per-processor solves are independent by construction~\cite{Fisher1981Lagrangian} --- that independence is what the relaxation buys --- so the loop parallelises. Unlike every other intervention tested here, this one cannot alter the objective, the bound, or validity---only wall-clock---so it cannot be falsified in the same way.
+
+\begin{table}[htbp]
+\centering
+\caption{Parallel dual, 4 instances, 4 workers, 200 iterations, best of 3 repeats. Timing spread across repeats averaged 1.4\%.}
+\label{tab:parallel}
+\begin{tabular}{lrrrr}
+\toprule
+Instance & sequential (s) & parallel (s) & speedup & \% of ceiling \\
+\midrule
+\texttt{B\_n140\_021\_a25\_061} & 14.36 & 10.13 & 1.42$\times$ & 75\% \\
+\texttt{EB\_n110\_006\_a50\_017} & 6.53 & 6.07 & 1.08$\times$ & 72\% \\
+\texttt{D\_n080\_041\_a50\_122} & 14.46 & 10.09 & 1.43$\times$ & 44\% \\
+\texttt{ED\_n050\_011\_a50\_032} & 0.47 & 0.27 & 1.73$\times$ & 43\% \\
+\midrule
+\textbf{mean} & & & \textbf{1.42}$\times$ & 59\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bounds were identical to the sequential path in every configuration and every repeat, which is the correctness claim the approach needs.
+
+Two structural limits are worth recording. First, DP cost is $O(2^m m^2)$ in a processor's candidate count $m$, and $m$ ranges from 0 to 13 across the 55 processors, so cost is extremely skewed: on \texttt{B\_n140} a single processor carries 53\% of the instance's total dual work. Because no partition splits one DP, speedup is capped at $\text{total}/\text{max\_single}$ regardless of worker count---a mean ceiling of 2.66$\times$ here. Second, contiguous chunking is badly wrong for such a distribution (observed imbalance up to 5.35$\times$ at eight workers); longest-processing-time assignment recovers most of the difference, lifting one instance from 1.13$\times$ to 1.71$\times$.
+
+The end-to-end value is nonetheless small, because the component is not on the critical path. In the production-budget arms the dual was invoked on one instance of twelve; the others terminated on the gap threshold before any phase failed to improve. On the single instance that did use it, the dual accounted for roughly 45 of 1297 seconds, or 3.5\% of runtime, so a 1.42$\times$ component speedup yields about 1.01$\times$ overall and exactly 1.00$\times$ elsewhere. The honest summary is a correct and measured component improvement whose component does not matter much in the current architecture; it would matter in a cold-start regime where the initial bound must be computed rather than loaded.

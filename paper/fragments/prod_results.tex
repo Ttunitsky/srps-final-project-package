@@ -1,0 +1,22 @@
+The fast screen runs at \texttt{abs\_cap}~$=240$s and \texttt{lag\_max\_time}~$=20$s, against production defaults of $1800$s and $60$s---13\% of the runtime and 33\% of the dual budget. Since the effect isolated above is a \emph{dual} effect, the screen may simply have starved the baseline. We therefore re-ran the decisive arms at full budget.
+
+\begin{table}[htbp]
+\centering
+\caption{Production-budget validation on the same 12 instances. The warm-$\mu$ effect does not survive a properly-fed dual.}
+\label{tab:prod}
+\begin{tabular}{lrrrr}
+\toprule
+Arm & $n$ & mean $\Delta$gap (pp) & mean $\Delta$obj & mean final gap (\%) \\
+\midrule
+control (no dual operators, no warm $\mu$) & 12 & 0.0061 & -0.083 & 0.2636 \\
+control + warm $\mu$ & 12 & -0.0026 & +0.083 & 0.2550 \\
+v2 destroy + repair + warm $\mu$ & 12 & 0.0012 & +0.000 & 0.2587 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The warm-$\mu$ effect measures -0.0086\pp at production budget, against $-0.1310\pp$ in the screen---a loss of 93\% of its magnitude. The mechanism is visible in the control itself: its mean final gap falls from $0.4239\%$ under the screen to 0.2636\% here. The screen cut instances off before the dual converged, so an extra upfront subgradient solve supplied effort the baseline was otherwise denied. Given a full budget, the existing in-loop re-bounding supplies that effort anyway, and the advantage disappears.
+
+Guidance measured against the warm control at production budget is +0.0037\pp---still nothing, and still on the wrong side of zero.
+
+This is the study's second false-signal mode, and the more dangerous one in practice. Reduced-budget screening is standard for parameter exploration, and here it produced a confident, plausible, and entirely spurious $0.13\pp$ result. Unlike the inert-cut null, nothing internal to the screen betrays it: the arms are consistent, the ordering is stable, and the effect is far outside run-to-run noise. Only re-running the finalist at full budget exposes it.

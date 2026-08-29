@@ -1,0 +1,5 @@
+arm,n_instances,mean_delta_obj,mean_delta_rt_s,mean_delta_gap_pp,mean_final_gap_pct,median_delta_obj,median_delta_rt_s,median_delta_gap_pp
+baseline,30,-0.033333,-120.093333,0.000313,0.138993,0.0,0.0765,0.0
+d_only,30,-0.2,-125.698233,0.008313,0.146993,0.0,0.109,0.0
+full,30,-0.066667,-96.098267,0.003921,0.142601,0.0,0.3375,0.0
+r_only,30,-0.366667,-100.669267,0.016217,0.154896,0.0,0.127,0.0

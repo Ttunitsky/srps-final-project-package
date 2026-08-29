@@ -1,0 +1,5 @@
+instance,family,L,claimed_jobs,active_processors,makespan_lb,best_makespan_found,excess_over_L,excess_pct_L,feasible_schedule_found,restarts,evals,verdict
+B_n140_021_a25_061,B,3072.0,49,52,3071.0,3071.0,-1.0,-0.033,1,116,7460,SCHEDULABLE - no-good cut would be UNSOUND
+EB_n110_006_a50_017,EB,5735.0,59,53,5715.0,5730.0,-5.0,-0.087,1,75356,5609484,SCHEDULABLE - no-good cut would be UNSOUND
+D_n080_041_a50_122,D,7490.0,51,54,7233.0,7830.0,340.0,4.539,0,88880,7241360,"none found (inconclusive, not a proof)"
+ED_n050_011_a50_032,ED,4725.0,25,46,4705.0,4705.0,-20.0,-0.423,1,83,3299,SCHEDULABLE - no-good cut would be UNSOUND
