@@ -1,0 +1,49 @@
+\begin{table}[htbp]
+\centering
+\caption{Headroom pipeline experiment: 54 instances, initial $ub$ set to
+$\lfloor L_{\text{200,cold}}\rfloor$ per instance, giving the in-loop dual
+refresh genuine room to tighten.  LAG\_MAX\_ITER\,$=$\,100, LAG\_MAX\_TIME\,$=$\,30\,s,
+three workers, 900\,s cap.  ``Refreshes'' counts in-loop dual calls that
+successfully lowered the certified bound.  The \emph{headroom-25} subset
+marks the 25 instances where $\lfloor \min_{\text{config}} L_{\text{cutLR}}\rfloor
+< ub_{\text{init}}$ (standalone cutLR provably tighter than the weakened bound).}
+\label{tab:cutlr-headroom}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Arm & Mean gap (\%) & Median (\%) & Inst.\ wins & UB refreshes \\
+\midrule
+\multicolumn{5}{l}{\emph{All 54 instances}} \\
+LR in-loop & 0.533 & 0.088 & 8 & 32 \\
+cutLR-triple in-loop & \textbf{0.428} & \textbf{0.080} & \textbf{12} & \textbf{35} \\[4pt]
+\multicolumn{5}{l}{\emph{Headroom-25 subset}} \\
+LR in-loop & 1.002 & 0.547 & --- & --- \\
+cutLR-triple in-loop & \textbf{0.780} & \textbf{0.411} & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Across all 54 instances the cutLR arm reduces mean certified gap by $0.105\pp$
+and increases the refresh count from 32 to 35.  On the 25 confirmed-headroom
+instances the reduction grows to $0.222\pp$ ($1.002\%\to 0.780\%$); these are
+the cases where the standalone cutLR bound was already below the weakened
+initial $ub$, so the in-loop refresh has room to fire even within its reduced
+budget.  The 34 ties are instances the ceiling absorbs regardless: the weakened
+initial $ub$ is already close to the ALNS incumbent, or the ALNS proves
+optimality without a dual refresh.
+
+\paragraph{Notable per-instance results.}
+The largest cutLR win is \texttt{B\_n150\_030\_a25\_088}: LR records a
+certified $ub=3561$ (gap $4.437\%$, zero refreshes) while cutLR-triple achieves
+$ub=3551$ (gap $0.028\%$, one refresh), a difference of 10 profit units in the
+certified bound.  The gap difference is amplified because LR's ALNS incumbent
+regressed from a previous run (3550$\to$3403), a primal contamination artifact
+of the sequential experiment design; the $ub$ difference of 10 is the clean
+evidence.
+
+The instances where plain LR wins (8 cases, all $\alpha=0.25$ hard families)
+share a common pattern: accumulated warm-multiplier subgradient calls converge
+to a tighter final Lagrangian value than cutLR's richer-but-slower steps reach
+within the 30-second refresh cap.  This is the $\alpha=0.25$ tradeoff: sparse
+job-processor overlap makes pair and triple incompatibilities rare, so the extra
+penalty terms add overhead without meaningfully cutting the relaxation.

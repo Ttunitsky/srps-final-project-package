@@ -1,0 +1,1506 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+
+\newcommand{\Kj}{\ensuremath{K_j}}
+\newcommand{\pp}{\,pp}
+\newtheorem{proposition}{Proposition}
+
+\title{A Certified Primal--Dual Solver for the Selective Routing\\
+Problem with Synchronisation: a Falsification Study\\
+of Strengthening Techniques and a Cut-Augmented\\
+Lagrangian Extension}
+
+\author{David Chouchena \and Tomer Tunitsky}
+\date{%
+  Tel-Aviv University\\[2pt]
+  \emph{Exact Algorithms for Combinatorial Optimization Problems}\\[8pt]
+  August 2026
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Selective Routing Problem with Synchronisation (SRPS) asks which of a set of
+profitable jobs to serve, how to route parallel processors through them, and when
+to start each job, subject to the requirement that every processor a job needs
+must begin serving it at the same instant. We describe a certified primal--dual
+solver for SRPS pairing an Adaptive Large Neighbourhood Search with a Lagrangian
+relaxation of the joint-service coupling, so that every returned solution carries
+a valid per-instance upper bound and hence a certificate of proximity to
+optimality. On the 660-instance benchmark it attains a mean certified gap of
+0.133\%, a median of 0.046\%, and proves optimality on 42.9\% of instances.
+
+We also develop a cut-augmented Lagrangian relaxation $L(\mu,\gamma,\nu)$ that
+inserts capacity and incompatibility inequalities in the projected selection
+space while preserving the per-processor orienteering decomposition. In
+standalone comparison on a 54-instance stratified sample, this tightens the
+certified bound against a matched-budget plain Lagrangian baseline, winning on
+30 of 54 instances with a mean gap of $0.361\%$ versus $0.455\%$ ($-0.094\pp$).
+In a pipeline experiment with deliberately weakened initial bounds, the
+cut-augmented arm achieves a mean certified gap of $0.428\%$ against $0.533\%$
+for the plain Lagrangian arm, with 12 instance wins to 8. This is the one
+dual-side technique in the study that demonstrably tightens the bound, and its
+benefit is conditional on the initial upper bound having genuine headroom.
+
+The bulk of this report is a systematic attempt to strengthen that solver using
+ten techniques from the exact-algorithms syllabus, and an account of why nine
+fail. Two were the primary brief: importing the cut separation logic of the exact
+branch-price-and-cut method, and coupling the search more tightly to the
+Lagrangian dual. Both are falsified on structural rather than parametric grounds.
+Separation against the incumbent can never find a violated cut, because the
+incumbent is feasible by construction; redirected at the relaxed solution, where
+violations demonstrably exist, the natural feasibility cut is \emph{unsound} on
+the majority of instances tested. The dual-guided operators are degenerate under
+their own initialisation---the fair profit split forces the reduced profit to be
+identically zero for every job---and once repaired, an isolating control
+attributes the apparent gain entirely to a warm-start dual solve, which a
+full-budget re-run then shows to be a screening artifact.
+
+A ceiling argument computed from the solver's own gap distribution bounds
+\emph{any} technique aimed at the certified gap at $0.1136\pp$ on average and
+$0.0087\pp$ at the median---below the run-to-run variance of the experiments built
+to detect it---and every gap-directed technique tested was absorbed by it. The two
+aimed at runtime were not so bounded, and one delivered: parallel evaluation of
+the per-processor subproblems is $1.42\times$ faster with bit-identical bounds.
+Beyond the negative results we extract two methodological lessons: mechanism
+\emph{activation} is not evidence of mechanism \emph{effect}, and a verdict
+measured at one computational budget can reverse at another---in both directions.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}\label{sec:intro}
+
+The Selective Routing Problem with Synchronisation (SRPS) arises from configuring
+the EMIR spectrograph at the Gran Telescopio Canarias~\cite{RieraLedesma2021SRPS}.
+The instrument has 55 pairs of sliding bars in parallel bands; observing a target
+requires moving one or more bar pairs into position, and a target lying between
+bands requires several bars positioned \emph{simultaneously}. Observing time is
+scarce, so only a subset of requested targets can be served. The problem is
+therefore selective (which targets), routing (in what order each bar pair visits
+them), and scheduling (when each observation starts), with a synchronisation
+constraint binding the three together.
+
+This report has two parts. The first describes a certified primal--dual solver:
+an Adaptive Large Neighbourhood Search supplies incumbents, a Lagrangian
+relaxation supplies valid upper bounds, and every solution is returned with a
+certificate of how far from optimal it can possibly be. The second, and longer,
+asks whether that solver can be strengthened using techniques from the
+exact-algorithms syllabus.
+
+Two directions motivated the study:
+
+\begin{description}
+  \item[Cut separation.] The exact method for SRPS derives part of its
+    strength from cutting planes separated over the synchronisation structure. If
+    those inequalities are valid, they should be exploitable inside a heuristic
+    --- to filter infeasible candidate moves, or to tighten the dual bound.
+  \item[Dual coupling.] The Lagrangian multipliers $\mu_{j,k}$ carry
+    information about which jobs the relaxation considers under- or
+    over-penalised. Steering the destroy and repair operators by the reduced
+    profit $b_j-\sum_k \mu_{j,k}$ should focus the search where the dual says
+    value remains.
+\end{description}
+
+Both are falsified. Exhausting the surrounding design space added eight further
+techniques --- primal-to-dual seeding, dual stabilisation, Lagrangian
+decomposition, warm-start effort scheduling, reduced-cost variable fixing,
+parallel subproblem evaluation, and a standalone exact reference --- of which one
+improves what it targets. Beyond the ten-technique study, a cut-augmented
+Lagrangian extension (Section~\ref{sec:cutlr}) is the one dual-side contribution
+that demonstrably tightens the bound. Sections~\ref{sec:dual}--\ref{sec:runtime} are organised
+by the metric each technique aims at, because that division is the organising fact
+of the study: everything aimed at the certified gap was bounded in advance by a
+ceiling computable from the solver's own results, and the two aimed at runtime
+were not.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+  \item A certified primal--dual solver for SRPS (Section~\ref{sec:solver}) and
+    its evaluation on the 660-instance benchmark (Section~\ref{sec:baseline}).
+  \item A ceiling argument bounding \emph{any} gap-directed strengthening, derived
+    from the solver's own gap distribution (Section~\ref{sec:ceiling}).
+  \item A structural impossibility result for cut separation against a primal
+    incumbent, and a soundness refutation of the natural feasibility cut when
+    separation is redirected at the relaxed solution (Section~\ref{sec:cuts}).
+  \item A degeneracy proof for the dual-guided operator design, a corrected
+    re-test, and the isolating control that overturns its apparent success
+    (Section~\ref{sec:guided}).
+  \item A proof that Lagrangian decomposition of the natural split cannot improve
+    the bound, closing that cell analytically rather than leaving it untested
+    (Section~\ref{sec:ld}).
+  \item Two methodological guards --- gate on effect rather than activation, and
+    validate screen finalists at full budget --- that between them would have
+    detected every failure here in minutes rather than hours
+    (Section~\ref{sec:lessons}).
+  \item A cut-augmented Lagrangian relaxation $L(\mu,\gamma,\nu)$
+    (Section~\ref{sec:cutlr}) incorporating capacity and incompatibility
+    inequalities in the projected selection space while preserving the
+    per-processor decomposition; evaluated across three experimental protocols
+    (standalone budget comparison, tight-bound pipeline, headroom pipeline)
+    establishing when and why it tightens the certified bound.
+\end{enumerate}
+
+\section{The Selective Routing Problem with Synchronisation}\label{sec:problem}
+
+\subsection{Binding constraints}\label{sec:constraints}
+
+An instance provides a job set $J=\{1,\dots,n\}$, where job $j$ yields profit
+$b_j$ and requires a subset $\Kj\subseteq K$ of the processor set $K$; a
+transition-time matrix $(t_{i\ell})$ covering travel and processing; and a global
+horizon $L$. For each processor $k$, let $J_k\subseteq J$ denote the jobs
+requiring it. A solution selects a subset of jobs, routes each processor through
+its assigned jobs, and assigns start times. Three constraints bind:
+
+\begin{enumerate}
+  \item \textbf{Horizon.} Elapsed time from the start depot to the end depot may
+    not exceed $L$ on any processor.
+  \item \textbf{Synchronisation.} All processors in $\Kj$ must start job $j$ at
+    the same instant $s_j$. For every arc $(i\to \ell)$ traversed by any
+    processor, $s_\ell-s_i\ge t_{i\ell}$. Processors may idle before a
+    synchronised start, and \emph{that idle time counts toward $L$}.
+  \item \textbf{Consistency.} If any processor serves $j$, every processor in
+    $\Kj$ must serve $j$. Partial service is forbidden.
+\end{enumerate}
+
+The objective is to maximise $\sum_{j\in J} b_j y_j$, where $y_j$ indicates
+selection.
+
+Constraints~2 and~3 are distinct requirements and are easily conflated:
+consistency says \emph{which} processors must serve a job, synchronisation says
+\emph{when} they must do so. A solution can satisfy either without the other.
+
+Constraint~2 is a difference-constraint system: earliest start times are longest
+paths in the arc-weighted graph induced by the routes, and a cyclic graph means no
+feasible schedule exists. This makes feasibility checkable in linear time and is
+the check the solver uses (Section~\ref{sec:representation}). The idle-time clause
+separates ``route length $\le L$'' from ``makespan $\le L$'': routes that each fit
+comfortably inside the horizon may still be jointly infeasible once synchronised
+waiting is charged. Section~\ref{sec:s0} shows the Lagrangian subproblem to be
+structurally blind to exactly that distinction.
+
+\subsection{Compact formulation}\label{sec:model}
+
+We adopt the compact arc-flow structure, denoted SRPS-1, of Riera-Ledesma and
+Salazar-Gonz\'alez~\cite{RieraLedesma2021SRPS}. Let $V_k=J_k\cup\{0,n+1\}$ be
+processor $k$'s node set with start depot $0$ and end depot $n+1$; let
+$z_{i\ell}^k\in\{0,1\}$ indicate that processor $k$ traverses arc $(i,\ell)$,
+$x_{j,k}\in\{0,1\}$ that processor $k$ serves job $j$, $y_j\in\{0,1\}$ that job
+$j$ is selected, and $s_{j,k}$ the service-start time of processor $k$ at job $j$.
+The objective is $\max \sum_{j\in J} b_j y_j$ subject to route structure,
+\[
+\sum_{\ell\in V_k\setminus\{0\}} z_{0\ell}^k = 1,\qquad
+\sum_{i\in V_k\setminus\{n+1\}} z_{i,n+1}^k = 1,
+\]
+\[
+\sum_{i\in V_k\setminus\{j\}} z_{ij}^k = x_{j,k},\qquad
+\sum_{\ell\in V_k\setminus\{j\}} z_{j\ell}^k = x_{j,k}
+\quad \forall j\in J_k,
+\]
+joint-service coupling (constraint~3),
+\[
+y_j \le x_{j,k} \qquad \forall j\in J,\; k\in \Kj,
+\]
+and timing (constraints~1 and~2),
+\[
+s_{\ell,k} \ge s_{i,k} + t_{i\ell} - M\bigl(1-z_{i\ell}^k\bigr),
+\qquad
+s_{j,k}=s_{j,k'} \;\;\forall k,k'\in \Kj,
+\qquad
+s_{n+1,k}-s_{0,k} \le L .
+\]
+The arc-time propagation doubles as subtour elimination: start times increase
+along any used arc with positive transition time, so cycles are infeasible.
+Section~\ref{sec:exact} solves this formulation directly as an uncoupled
+reference.
+
+\subsection{Benchmark}\label{sec:benchmark}
+
+We use the benchmark introduced with the problem~\cite{RieraLedesma2021SRPS}. It
+comprises eight families along two axes. The \emph{distance} axis distinguishes
+horizontal transition costs, $|u_i-u_\ell|$, which mimic the real instrument, from
+Euclidean costs on the plane; families with an \texttt{E} prefix are Euclidean.
+The \emph{class} axis records $|\Kj|$: class-1 families have $|\Kj|=1$ for every
+job and reduce to the team orienteering problem, while classes 2--4 have
+$|\Kj|\in\{2,3,4\}$ and carry genuine synchronisation. Profits take values in
+$\{1,10,100\}$. Instances are labelled by family, size $n$, and a
+budget-tightness parameter $\alpha\in\{0.25,0.50,0.75\}$ controlling how much of
+the total service demand fits inside $L$.
+
+Our primary study set is the 660 instances of classes 2--4, where synchronisation
+is active. Where a wider set of 780 appears (Section~\ref{sec:ceiling}), it is the
+660 plus the class-1 families, and the text says so.
+
+\section{Related work}\label{sec:related}
+
+\subsection{SRPS and its exact treatment}
+
+SRPS was introduced by Riera-Ledesma and
+Salazar-Gonz\'alez~\cite{RieraLedesma2021SRPS} together with the model SRPS-1 of
+Section~\ref{sec:model}, a benchmark, and an exact branch-price-and-cut algorithm
+in two variants: one enhancing the pricing step, one node-based. The method runs
+under a one-CPU-hour limit and reports a primal--dual gap of
+$100\times(\text{dual}-\text{primal})/\text{primal}$.
+
+Its reported performance defines the space in which a heuristic can add value. In
+the hardest class-4 families all instances up to $n\le 55$ are solved to
+optimality; at $n=60$ nonzero gaps remain, reaching 1.64\% on the Euclidean family
+at $\alpha=0.75$; for $n\ge 65$ no benchmark solutions are published. Two regimes
+therefore exist --- hard instances with residual exact gaps, and larger instances
+with no reported exact result.
+
+The exact method's cut separation is the direct motivation for the first of
+these (Section~\ref{sec:cuts}).
+Branch-price-and-cut separates violated inequalities against the \emph{fractional}
+solution of a linear master problem; whether that machinery transfers to a
+heuristic which never forms such a solution is precisely what
+Section~\ref{sec:cuts} answers.
+
+\subsection{Metaheuristics for selective routing}
+
+Adaptive Large Neighbourhood Search and related destroy--repair metaheuristics are
+effective across orienteering, team orienteering, and vehicle-routing variants
+with rich side constraints, because they combine strong primal search with
+problem-specific insertion
+logic~\cite{RopkePisinger2006ALNS,Vansteenwegen2011Orienteering}. A substantial
+body of metaheuristics has been developed for the team orienteering problem
+specifically~\cite{Archetti2007MetaheuristicsTOP}. These deliver strong incumbents
+but generally provide \emph{no per-instance optimality certificate}, which is the
+gap the solver of Section~\ref{sec:solver} closes.
+
+\subsection{Lagrangian relaxation and decomposition}
+
+Lagrangian relaxation with subgradient optimisation is a classical route to
+instance-specific bounds: a complicating coupling is dualised, the residual
+problem decomposes, and the dual value bounds the
+optimum~\cite{Fisher1981Lagrangian,Held1974Subgradient,Guignard2003Lagrangean}.
+The approach has a long record in
+routing~\cite{Fisher1997VRPTW,Kohl1999LagrangeVRPTW}, and matheuristics
+interleaving such relaxations with metaheuristic search are an established way to
+obtain both strong primal solutions and
+bounds~\cite{ArchettiSperanza2014Matheuristic}. Step sizes follow
+Polyak~\cite{PolyakStepSize}. Guignard's treatment of Lagrangian
+\emph{decomposition}~\cite{Guignard2003Lagrangean} is used directly in
+Section~\ref{sec:ld}, where the condition for decomposition to improve on
+relaxation --- that the dualised block lack the integrality property --- decides one
+cell of the design space without an experiment.
+
+\subsection{Techniques this study draws on}
+
+Beyond the two hypotheses, the study evaluates cutting planes and their separation
+discipline, Lagrangian decomposition, reduced-cost variable fixing, dual
+stabilisation by trust region and smoothing, parallel evaluation of independent
+subproblems, and direct solution of the compact model by a general-purpose MIP
+solver. Table~\ref{tab:coverage} maps each to the lecture that introduces it.
+
+\section{Summary of techniques evaluated}\label{sec:coverage}
+
+\input{fragments/coverage_results_cutlr}
+
+\section{The solver}\label{sec:solver}
+
+An ALNS produces feasible solutions, a Lagrangian relaxation produces valid upper
+bounds, and an outer loop alternates between them until the gap is small enough to
+stop. The distinguishing feature is that the dual is not a one-off pre-processing
+step but a mechanism re-tightened \emph{inside} the search, around the current
+incumbent.
+
+\subsection{Representation and feasibility}\label{sec:representation}
+
+A solution is a selected job set and one elementary route per processor.
+Feasibility is maintained by the longest-path check of
+Section~\ref{sec:constraints}: the routes induce a precedence graph, earliest
+start times are longest paths within it, and the solution is feasible exactly when
+that graph is acyclic and its longest path from start to end depot does not exceed
+$L$. This single check covers constraints 1 and 2 together, including synchronised
+idle time.
+
+\subsection{Destroy and repair operators}
+
+Three destroy operators are used. \emph{Random destroy} removes a uniformly
+sampled subset of selected jobs; \emph{worst destroy} removes the least valuable
+selected jobs; \emph{Shaw destroy} removes jobs related to a random pivot under
+travel-based proximity. The destroy size is sampled dynamically, with escalation
+tiers enlarging the removed fraction on hard instances (Section~\ref{sec:loop}).
+
+Three repair operators are used: \emph{profit-greedy}, \emph{ratio}, and
+\emph{regret-2}. They differ only in the order in which candidate jobs are offered
+to a common insertion procedure, and it is that procedure which carries the
+SRPS-specific content.
+
+\subsection{Synchronisation-aware insertion}
+
+Inserting a job $j$ is not a single-route decision: every processor in $\Kj$ must
+accommodate it, and all must start it at the same instant. The procedure
+enumerates the top few local positions on each required processor route, forms
+their Cartesian product, and checks each cross-route placement with the
+longest-path test.
+
+\begin{proposition}[Insertion-complexity bound]
+If at most $c$ local candidate positions are retained per required processor for
+job $j$, the procedure evaluates at most $c^{|\Kj|}$ route-position combinations,
+each followed by one feasibility check.
+\end{proposition}
+
+\begin{proof}
+Candidate positions are chosen independently on each processor in $\Kj$; their
+Cartesian product contains at most $\prod_{k\in \Kj} c = c^{|\Kj|}$ combinations,
+each checked once.
+\end{proof}
+
+With $c=3$ and class-4 jobs this is at most $3^4=81$ combinations per job. This
+combinatorial insertion is where synchronisation enters the heuristic; the rest
+follows a standard destroy--repair pattern.
+
+\subsection{Acceptance, adaptation, and multi-start}
+
+The search uses simulated-annealing acceptance, adaptive roulette-wheel operator
+selection, and exponentially smoothed score updates: worsening moves may be
+accepted to escape local optima, and operators producing improving or accepted
+moves earn larger future weight. The search cycles over six fixed random seeds.
+
+\subsection{The Lagrangian bound}\label{sec:lagbound}
+
+The complicating constraints are the joint-service couplings $y_j \le x_{j,k}$.
+Relaxing them with multipliers $\mu_{j,k}\ge 0$ gives
+\begin{equation}\label{eq:lag}
+L(\mu) = \sum_{j\in J} \max\Bigl(0,\; b_j - \sum_{k\in \Kj}\mu_{j,k}\Bigr)
+       + \sum_{k\in K} O_k(\mu),
+\end{equation}
+where $O_k(\mu)$ is the optimum of a single-processor orienteering problem in
+which job $j\in J_k$ carries modified profit $\mu_{j,k}$.
+
+\begin{proposition}[Validity of the bound]
+For every $\mu\ge 0$, the SRPS optimum satisfies $z^\ast \le L(\mu)$.
+\end{proposition}
+
+\begin{proof}
+Any feasible SRPS solution satisfies $y_j\le x_{j,k}$ for all required processors,
+so after relaxation the nonnegative penalty terms vanish on it and its objective
+cannot exceed the relaxed objective at the same $\mu$. Maximising over feasible
+solutions gives the claim.
+\end{proof}
+
+Each $O_k(\mu)$ is solved \emph{exactly} by bitmask dynamic programming in
+$O(2^{|J_k|}|J_k|^2)$, with no pruning, sampling, or candidate-set restriction.
+The exponential factor is bounded by the largest per-processor job set rather than
+by $n$: since each job requires only $|\Kj|\in\{2,3,4\}$ of the $|K|=55$
+processors, jobs spread thinly and each processor serves few. That the resulting
+bound on $|J_k|$ is small, and does not grow with $n$, is an empirical property of
+the benchmark, reported with the other measurements in
+Section~\ref{sec:subproblem-size}.
+
+Two properties of $O_k(\mu)$ matter throughout. First, it is solved to optimality,
+so no looseness originates there. Second, it enforces route length $\le L$ but is
+structurally blind to synchronisation idle time, because each processor is solved
+in isolation. The relaxed solution is therefore optimistic in a specific,
+identifiable way --- a fact Section~\ref{sec:s0} exploits and Section~\ref{sec:ld}
+returns to.
+
+\subsection{Subgradient scheme}\label{sec:subgradient}
+
+Multipliers are initialised by the fair profit split $\mu_{j,k}=b_j/|\Kj|$, which
+makes the initial relaxed objective coincide with an independent-orienteering
+bound. The dual is then minimised by projected subgradient descent with
+Polyak-style steps~\cite{PolyakStepSize},
+\[
+\eta_t = \frac{L(\mu_t)-\theta^\ast}{\|g_t\|^2},
+\qquad
+g_{j,k}=x^\ast_{j,k}-y^\ast_j,
+\qquad
+\mu_{j,k}\leftarrow \max(0,\mu_{j,k}-\eta_t g_{j,k}),
+\]
+clamped for stability, with a diminishing fallback schedule after 30 consecutive
+non-improving iterations. The level reference $\theta^\ast$ is the current
+incumbent $z$ throughout. The best bound found is returned with its multiplier
+vector, retained as a warm start for the next invocation.
+
+That the fair split is the natural \emph{starting point} for descent, yet the one
+multiplier vector at which reduced profits vanish identically, is the whole of the
+defect analysed in Section~\ref{sec:degeneracy}.
+
+\subsection{The adaptive control loop}\label{sec:loop}
+
+The destroy--repair search sits inside an outer loop allocating effort only where
+certification remains hard. Each \emph{phase} runs the ALNS with cycling seeds for
+up to 300 seconds. If the phase improves the incumbent, the destroy \emph{tier}
+resets; otherwise the method performs an in-loop Lagrangian re-bound and escalates
+the destroy fraction through 25\%, 33\%, and 40\%. Three stop conditions apply:
+the upper bound matches the incumbent, the certified gap falls below 0.3\%, or the
+tiers are exhausted. A per-instance cap of 3600 seconds applies throughout.
+
+Each re-bound is capped at 200 subgradient iterations or 60 seconds, is
+warm-started from the current multipliers, and uses the current incumbent as the
+Polyak target. Because the numerator $L(\mu_t)-z$ shrinks as the bound approaches
+the incumbent, steps are large when the bound is loose and fine when it is nearly
+tight: the dual is pulled down toward the incumbent while the ALNS pushes the
+incumbent up, and the two chase each other. That 200-iteration budget is the
+configuration this study measures, and Section~\ref{sec:convergence} shows it to
+be the binding constraint on the dual.
+
+\subsection{Certification}\label{sec:certification}
+
+The reported certified gap is
+\begin{equation}\label{eq:gap}
+\text{gap} \;=\; \frac{ub-z}{ub},\qquad ub=\lfloor L(\mu)\rfloor ,
+\end{equation}
+with $z$ the incumbent. Flooring is valid because all profits are integer. A gap
+of $x\%$ guarantees the solution lies within $x\%$ of the optimum; a gap of $0\%$
+\emph{proves} optimality by weak duality, and we call such instances \emph{proven
+optimal}. No published benchmark value enters the algorithm: both the ALNS and the
+dual reference use only the current incumbent.
+
+Equation~\eqref{eq:gap} has \textbf{two levers}, and the distinction organises the
+study: a mechanism can improve the gap by \emph{raising} $z$ (primal) or by
+\emph{lowering} $ub$ (dual). Cutting planes act on the dual. Neighbourhood
+operators act on the primal. Sections~\ref{sec:dual} and~\ref{sec:primal} divide
+on exactly that line.
+
+\section{Baseline performance}\label{sec:baseline}
+
+\subsection{Certified gaps}
+
+All runs use a single machine, six worker processes, and the configuration of
+Section~\ref{sec:loop}. Across the 660-instance primary study set the mean
+certified gap is 0.133\%, the median 0.046\%, and the maximum 1.965\%; 94.1\% of
+instances are certified within 0.5\% and 100\% within 2\%. Median runtime is 5.1
+minutes, and no instance stops because of the absolute runtime cap.
+
+\subsection{Certified optima and subproblem cost}\label{sec:subproblem-size}
+
+283 instances (42.9\%) are returned with a certified gap of exactly zero and are
+therefore proven optimal in the sense of Section~\ref{sec:certification}. Of
+those, 149 are also proved optimal by the exact method, where the two certificates
+coincide and cross-validate one another; the remaining 134 are proven optimal by
+the Lagrangian certificate alone.
+
+The exactness of the dual bound rests on the per-processor job sets staying small,
+and they do. Across all 660 instances the largest $|J_k|$ is $13$, with
+per-instance means of $2.8$--$6.0$, and this maximum is \emph{flat in $n$}: it is
+already $13$ at $n=80$ and remains $13$ at $n=150$. Each subproblem therefore
+costs at most $2^{13}\cdot 13^2\approx 1.4\times10^{6}$ operations, so the bound is
+computed exactly even on the largest instances. Section~\ref{sec:parallel} shows
+the flip side of the same distribution: because cost scales as $2^{|J_k|}$, a
+single processor can account for more than half an instance's dual work.
+
+\subsection{Relation to the exact method}
+
+Against the published branch-price-and-cut
+results~\cite{RieraLedesma2021SRPS}, the instances divide into three groups. On
+the 245 the exact method proves optimal, the solver recovers the optimum on 241
+and is one profit unit below on four, with a mean certified gap of 0.067\%. On the
+112 where the exact method returns an incumbent but stops at its one-hour limit
+with a nonzero gap, the solver matches the published incumbent on 93, improves it
+on 15, and is one unit below on four. On the 300 with no reported exact solution,
+the solver certifies all 300, including 196 first-ever certified results.
+
+\subsection{Headroom: a ceiling on any gap-directed improvement}\label{sec:ceiling}
+
+The results above imply a bound on what \emph{any} technique aimed at the
+certified gap can achieve, and that bound governs the rest of this report.
+
+Cuts and every other dual-side device act only on $ub$. The optimum $P^\ast$
+satisfies $z\le P^\ast\le ub$, since $z$ is attained by a feasible solution. The
+maximum conceivable improvement from a technique driving the dual bound exactly to
+the optimum on every instance is therefore bounded by the current certified gap
+itself. The same bound applies symmetrically to primal-side techniques, which can
+raise $z$ at most to $P^\ast$.
+
+\begin{table}[htbp]
+\centering
+\caption{Ceiling on any gap-directed improvement, computed over 780 instances.
+The row set is the 660 primary instances plus the class-1 families, which reduce
+to team orienteering and are easier --- hence a proven-optimal share of 48.5\% here
+against 42.9\% on the primary set. The maximum, $1.9650\pp$, is identical under
+both row sets.}
+\label{tab:ceiling}
+\begin{tabular}{lr}
+\toprule
+Quantity & Value \\
+\midrule
+Instances already provably tight ($\text{gap}=0$) & 378 / 780 \;(48.5\%) \\
+Mean maximum possible gap reduction & 0.1136\pp \\
+Median maximum possible gap reduction & 0.0087\pp \\
+90th percentile & 0.2948\pp \\
+Maximum & 1.9650\pp \\
+\midrule
+Total absolute headroom $\sum(ub-z)$ & 2255 profit units \\
+Share held by the top 50 instances & 45.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On nearly half the benchmark there is nothing to gain. On the median instance the
+entire theoretical prize is $0.0087\pp$. For comparison, arm-to-arm differences in
+the calibration suites below range over $\pm0.01$--$0.09\pp$: the median instance's
+complete theoretical prize is smaller than the noise floor of the apparatus built
+to detect it. No amount of calibration recovers a signal beneath its own
+measurement noise.
+
+This computation costs seconds and uses only data already in hand. That it was
+performed \emph{after} rather than before the calibration campaigns is itself one
+of the lessons of Section~\ref{sec:lessons}.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section{Cut-augmented Lagrangian relaxation}\label{sec:cutlr}
+
+Two cut-separation routes are closed by the later falsification study
+(Section~\ref{sec:cuts}): the primal incumbent is feasible by construction
+and can never supply a violated cut, and the natural feasibility cut against
+the Lagrangian relaxed solution is unsound on most instances.  An alternative
+route avoids both pitfalls by incorporating valid inequalities directly into the
+\emph{dual} as Lagrangian penalties, so the bound-computing mechanism itself
+becomes tighter.  This section develops and evaluates that route, independently
+of the falsification study.
+
+\subsection{Formulation}\label{sec:cutlr-formulation}
+
+The Lagrangian relaxation $L(\mu)$ decomposes per-processor (Section~\ref{sec:lagbound}).
+The cut-augmented extension $L(\mu,\gamma,\nu)$ adds two families of valid inequalities
+in the projected $y$-space, while preserving this decomposition.
+
+\subsubsection{Capacity cuts}
+
+For each processor $k$, let $O_k$ denote the single-processor orienteering optimum at
+zero multipliers: the maximum profit processor $k$ can earn independently.  Any
+feasible SRPS solution selects only jobs that processor $k$ can accommodate within the
+horizon $L$, so the total profit of selected jobs requiring $k$ is at most $O_k$:
+\begin{equation}\label{eq:cap-cut}
+  \sum_{j \in J_k} b_j\, y_j \;\le\; O_k \qquad \forall\, k \in K.
+\end{equation}
+Introducing multipliers $\gamma_k \ge 0$ for these constraints and folding them into
+the Lagrangian modifies the effective profit for job $j$ on processor $k$'s subproblem
+to $\mu_{j,k} + \gamma_k b_j / O_k$.  Each per-processor subproblem remains a
+standard orienteering DP on the same arc graph, with augmented edge weights.
+
+\subsubsection{Incompatibility cuts}
+
+A pair $(i,j)$ is \emph{incompatible} if no single-processor route can accommodate
+both jobs simultaneously (verified by attempting to include both in any per-processor
+DP).  For incompatible pairs:
+\begin{equation}\label{eq:pair-cut}
+  y_i + y_j \;\le\; 1.
+\end{equation}
+A triple $(i,j,\ell)$ is \emph{incompatible} if no route can accommodate all three:
+\begin{equation}\label{eq:triple-cut}
+  y_i + y_j + y_\ell \;\le\; 2.
+\end{equation}
+Multipliers $\nu_{ij}\ge 0$ and $\nu_{ij\ell}\ge 0$ penalise violations, adding a
+per-job offset to the selection threshold before each per-processor solve.
+
+\begin{proposition}[Validity]\label{prop:cuts-valid}
+Constraints~\eqref{eq:cap-cut}--\eqref{eq:triple-cut} are valid for SRPS.
+\end{proposition}
+\begin{proof}
+Any feasible SRPS solution selects only jobs every required processor can serve
+within $L$, so the selected profit requiring processor $k$ is at most $O_k$,
+giving~\eqref{eq:cap-cut}. An incompatible pair cannot both appear in any
+feasible route, so~\eqref{eq:pair-cut} holds by definition;
+similarly~\eqref{eq:triple-cut}.
+\end{proof}
+
+\begin{proposition}[Decomposition preserved]\label{prop:decomp}
+$L(\mu,\gamma,\nu)$ separates into the same per-processor orienteering subproblems
+as $L(\mu)$, with shifted job profits.
+\end{proposition}
+\begin{proof}
+The $\gamma_k$ penalties enter linearly through
+$\mu_{j,k}\leftarrow\mu_{j,k}+\gamma_k b_j/O_k$, so each $O_k(\mu,\gamma)$ is
+still a standard orienteering DP.  The incompatibility penalties shift the
+$y$-threshold before the selection rule fires, and do not enter the route
+subproblems.
+\end{proof}
+
+Three configurations are evaluated: \textbf{cap} (capacity cuts only),
+\textbf{pair} (capacity and pair incompatibilities), and
+\textbf{triple} (all three).  All multipliers are updated by projected
+subgradient steps alongside $\mu_{j,k}$, warm-started between invocations.
+
+\subsection{Experimental protocols}\label{sec:cutlr-design}
+
+Three protocols probe where the cuts add value.
+
+\paragraph{Standalone comparison (stratified-54).}
+Each method receives the same total dual budget: 100 cold-start Lagrangian
+iterations, optionally followed by 100 warm cut-augmented iterations.
+The baseline $\text{LR\_200\_cold}$ doubles the cold budget; the control
+$\text{LR\_100{+}LR\_100}$ applies the same 200 iterations as a warm
+continuation without cuts.  All comparisons are gap-only: no ALNS primal
+is run.
+
+\paragraph{Tight-UB pipeline (hard-6).}
+Six hard instances run through the full adaptive pipeline
+(Section~\ref{sec:loop}), with the initial $ub$ set to the master-result
+upper bound from the production run --- the tightest certificate already
+available.  This probes whether an in-loop dual refresh can improve on it.
+
+\paragraph{Headroom pipeline (stratified-54).}
+The same 54-instance set runs through the full pipeline, with the initial
+$ub$ deliberately set to $\lfloor L_{\text{200,cold}}\rfloor$ per instance ---
+the weakened value from the standalone analysis.  This gives the in-loop dual
+refresh genuine headroom to tighten.  Two arms are compared: plain LR in-loop
+versus cutLR-triple in-loop.
+
+\subsection{Standalone results}\label{sec:cutlr-standalone}
+
+\input{fragments/cutlr_standalone_results}
+
+\subsection{Pipeline results}\label{sec:cutlr-pipeline}
+
+\subsubsection{Tight-UB protocol: the ceiling applies}
+
+With the master upper bound as the initial $ub$, the in-loop dual refresh fires
+but cannot tighten the certificate: both the LR arm and the cutLR-triple arm
+record \textbf{zero successful refreshes} across all six hard instances.  The
+certified gaps are identical between arms.
+
+This is the ceiling of Section~\ref{sec:ceiling} operating directly.  The
+initial $ub$ was produced with a 200-iteration, 60-second dual budget; the
+in-loop refresh has only 100 iterations and 30 seconds.  A tighter input cannot
+be improved by a smaller budget, and $\lfloor L_{\text{in-loop}}\rfloor\ge ub_0$
+on every instance.
+
+\subsubsection{Headroom protocol}
+
+\input{fragments/cutlr_headroom_results}
+
+\subsection{Verdict}\label{sec:cutlr-verdict}
+
+The cut-augmented Lagrangian demonstrably tightens the bound in standalone
+comparison.  With the same dual budget, cutLR-triple reduces mean certified gap
+from $0.455\%$ to $0.361\%$ and wins on 30 of 54 instances; the plain warm
+continuation (LR\_100$+$LR\_100) achieves only $0.467\%$ on the same budget,
+confirming the improvement is from the cuts rather than the warm start alone.
+
+The pipeline result is conditional.  With a tight initial $ub$ the ceiling
+absorbs both arms and neither gains.  Under the headroom protocol, cutLR-triple
+achieves mean $0.428\%$ against $0.533\%$ for plain LR, winning 12 instance
+comparisons to LR's 8.  The advantage is concentrated on medium-hard instances
+($\alpha=0.5$, $n\ge 80$), where per-processor capacity conflicts make
+subgradient LR slow to converge.  On the hardest $\alpha=0.25$ instances,
+accumulated warm-multiplier LR calls eventually converge past what cutLR
+achieves per call within the 30-second cap, giving LR a countervailing edge on
+8 instances.
+
+Two caveats apply to the headroom experiment.  First, the deliberate weakening
+of the initial $ub$ does not reflect the production pipeline, where the initial
+certificate comes from a prior full run; the headroom protocol is a
+stress-test, not a simulation.  Second, the two pipeline arms share incumbents:
+ARM 1 (LR) updated the canonical incumbent directory, so ARM 2 (cutLR) started
+from those improved solutions on some instances.  The $ub$ comparison is
+unaffected by this contamination, but the gap figures on instances where ARM 1's
+ALNS regressed should be read as approximate; the UB delta is the clean
+per-instance evidence.
+
+\section{Study design}\label{sec:design}
+
+Every technique below was implemented \emph{outside} the solver: no file in the
+solver's own modules was modified, and each instrument composes them from the
+outside. This keeps the comparison honest --- a difference between an arm and its
+control cannot be an artifact of a changed baseline.
+
+\subsection{Notation}
+
+\begin{table}[htbp]
+\centering
+\caption{Notation used throughout.}
+\label{tab:notation}
+\begin{tabular}{ll}
+\toprule
+Symbol & Meaning \\
+\midrule
+$z$ & incumbent objective (primal) \\
+$ub$ & Lagrangian upper bound, $\lfloor L(\mu)\rfloor$ (dual) \\
+$P^\ast$ & true optimum, known only to lie in $[z,ub]$ \\
+$\mu_{j,k}$ & multiplier on the coupling of job $j$ to processor $k$ \\
+$r_j$ & reduced profit $b_j-\sum_{k\in \Kj}\mu_{j,k}$ \\
+$g_{j,k}$ & subgradient component $x_{j,k}-y_j$ \\
+$G$ & absolute gap $L(\mu)-z$ \\
+pp & percentage points of certified gap \\
+phase & one ALNS run of up to 300\,s with cycling seeds \\
+tier & destroy-fraction escalation level (25\%, 33\%, 40\%) \\
+\midrule
+\multicolumn{2}{l}{\emph{Cut-augmented Lagrangian (Section~\ref{sec:cutlr})}} \\
+$O_k$ & single-processor orienteering optimum for processor $k$ at zero multipliers \\
+$\gamma_k$ & multiplier on capacity cut for processor $k$; $\gamma_k\ge 0$ \\
+$\nu_{ij}$ & multiplier on pair incompatibility $y_i+y_j\le 1$; $\nu_{ij}\ge 0$ \\
+$\nu_{ij\ell}$ & multiplier on triple incompatibility $y_i+y_j+y_\ell\le 2$; $\nu_{ij\ell}\ge 0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Instance subsets}
+
+\begin{itemize}
+  \item \textbf{Stratified-30.} A stratified subset across families B, C, D, EB,
+    EC, ED and across $n$ and $\alpha$. Used wherever breadth matters.
+  \item \textbf{Coupling-12.} A fast-screen subset for arm matrices comparing ten
+    or more configurations.
+  \item \textbf{Hard-tail-4.} The loosest-gap instances. Used where headroom is
+    required for an effect to be visible at all.
+  \item \textbf{Small-nonzero-30.} Every instance with $n\le 50$ carrying a
+    nonzero certified gap, for the exact reference of Section~\ref{sec:exact}.
+\end{itemize}
+
+\subsection{Budget regimes}
+
+Three regimes appear, and the distinction is load-bearing rather than incidental:
+Section~\ref{sec:lessons} reports two verdicts that reverse between them.
+
+\begin{table}[htbp]
+\centering
+\caption{Budget regimes. \emph{Production} is the solver's own configuration
+(Section~\ref{sec:loop}); the others are screens.}
+\label{tab:budgets}
+\begin{tabular}{lrrrr}
+\toprule
+Regime & phase (s) & cap (s) & dual iters & dual (s) \\
+\midrule
+Production & 300 & 1800 & 200 & 60 \\
+Fast screen & 120 & 240 & 120 & 20 \\
+Activation probe & 20 & 45 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 1800\,s cap is the per-instance budget of the development harness; the solver
+itself caps at 3600\,s, and no arm reached either for reasons other than tier
+exhaustion.
+
+\subsection{How each technique was tested and calibrated}
+
+\paragraph{Cut separation (Section~\ref{sec:cuts}).}
+An explicit cut pool with three separation routines (circuit, route-length,
+synchronisation-path), integrated through a hard feasibility filter and a soft
+scoring penalty. Calibrated by a 29-run staged suite on Stratified-30 at the
+production regime: a 3-run correctness gate, 12 coarse runs spanning
+low/medium/high settings, 8 refinement runs around the coarse finalists, and 6
+robustness runs over seed bundles. Eight parameters were swept ---
+\texttt{sep\_freq\_phase} $\in\{1,2,3\}$,
+\texttt{max\_cuts\_per\_round} $\in\{5,10,20\}$,
+\texttt{epsilon\_violation} $\in\{10^{-6},10^{-5},10^{-4}\}$,
+\texttt{epsilon\_reject} $\in\{10^{-5},10^{-4},10^{-3}\}$,
+\texttt{lambda\_cut} $\in\{0.1,0.25,0.5,1.0\}$,
+\texttt{cut\_age\_limit} $\in\{2,4,8\}$,
+\texttt{cut\_weight\_decay} $\in\{0,0.05,0.1\}$,
+\texttt{sep\_budget\_s\_per\_phase} $\in\{5,10,20\}$ --- with lexicographic
+selection on mean $\Delta$gap, then maximum final gap, then runtime.
+
+\paragraph{Activation sweep.}
+Four points of \texttt{epsilon\_violation} $\in\{10^{-7},-50,-100,-200\}$ on a
+three-instance subset at the activation-probe regime, with a gate failing a run
+when no cut enters the pool. Negative tolerances are non-physical and were used
+deliberately to force activation, separating ``the mechanism does not apply'' from
+``the mechanism is broken''.
+
+\paragraph{Separation against the relaxed solution.}
+A read-only instrument runs the subgradient to convergence (200 iterations or
+30\,s), replays the relaxation at $\mu^\ast$, and measures two violation channels.
+A second searches for any global ordering achieving makespan $\le L$ by time-boxed
+random-restart hill climbing (90\,s per instance), reporting \textsc{schedulable}
+constructively when one is found. Neither has parameters to calibrate: they are
+measurements, not treatments.
+
+\paragraph{Dual-guided coupling (Section~\ref{sec:guided}).}
+Six arms on Coupling-12 at the fast-screen regime: plain control, warm-$\mu$
+control, original (v1) operators with warm $\mu$, and corrected (v2) destroy,
+repair, and both. The v2 repair scores $(b_j+w\,r_j)/(1+\text{cost})$ with $w=1$;
+the v2 destroy scales its tie-breaking jitter to 1\% of the observed spread of
+$r_j$. The decisive arm is the warm-$\mu$ control, isolating the cost of the seed
+from the effect of the guidance. Three arms were repeated at the production
+regime.
+
+\paragraph{Reduced-cost fixing (Section~\ref{sec:fixing}).}
+No search runs. The subgradient is run per instance on Stratified-30, $r_j$ read
+off at $\mu^\ast$, and the two fixing tests evaluated in closed form. Because the
+threshold $G$ depends on incumbent quality and fixing runs mid-search rather than
+post hoc, reach is reported at $z$, $0.99z$ and $0.95z$.
+
+\paragraph{Seeding and stabilisation (Sections~\ref{sec:seeding},
+\ref{sec:convergence}).}
+Ten variants over three axes --- initialisation
+($\varepsilon\in\{0.05,0.10,0.25\}$), step rule (Polyak; trust region with radius
+$0.5$ and $1.0$), and dual smoothing ($0.3$, $0.6$) --- plus two combinations, on
+Stratified-30 at 200 iterations across six workers. Because a smoke test and the
+full sweep disagreed, a convergence probe then ran four variants to 1000
+iterations on Hard-tail-4, retaining the full bound history so the running best
+could be read at checkpoints $60/100/200/400/700/1000$ from one run per variant.
+
+\paragraph{Parallel subproblem evaluation (Section~\ref{sec:parallel}).}
+The per-processor loop is farmed to a worker pool with the instance loaded once
+per worker. Processors are partitioned by longest-processing-time assignment
+weighted by $2^{|J_k|}$; contiguous chunking was measured first and found badly
+imbalanced. Correctness requires the bound to be \emph{identical}, not merely
+close, to the sequential path. Timing uses best-of-three repeats.
+
+\paragraph{Uncoupled exact reference (Section~\ref{sec:exact}).}
+SRPS-1 is built directly and handed to CPLEX 22.1.1 with a 180\,s limit and six
+threads, sharing no state with the solver. Only instances CPLEX proves closed
+admit a decomposition of the certified gap.
+
+\section{Techniques targeting the dual bound}\label{sec:dual}
+
+Everything here aims to lower $ub$, and is therefore bounded by
+Table~\ref{tab:ceiling} before any of it is run.
+
+\subsection{BPC-style cut separation}\label{sec:cuts}
+
+\subsubsection{First design and its structural impossibility}\label{sec:cuts-structural}
+
+The initial implementation maintained a pool of cuts of three types --- circuit,
+route-length, and synchronisation-path --- separated at phase boundaries against
+the ALNS incumbent, applied through a hard feasibility filter and a soft scoring
+penalty.
+
+This design cannot work, for a reason requiring no experiment. Separation is
+performed against the incumbent, and the incumbent is feasible by construction.
+Feasibility means precisely: no cycles in the constraint graph, no route over $L$,
+and a synchronisation path within $L$ (Section~\ref{sec:constraints}). These are
+exactly the three conditions the separator tests. The candidate set is therefore
+empty at every call, identically, on every instance.
+
+A 29-run calibration suite was nevertheless executed on Stratified-30, consuming
+127.9 minutes and tuning eight parameters. Its outcome was a tautology: the
+recommended configuration was the arm with all cut machinery disabled, and the
+mean objective delta was identical ($-3.300$) across the top five arms. Every run
+reported \texttt{cuts\_added\_total}~$=0$.
+
+\subsubsection{The activation sweep and mechanism inertness}\label{sec:cuts-inert}
+
+To separate ``the mechanism is broken'' from ``the mechanism does not apply'', a
+four-point sweep drove the violation tolerance $\varepsilon$ negative, forcing
+cuts into the pool.
+
+\begin{table}[htbp]
+\centering
+\caption{Activation sweep on a three-instance subset. Pool size responds to
+$\varepsilon$; nothing else does.}
+\label{tab:sweep}
+\begin{tabular}{lrrrrl}
+\toprule
+$\varepsilon$ & cuts added & mean viol.\ after & filter rejections & mean $\Delta$gap (pp) & final objectives \\
+\midrule
+$10^{-7}$ & 0  & 0.0 & 0 & $+0.057444$ & 4971 / 2285 / 2226 \\
+$-50$     & 2  & 0.0 & 0 & $+0.057444$ & 4971 / 2285 / 2226 \\
+$-100$    & 8  & 0.0 & 0 & $+0.057444$ & 4971 / 2285 / 2226 \\
+$-200$    & 15 & 0.0 & 0 & $+0.057444$ & 4971 / 2285 / 2226 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pool grows fifteenfold; every outcome column is bit-identical to six decimal
+places. That is not a statistical null --- a real treatment with no effect produces
+scatter --- but an algebraic identity, and it has a specific cause. The evaluation
+routine scores each cut against a right-hand side frozen at construction as the
+true horizon $L$:
+\[
+\text{viol} \;=\; \max\bigl(0,\; \texttt{max\_len}-c.\texttt{rhs}\bigr),
+\qquad c.\texttt{rhs}=L .
+\]
+For any feasible candidate $\texttt{max\_len}\le L$, so the clamp returns exactly
+$0.0$ regardless of $\varepsilon$. The guard \texttt{if viol > 0.0} never fires, no
+cut is ever recorded as violated, the hard filter never rejects, and the soft
+penalty subtracts $\lambda\cdot 0$. Fifteen active cuts produced
+\texttt{mean\_violation\_after}~$=0.0$.
+
+We call this \emph{mechanism inertness}: the machinery activates and reports
+activation while remaining incapable of influencing the outcome variable. It is
+more dangerous than an obvious crash, because it produces clean-looking null
+results that invite the interpretation ``the idea does not help'' when the correct
+interpretation is ``the idea was never tested''.
+
+A telemetry defect compounded it. A counter intended to record penalty
+applications was incremented once per job removal regardless of any active cut,
+reporting nonzero values on runs with an empty pool. An analyst reading only the
+summary columns would have seen a mechanism apparently doing work.
+
+\subsubsection{Redirecting separation at the relaxed solution}\label{sec:s0}
+
+The structural argument also indicates the repair. In branch-price-and-cut,
+separation runs against a \emph{fractional} solution, which is where violations
+live. The heuristic has no such solution, but it does have the Lagrangian relaxed
+solution, and that object is infeasible in a well-defined way: $g_{j,k}$ is
+nonzero until convergence, and each $O_k(\mu)$ ignores synchronisation idle time
+(Section~\ref{sec:lagbound}).
+
+We built a read-only instrument (S0) that runs the subgradient to convergence,
+replays the relaxation at $\mu^\ast$, and measures two channels:
+
+\begin{description}
+  \item[Channel A (consistency).] Jobs partially claimed --- served by some but not
+    all processors in $\Kj$, violating constraint~3 directly.
+  \item[Channel B (synchronisation time).] The joint difference-constraint system
+    over the relaxed routes: whether it is cyclic, and if not, whether its longest
+    path exceeds $L$.
+\end{description}
+
+Both fire abundantly. Notably, the same cycle-detection routine that returned zero
+on every one of the 29 calibration runs returns nonzero here \emph{without
+modification}. The cut family was never wrong; the object it was pointed at was.
+
+\input{fragments/s0_results}
+
+\subsubsection{Why the natural cut is unsound}\label{sec:s0b}
+
+Channel B appears to be the opportunity: structural infeasibility the
+decomposition cannot see. It does not survive scrutiny.
+
+The relaxation fixes \emph{which} jobs each processor takes, not the \emph{order}.
+Any single global total order induces per-processor sequences whose arcs all point
+forward, hence an acyclic graph. Acyclicity is therefore always achievable, and
+the cycles S0 reports are an artifact of each processor adopting its own locally
+optimal min-time order. The real question is whether some ordering also satisfies
+makespan $\le L$.
+
+This is a soundness requirement, not a technicality. A no-good cut asserting
+``this relaxed selection is infeasible'' is valid only if \emph{no} ordering works.
+If a feasible ordering exists and the cut is applied anyway, a feasible point is
+excluded, $ub$ becomes invalid, and every certified gap computed downstream is
+wrong. For a method whose contribution is certification, that failure mode is
+worse than adding no cuts at all.
+
+Instrument S0b therefore searches for any global ordering achieving makespan
+$\le L$ by time-boxed random-restart hill climbing, reporting \textsc{schedulable}
+when one is found.
+
+\input{fragments/s0b_results}
+
+\subsubsection{Verdict}\label{sec:cuts-verdict}
+
+We falsify cut separation on three independent grounds. First, separation
+against the
+incumbent cannot produce a violated cut, confirmed operationally by a 29-run suite
+reporting no cuts in any run. Second, forcing activation admitted up to fifteen
+cuts while leaving mean post-evaluation violation at $0.0$ and every final
+objective bit-identical: the cuts were \emph{inert} rather than ineffective, and an
+experiment with no power cannot support a claim about efficacy. Third, redirecting
+separation at the relaxed solution yields a cut family that is \emph{unsound} on
+16 of 30 instances. Independently of design, Table~\ref{tab:ceiling} caps any cut
+family at $0.1136\pp$ mean and $0.0087\pp$ median.
+
+Three limits should be stated. We do not claim BPC cuts are ineffective for SRPS
+in general: we tested three families inside one architecture. The 14 of 30
+instances on which no feasible ordering was found remain \emph{formally open},
+since the schedulability search is heuristic; the soundness argument rests only on
+the 16 constructive cases, which suffices, because a single wrongly excluded
+feasible point invalidates the bound. And of the three limbs, only the ceiling
+generalises beyond the tested subsets.
+
+\subsection{Can the incumbent itself generate cuts?}\label{sec:incumbent-cuts}
+
+A natural question, worth answering explicitly because it motivates much of the
+design above: the solver always holds a best known solution, so is there
+information in it that can be used to generate cuts?
+
+The answer is no, and the reason is Section~\ref{sec:cuts-structural} stated in
+general form. A cut is useful only if some point violates it. The incumbent is
+feasible, so it violates no valid inequality --- that is what feasibility means.
+Any separation routine run against it returns an empty candidate set, whatever the
+cut family, independently of the particular families we implemented.
+
+What the incumbent \emph{can} supply is a bound, not a cut. It is a lower bound on
+the optimum, and the solver already exploits that: $z$ is the Polyak level
+reference (Section~\ref{sec:subgradient}), the threshold in the fixing tests of
+Section~\ref{sec:fixing}, and one end of the interval producing the ceiling of
+Table~\ref{tab:ceiling}. The distinction is between a feasible point, which
+bounds, and an infeasible one, which cuts. Generating cuts requires an infeasible
+object, and in this architecture the only one available is the Lagrangian relaxed
+solution --- which is why Section~\ref{sec:s0} redirects separation there, and
+Section~\ref{sec:s0b} shows why even that fails.
+
+\subsection{Primal-to-dual seeding and dual stabilisation}\label{sec:seeding}
+
+The solver seeds $\mu$ by the fair split and chains warm starts from one re-bound
+to the next; the incumbent enters only as the Polyak target, never as structure
+(Section~\ref{sec:subgradient}). Seeding $\mu$ from the incumbent's own selection
+is a genuine primal-to-dual coupling and was untested. Dual stabilisation --- trust
+region and smoothing --- was likewise untested against the plain Polyak scheme.
+
+\input{fragments/variants_results}
+
+\subsection{Does the trust region survive a longer budget?}\label{sec:convergence}
+
+\input{fragments/convergence_results}
+
+\subsection{Alternative ways to combine the subproblem solutions}\label{sec:combining}
+
+Equation~\eqref{eq:lag} combines the per-processor optima by plain summation:
+$L(\mu)$ is the $y$-term plus $\sum_k O_k(\mu)$. That is the only aggregation the
+solver performs, and it is worth asking what alternatives exist and what they
+would buy. Three are available, and all three can be settled without an
+experiment.
+
+\paragraph{Lagrangian decomposition.} Duplicate the shared variables and price
+their disagreement rather than summing independent blocks. For the natural split
+this provably reproduces the same bound, because the dualised block has the
+integrality property; Section~\ref{sec:ld} gives the argument. A different split,
+separating routing from synchronisation timing, is not covered by it and remains
+the one open direction.
+
+\paragraph{Column generation and Dantzig--Wolfe.} Reformulate with one column per
+per-processor route and price columns by the same orienteering subproblem. By the
+Dantzig--Wolfe equivalence, the linear master's bound at convergence equals the
+Lagrangian dual optimum $\min_\mu L(\mu)$ for the same subproblem structure. Column
+generation therefore cannot yield a \emph{tighter} bound than a fully converged
+subgradient; it can only reach it differently. That is not nothing --- an LP master
+does not oscillate, and Section~\ref{sec:convergence} shows the subgradient still
+descending when its budget expires --- but the improvement on offer is one of
+convergence, not of bound quality, and it is bounded by the same ceiling.
+
+\paragraph{Surrogate relaxation.} Aggregate the coupling constraints into a single
+weighted surrogate rather than dualising each. The surrogate bound dominates the
+Lagrangian bound in theory, but the surrogate subproblem retains the aggregated
+constraint and is no longer separable by processor --- forfeiting precisely the
+property that makes $O_k(\mu)$ exactly solvable. The aggregation that would
+tighten the bound is the one that destroys the decomposition.
+
+The pattern across all three matches the ceiling result: the aggregation is not
+where the looseness lives. The looseness lives in the subproblem's blindness to
+synchronisation waiting (Section~\ref{sec:lagbound}), and no way of combining
+blind subproblem solutions restores what the blindness discarded.
+
+\subsection{Warm-start dual effort scheduling}\label{sec:warm}
+
+The isolating control introduced for the dual-guided operators
+(Section~\ref{sec:guided}) doubles as a test of a dual-side technique in its own
+right: spending a subgradient solve \emph{before} the search rather than only
+reactively when a phase stalls. Its result is reported with those arms, because
+the two are measured together, and Section~\ref{sec:prod} shows it to be a
+screening artifact.
+
+\section{Techniques targeting the primal incumbent}\label{sec:primal}
+
+\subsection{Dual-guided destroy and repair}\label{sec:guided}
+
+\subsubsection{Design and the initialisation degeneracy}\label{sec:degeneracy}
+
+Two operators were added to the ALNS portfolio. A guided destroy removes jobs
+ranked by ascending reduced profit $r_j$, breaking ties on descending dual
+pressure. A guided repair inserts jobs by a score derived from $r_j$ and the
+insertion cost. Multipliers are optionally refreshed from the in-loop re-bound.
+
+Multipliers are initialised by the fair profit split
+(Section~\ref{sec:subgradient}). Then
+\[
+\sum_{k\in \Kj}\mu_{j,k}\;=\;|\Kj|\cdot\frac{b_j}{|\Kj|}\;=\;b_j
+\qquad\Longrightarrow\qquad
+r_j \;=\; b_j-\sum_{k\in \Kj}\mu_{j,k} \;=\; 0
+\]
+for \emph{every} job, identically. Direct measurement confirms it: on one 80-job
+instance, $0$ of $80$ jobs have nonzero reduced profit; on a 150-job instance, $0$
+of $150$.
+
+The fair split is the correct starting point for descent, but it is precisely the
+multiplier vector at which the guidance signal vanishes. Two consequences follow
+mechanically:
+
+\begin{description}
+  \item[Destroy degenerates to random removal.] The sort key is
+    $(0+\text{uniform}(-10^{-6},10^{-6}),\,-\text{dual pressure})$. The first
+    component is pure noise on an identically zero base, and exact ties have
+    measure zero, so the intended second criterion never breaks anything.
+  \item[Repair degenerates to insertion order.] With $r_j=0$ every job takes a
+    constant fallback score, the strict improvement test fails for every candidate
+    after the first, and insertion follows the iteration order of the unserved
+    set.
+\end{description}
+
+Both degenerate operators are inserted at position~0 of their portfolios,
+displacing tuned operators.
+
+\subsubsection{The original results are what the defect predicts}
+
+\begin{table}[htbp]
+\centering
+\caption{Original dual-guided matrix (30 instances). Lower mean $\Delta$gap is
+better.}
+\label{tab:h2-orig}
+\begin{tabular}{lrrl}
+\toprule
+Arm & mean $\Delta$gap (pp) & mean $\Delta$obj & Predicted by \\
+\midrule
+baseline     & 0.000313 & $-0.033$ & --- \\
+full         & 0.003921 & $-0.067$ & both defects, partly rescued by feedback \\
+destroy only & 0.008313 & $-0.200$ & random destroy displacing a tuned operator \\
+repair only  & 0.016217 & $-0.367$ & insertion-order repair displacing regret-2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ordering is not noise: it is what the degeneracy analysis predicts in advance.
+The repair-only arm, displacing regret-2 with order-dependent insertion, is worst;
+the destroy-only arm, displacing a tuned operator with randomness, is next; the
+baseline wins.
+
+\subsubsection{Correcting the design}\label{sec:h2-fix}
+
+Testing the hypothesis rather than the defect requires two repairs. \textbf{Warm
+multiplier initialisation} seeds $\mu$ from a real subgradient solve: nonzero
+reduced profits rise from $0/80$ to $74/80$, with spread $9.667$.
+\textbf{Non-degenerate operators (v2)} let the dual signal \emph{modulate} a
+competent base heuristic instead of replacing it, so that with $r\equiv 0$ the
+repair reduces to profit-density greedy rather than to a constant. Both original
+operators are retained behind flags, so the degenerate behaviour remains
+reproducible.
+
+\subsubsection{Corrected results}\label{sec:h2-results}
+
+\input{fragments/h2_results}
+
+\subsubsection{Production-budget validation}\label{sec:prod}
+
+\input{fragments/prod_results}
+
+\section{Techniques targeting runtime}\label{sec:runtime}
+
+Runtime carries no ceiling. Both techniques here were selected for that reason.
+
+\subsection{Reduced-cost variable fixing}\label{sec:fixing}
+
+\input{fragments/fixing_results}
+
+\subsection{Parallel subproblem evaluation}\label{sec:parallel}
+
+\input{fragments/parallel_results}
+
+\section{An uncoupled exact reference}\label{sec:exact}
+
+\input{fragments/exact_results}
+
+\section{Lagrangian decomposition: why the natural split cannot help}\label{sec:ld}
+
+One cell of the design space calls for Lagrangian \emph{decomposition} rather than
+the Lagrangian \emph{relaxation} the solver implements. We did not run it, because
+for the natural split it can be shown not to help.
+
+Write the problem as $\max\{c^\top v : v \in X_A \cap X_B\}$, where $X_A$ collects
+the per-processor routing and horizon constraints and $X_B$ the joint-service
+coupling $x_{j,k}=y_j$, both intersected with integrality. The solver dualises
+$X_B$ and solves over $X_A$ exactly, so its bound is
+\[
+z_{\mathrm{LR}}=\max\{c^\top v : v \in \operatorname{conv}(X_A),\; x_{j,k}=y_j\}.
+\]
+Lagrangian decomposition duplicates the shared variables, assigns one copy to each
+block, and prices their disagreement:
+\[
+z_{\mathrm{LD}}=\max\{c^\top v : v \in \operatorname{conv}(X_A)\cap
+\operatorname{conv}(X_B)\}.
+\]
+By the Guignard--Kim result~\cite{Guignard2003Lagrangean},
+$z_{\mathrm{LD}}\le z_{\mathrm{LR}}$ always, with strict improvement exactly when
+$\operatorname{conv}(X_B)$ is strictly contained in the linear description of
+$X_B$ --- that is, when the dualised block lacks the integrality property.
+
+Here it does not lack it. $X_B$ is the set of binary vectors satisfying
+$x_{j,k}=y_j$: equalities tying each $x_{j,k}$ to a single binary $y_j$. Fixing
+$y$ determines $x$, and the remaining polytope is a product of $\{0,1\}$-valued
+coordinates, so every vertex of the linear description has $y_j\in\{0,1\}$. Hence
+$\operatorname{conv}(X_B)$ coincides with that description, and
+\[
+z_{\mathrm{LD}}=z_{\mathrm{LR}} .
+\]
+Duplicating variables for the coupling constraint is guaranteed to reproduce the
+bound the solver already computes. No experiment is required, and none would be
+informative: the two bounds are equal by construction, so any measured difference
+could only be numerical noise.
+
+\paragraph{The split that could help.}
+A different partition is not covered by this argument. Separating \emph{routing}
+from \emph{synchronisation timing} --- one block enforcing per-processor routes, the
+other the difference-constraint system on start times --- dualises a copy constraint
+whose blocks both have non-integral hulls, so $z_{\mathrm{LD}}<z_{\mathrm{LR}}$
+becomes possible. This is also the split targeting a deficiency we measured rather
+than a hypothetical one: the per-processor subproblem enforces route length but is
+blind to synchronisation waiting (Sections~\ref{sec:constraints},
+\ref{sec:lagbound}).
+
+We record it as future work. It requires a second subproblem family, a timing
+oracle, and a second multiplier vector, and its payoff remains capped by
+Table~\ref{tab:ceiling}. It is the only remaining idea in this study with a
+mechanism pointing at a measured source of looseness, which is why we name it
+precisely rather than leaving the cell blank.
+
+\section{Methodological lessons}\label{sec:lessons}
+
+\paragraph{Activation is not effect.}
+A mechanism can fire, report firing, and still be incapable of changing the
+outcome. The activation sweep of Table~\ref{tab:sweep} passed an explicit
+activation gate at $\varepsilon=-100$ while remaining completely inert. Gates must
+therefore be placed on the \emph{outcome} variable: before spending a calibration
+suite, assert on a small subset that the treated arm differs from control. That
+guard would have caught the failure of Section~\ref{sec:cuts} in roughly fifteen
+minutes instead of 128.
+
+\paragraph{Budgets decide verdicts, in both directions.}
+Reduced-budget screening is standard practice, and it produced here a confident,
+internally consistent, entirely spurious $0.13\pp$ result. Nothing inside the
+screen betrays it: arm ordering is stable and the effect sits far outside
+run-to-run noise. The failure mode is specific --- a starved baseline flatters any
+treatment that supplies the starved resource.
+
+The same mechanism runs the other way, and we walked into it. The trust region
+measured $-8.07$ at 60 iterations, $+1.58$ at 200, and led on every instance at
+1000. We declared it falsified on the middle number. It was not falsified; the
+arms had not yet separated. A negative verdict taken at a single budget is as
+unsafe as a positive one. Three of this study's findings --- the fast screen, the
+trust region, and reduced-cost fixing --- turn on this, which suggests it is the
+dominant confound in metaheuristic calibration rather than an incidental one.
+
+\paragraph{Check the ceiling before calibrating.}
+Table~\ref{tab:ceiling} costs seconds and uses only data already in hand. It
+establishes that the median instance offers $0.0087\pp$ of headroom --- below
+experimental noise --- which is decisive information about whether a calibration
+campaign can possibly succeed. It should precede the campaign, not follow it.
+
+\paragraph{Verify that the signal is non-degenerate.}
+The defect of Section~\ref{sec:degeneracy} is a single arithmetic identity,
+$\sum_k b_j/|\Kj|=b_j$, checkable in one line before any experiment. Guidance
+mechanisms should assert that their signal has nonzero variance across the
+decision set \emph{at the point of use}.
+
+\paragraph{Distinguish soundness failures from performance failures.}
+The result of Section~\ref{sec:s0b} is not that the cut performs poorly, but that
+it is \emph{invalid} on a majority of instances. In a certifying method, an
+invalid cut does not degrade the result --- it corrupts the guarantee, silently.
+Soundness must be established before efficacy is measured.
+
+\section{Threats to validity}\label{sec:threats}
+
+The schedulability search of Section~\ref{sec:s0b} is heuristic. A
+\textsc{schedulable} verdict is constructive and therefore sound: an explicit
+feasible ordering is exhibited. A ``none found'' verdict is not a proof of
+infeasibility, and we do not treat it as one; those instances remain formally
+open, and settling them would require an exact feasibility oracle over the
+disjunctive orderings, which is NP-hard in general.
+
+The S0 and S0b samples are subsets of the benchmark rather than its entirety,
+selected to include both the stratified subset and the loosest-gap instances. The
+ceiling argument carries no such limitation, being computed over 780 instances,
+and it is the argument on which the principal conclusion rests.
+
+The corrected dual-guided arms carry a runtime confound by construction: warm
+initialisation spends an additional subgradient solve the plain control does not
+pay. We control for it with a dedicated arm applying warm initialisation with both
+guided operators disabled. A second confound, the reduced screening budget, is not
+merely controlled but \emph{measured}: Section~\ref{sec:prod} re-runs the decisive
+arms at full budget.
+
+All results are measured against the solver configured as in
+Section~\ref{sec:loop}, in particular a dual refresh capped at 200 iterations or
+60 seconds. Section~\ref{sec:convergence} shows that budget to be the binding
+constraint on the dual: the subgradient is still descending when it stops. Raising
+it tightens the certificate on every hard-tail instance tested, by $0.29\pp$ on
+average at essentially no runtime cost. Conclusions about gap-directed techniques
+become \emph{more} secure under such a configuration, since a tighter $ub$ shrinks
+the ceiling and leaves any technique less room; conclusions that are themselves
+budget-conditional --- the trust region above all --- would need re-testing.
+
+Finally, we tested three specific cut families and one dual-guidance design. We do
+not claim that no cut or coupling mechanism can help SRPS heuristics in general.
+We claim that these do not, that the reasons are structural, and that the ceiling
+bounds what any successor could achieve on this benchmark.
+
+\section{Conclusions}\label{sec:conclusions}
+
+We described a certified primal--dual solver for SRPS, tried ten times over to
+strengthen it with techniques from the exact-algorithms syllabus (nine of which
+failed on structural grounds), and then exhibited a positive dual-side
+contribution: a cut-augmented Lagrangian relaxation that demonstrably tightens
+the bound when the initial certificate has genuine headroom.
+
+\textbf{Falsification study: nine of ten attempts fail.}
+
+\textbf{Cut separation fails three times over} (Section~\ref{sec:cuts}). Separation against a feasible
+incumbent is
+mathematically incapable of finding a violated cut. Redirected at the Lagrangian
+relaxed solution it finds violations in abundance, but the natural feasibility cut
+is unsound on the majority of instances tested, because the relaxed selection
+admits a feasible synchronised schedule once ordering is chosen globally rather
+than per processor. And independently of design, the certified bound is already
+exact on 48.5\% of instances, capping every cut family at $0.11\pp$ mean and
+$0.009\pp$ median improvement.
+
+\textbf{Dual-guided coupling fails twice over.} The operator design is
+degenerate under its own
+initialisation, and correcting that defect was worth doing because it converts an
+untested hypothesis into a tested one. The corrected matrix then appears positive,
+and is not: an isolating control attributes the movement to the warm-start dual
+solve rather than to guidance, and a full-budget re-run shows that residue to be a
+screening artifact as well. Guidance measured against a properly-fed control is
+$+0.0037\pp$ --- on the wrong side of zero.
+
+Of the remaining techniques, Lagrangian decomposition of the natural split is
+provably equivalent to the relaxation already in use; seeding and stabilisation
+fail to move the floored bound; and reduced-cost fixing, though sound and cheap,
+fires only once the incumbent is already essentially optimal, at which point no
+search remains to accelerate. The expected asymmetry --- that the tightness capping
+cut-based strengthening should make the fixing threshold easy to clear --- does not
+hold, because both properties are consequences of the same quantity $G$ and cannot
+be played against each other.
+
+Parallelising the per-processor subproblems is the one intervention that improves
+what it targets: $1.42\times$ on the dual with bit-identical bounds, capturing
+59\% of a ceiling itself limited because a single subproblem can carry half an
+instance's work. Its end-to-end value is nonetheless about one per cent, because
+the dual is invoked on one instance in twelve. A correct optimisation of something
+that is not the bottleneck is still not a contribution to the solver, and we
+report it as such.
+
+\textbf{The cut-augmented Lagrangian is the one positive dual-side result}
+(Section~\ref{sec:cutlr}).  Capacity and incompatibility inequalities in the
+projected $y$-space, combined via Lagrangian penalties while preserving the
+per-processor decomposition, tighten the certified bound on 30 of 54 stratified
+instances in standalone comparison ($0.361\%$ mean versus $0.455\%$ for matched-budget
+plain LR, $-0.094\pp$).  In a pipeline experiment with deliberately weakened
+initial bounds the cut-augmented arm wins 12 of 54 instance comparisons against
+8 for plain LR, with advantage concentrated on medium-hard instances.  The
+benefit is conditional: where the initial certificate is already tight the
+ceiling absorbs both arms equally, and on the hardest low-alpha instances
+accumulated warm-multiplier subgradient calls eventually outpace per-call
+cutLR.  The net picture is that cuts add real value at the start of a solve or
+after a change in instance data, but not inside a re-solve whose initial bound
+is already the output of a full production run.
+
+The broader contribution is diagnostic. Mechanism inertness --- machinery that
+activates, reports activation, and cannot affect the outcome --- is a failure mode
+producing clean, publishable-looking null results from experiments that never took
+place. The guard against it is cheap and general: gate on the outcome variable,
+never on whether the mechanism fired. And no verdict, positive or negative, should
+be believed at a single computational budget.
+
+\appendix
+
+\section{Reproduction and results}\label{app:repro}
+
+All instruments are read-only with respect to the solver and modify no existing
+code path. The accompanying repository ships a single runner:
+
+\begin{verbatim}
+python reproduce.py --list          # every stage, its command, its runtime
+python reproduce.py --all           # everything, about 6 hours
+python reproduce.py --all --quick   # everything at reduced budgets
+python reproduce.py --fragments     # rebuild this paper's tables from the CSVs
+\end{verbatim}
+
+Every table in Sections~\ref{sec:dual}--\ref{sec:exact} is generated directly from
+the result files rather than transcribed. Artifacts are written to
+\texttt{results/bpc\_replica\_dev/} (cut separation and its instruments),
+\texttt{results/dual\_guided\_dev/} (coupling, seeding, stabilisation, fixing,
+parallel), and \texttt{results/exact/} (the CPLEX reference). Result files are
+timestamped and never overwritten, so repeated runs accumulate.
+
+The per-instance baseline results --- incumbent, bound, certified gap, and runtime
+for all 780 instances --- are in \texttt{results/adaptive\_master.csv}. Every
+$\Delta$ reported in this paper is measured against that table, so any arm can be
+recompared against the baseline directly.
+
+The 71 instance files the experiments touch are bundled with the repository under
+CC0; the full benchmark is not needed to reproduce anything reported here.
+Repository documentation covers setup, the meaning of every result column, and the
+integer-floor convention of Equation~\eqref{eq:gap}, which is the single most
+common source of misreading: a technique can improve the real-valued bound and
+change the certified gap by nothing.
+
+\begin{thebibliography}{9}
+
+\bibitem{RieraLedesma2021SRPS}
+J.~Riera-Ledesma, J.-J. Salazar-Gonz\'alez,
+Selective routing problem with synchronization,
+Computers \& Operations Research 135 (2021) 105465.
+\href{https://doi.org/10.1016/j.cor.2021.105465}{doi:10.1016/j.cor.2021.105465}.
+
+\bibitem{RopkePisinger2006ALNS}
+S.~Ropke, D.~Pisinger,
+An adaptive large neighborhood search heuristic for the pickup and delivery
+problem with time windows,
+Transportation Science 40~(4) (2006) 455--472.
+\href{https://doi.org/10.1287/trsc.1050.0135}{doi:10.1287/trsc.1050.0135}.
+
+\bibitem{Vansteenwegen2011Orienteering}
+P.~Vansteenwegen, W.~Souffriau, D.~Van Oudheusden,
+The orienteering problem: A survey,
+European Journal of Operational Research 209~(1) (2011) 1--10.
+\href{https://doi.org/10.1016/j.ejor.2010.03.045}{doi:10.1016/j.ejor.2010.03.045}.
+
+\bibitem{Archetti2007MetaheuristicsTOP}
+C.~Archetti, A.~Hertz, M.~G. Speranza,
+Metaheuristics for the team orienteering problem,
+Journal of Heuristics 13~(1) (2007) 49--76.
+\href{https://doi.org/10.1007/s10732-006-9004-0}{doi:10.1007/s10732-006-9004-0}.
+
+\bibitem{Fisher1981Lagrangian}
+M.~L. Fisher,
+The Lagrangian relaxation method for solving integer programming problems,
+Management Science 27~(1) (1981) 1--18.
+\href{https://doi.org/10.1287/mnsc.27.1.1}{doi:10.1287/mnsc.27.1.1}.
+
+\bibitem{Held1974Subgradient}
+M.~Held, P.~Wolfe, H.~P. Crowder,
+Validation of subgradient optimization,
+Mathematical Programming 6~(1) (1974) 62--88.
+\href{https://doi.org/10.1007/BF01580223}{doi:10.1007/BF01580223}.
+
+\bibitem{Guignard2003Lagrangean}
+M.~Guignard,
+Lagrangean relaxation,
+Top 11~(2) (2003) 151--200.
+\href{https://doi.org/10.1007/bf02579036}{doi:10.1007/bf02579036}.
+
+\bibitem{PolyakStepSize}
+B.~T. Polyak,
+Minimization of unsmooth functionals,
+USSR Computational Mathematics and Mathematical Physics 9~(3) (1969) 14--29.
+\href{https://doi.org/10.1016/0041-5553(69)90061-5}{doi:10.1016/0041-5553(69)90061-5}.
+
+\bibitem{Fisher1997VRPTW}
+M.~L. Fisher, K.~O. J\o rnsten, O.~B.~G. Madsen,
+An optimization algorithm for the vehicle routing problem with time window
+constraints,
+Operations Research 45~(3) (1997) 395--406.
+\href{https://doi.org/10.1287/opre.45.3.395}{doi:10.1287/opre.45.3.395}.
+
+\bibitem{Kohl1999LagrangeVRPTW}
+N.~Kohl, J.~Desrosiers, O.~B.~G. Madsen, M.~M. Solomon, F.~Soumis,
+2-path cuts for the vehicle routing problem with time windows,
+Transportation Science 33~(1) (1999) 101--116.
+\href{https://doi.org/10.1287/trsc.33.1.101}{doi:10.1287/trsc.33.1.101}.
+
+\bibitem{ArchettiSperanza2014Matheuristic}
+C.~Archetti, M.~G. Speranza,
+A survey on matheuristics for routing problems,
+EURO Journal on Computational Optimization 2~(4) (2014) 223--246.
+\href{https://doi.org/10.1007/s13675-014-0030-7}{doi:10.1007/s13675-014-0030-7}.
+
+\bibitem{Barnhart1998BranchPrice}
+C.~Barnhart, E.~L. Johnson, G.~L. Nemhauser, M.~W.~P. Savelsbergh, P.~H. Vance,
+Branch-and-price: Column generation for solving huge integer programs,
+Operations Research 46~(3) (1998) 316--329.
+\href{https://doi.org/10.1287/opre.46.3.316}{doi:10.1287/opre.46.3.316}.
+
+\bibitem{Crowder1983ZeroOne}
+H.~Crowder, E.~L. Johnson, M.~W. Padberg,
+Solving large-scale zero-one linear programming problems,
+Operations Research 31~(5) (1983) 803--834.
+\href{https://doi.org/10.1287/opre.31.5.803}{doi:10.1287/opre.31.5.803}.
+
+\bibitem{DuMerle1999Stabilized}
+O.~du Merle, D.~Villeneuve, J.~Desrosiers, P.~Hansen,
+Stabilized column generation,
+Discrete Mathematics 194~(1--3) (1999) 229--237.
+\href{https://doi.org/10.1016/S0012-365X(98)00213-1}{doi:10.1016/S0012-365X(98)00213-1}.
+
+\end{thebibliography}
+
+\end{document}
