@@ -1,0 +1,2 @@
+instance,family,n,alpha,phase,tier,obj,ub,gap_pct,seeds,phase_rt,cumul_rt,event
+B_n100_001_a25_001,B,100,0.25,1,0,2141.0,2144,0.13992537313432835,1,45.35112489992753,45.35115110001061,OBJ+20 tier->0

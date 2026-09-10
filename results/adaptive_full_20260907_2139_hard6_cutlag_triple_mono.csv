@@ -1,0 +1,7 @@
+instance,family,n,alpha,group_id,bks,master_obj,master_rt_s,master_cert_gap_pct,master_status,beta_obj,beta_ub,beta_gap_pct,beta_ec_gain,beta_phases,beta_stop_reason,beta_total_rt_s,beta_raw_ub,beta_bound_mode,beta_cut_positive_gamma,beta_cut_positive_nu,beta_num_ub_refreshes,beta_num_lag_iters,beta_no_refresh,beta_vs_master,beta_vs_bks,beta_status
+EB_n130_016_a25_046,EB,130,0.25,016,2237.0,2237.0,1203.5,0.2230,,2237.0,2242,0.2230,0,4,TIERS_EXHAUSTED,462.6,2267.8393,cutlag_triple,17,30,0,161,0,0.0,0.0,TIE
+D_n080_045_a25_133,D,80,0.25,045,,1910.0,1218.2,0.6760,,1883.0,1923,2.0801,0,5,TIERS_EXHAUSTED,630.0,1947.6429,cutlag_triple,18,16,0,204,0,-27.0,,NA
+ED_n080_045_a25_133,ED,80,0.25,045,,1681.0,1511.9,0.3557,,1680.0,1687,0.4149,0,8,TIERS_EXHAUSTED,924.6,1691.4907,cutlag_triple,18,31,0,336,0,-1.0,,NA
+B_n130_016_a25_046,B,130,0.25,016,2744.0,2744.0,903.6,1.9650,,2744.0,2799,1.9650,0,4,TIERS_EXHAUSTED,463.8,2813.5594,cutlag_triple,20,33,0,176,0,0.0,0.0,TIE
+EB_n100_001_a50_002,EB,100,0.5,001,2822.0,2822.0,901.6,0.0708,,2822.0,2824,0.0708,0,2,GAP<0.3%,184.4,2824.0000,cutlag_triple,0,0,0,0,0,0.0,0.0,TIE
+D_n080_045_a50_134,D,80,0.5,045,,2749.0,941.5,0.7939,,2749.0,2771,0.7939,1,8,TIERS_EXHAUSTED,1110.8,2780.4026,cutlag_triple,6,0,0,398,0,0.0,,NA
