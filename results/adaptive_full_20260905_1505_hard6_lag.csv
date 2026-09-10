@@ -1,0 +1,7 @@
+instance,family,n,alpha,group_id,bks,master_obj,master_rt_s,master_cert_gap_pct,master_status,beta_obj,beta_ub,beta_gap_pct,beta_ec_gain,beta_phases,beta_stop_reason,beta_total_rt_s,beta_raw_ub,beta_bound_mode,beta_cut_positive_gamma,beta_cut_positive_nu,beta_num_ub_refreshes,beta_num_lag_iters,beta_no_refresh,beta_vs_master,beta_vs_bks,beta_status
+EB_n130_016_a25_046,EB,130,0.25,016,2237.0,2237.0,1203.5,0.2230,,2237.0,2253,0.7102,0,4,TIERS_EXHAUSTED,426.8,2253.2132,lag,,,2,300,0,0.0,0.0,TIE
+D_n080_045_a25_133,D,80,0.25,045,,1910.0,1218.2,0.6760,,1883.0,1944,3.1379,0,5,TIERS_EXHAUSTED,529.9,1944.0687,lag,,,2,300,0,-27.0,,NA
+ED_n080_045_a25_133,ED,80,0.25,045,,1681.0,1511.9,0.3557,,1680.0,1691,0.6505,0,8,TIERS_EXHAUSTED,811.3,1691.7213,lag,,,3,400,0,-1.0,,NA
+EB_n100_001_a50_002,EB,100,0.5,001,2822.0,2822.0,901.6,0.0708,,2822.0,2824,0.0708,0,1,GAP<0.3%,92.7,2824.0000,lag,,,0,0,0,0.0,0.0,TIE
+D_n080_045_a50_134,D,80,0.5,045,,2749.0,941.5,0.7939,,2740.0,2789,1.7569,0,4,TIERS_EXHAUSTED,481.8,2789.8620,lag,,,2,300,0,-9.0,,NA
+B_n130_016_a25_046,B,130,0.25,016,2744.0,2744.0,903.6,1.9650,,2744.0,2802,2.0700,0,4,TIERS_EXHAUSTED,412.1,2802.7607,lag,,,2,300,0,0.0,0.0,TIE

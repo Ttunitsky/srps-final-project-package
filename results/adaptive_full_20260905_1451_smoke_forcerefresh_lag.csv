@@ -1,0 +1,2 @@
+instance,family,n,alpha,group_id,bks,master_obj,master_rt_s,master_cert_gap_pct,master_status,beta_obj,beta_ub,beta_gap_pct,beta_ec_gain,beta_phases,beta_stop_reason,beta_total_rt_s,beta_raw_ub,beta_bound_mode,beta_cut_positive_gamma,beta_cut_positive_nu,beta_num_ub_refreshes,beta_num_lag_iters,beta_no_refresh,beta_vs_master,beta_vs_bks,beta_status
+B_n100_001_a25_001,B,100,0.25,001,2142.0,2142.0,300.6,0.0933,,2142.0,2146,0.1864,0,3,GAP<0.3%,144.5,2146.4088,lag,,,2,150,0,0.0,0.0,TIE
