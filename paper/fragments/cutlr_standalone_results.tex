@@ -1,0 +1,43 @@
+\begin{table}[htbp]
+\centering
+\caption{Standalone dual comparison on the stratified-54 subset (54 instances
+spanning 6 families, 3 $\alpha$ levels, 3 difficulty positions each).  All
+methods share a total budget of at most 200 subgradient iterations.  \emph{Warm}
+methods begin from LR\_100's multipliers; \emph{cold} methods start from zero.
+Lower certified gap is better.  The pairwise comparison column counts wins
+against LR\_200\_cold, the natural double-budget baseline.}
+\label{tab:cutlr-standalone}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Mean gap (\%) & Median (\%) & Max (\%) & vs.\ LR\_200\_cold \\
+\midrule
+LR\_100 (100 cold) & 1.028 & 0.673 & 4.204 & --- \\
+LR\_200\_cold (200 cold) & 0.455 & 0.144 & 2.712 & baseline \\
+LR\_100$+$LR\_100 (warm) & 0.467 & 0.147 & 2.811 & 19W / 24L / 11T \\
+\midrule
+cutLR-cap warm 100 & 0.397 & 0.116 & 2.351 & 35W / 9L / 10T \\
+cutLR-pair warm 100 & 0.404 & 0.125 & 2.260 & 30W / 14L / 10T \\
+cutLR-triple warm 100 & \textbf{0.361} & \textbf{0.114} & 2.440 & \textbf{30W / 13L / 11T} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The three cutLR configurations improve on every aggregate metric over
+LR\_200\_cold; the triple configuration achieves the lowest mean gap
+($0.361\%$, $-0.094\pp$ vs.\ baseline).
+
+A decisive comparison is LR\_100$+$LR\_100 against cutLR-triple: both consume
+the same total dual budget (100 cold then 100 warm iterations), but the warm
+continuation without cuts achieves $0.467\%$ mean gap and wins only 19 of 54
+instances versus the baseline, while cutLR-triple achieves $0.361\%$ and wins
+30. The $+0.106\pp$ advantage of cutLR over the warm continuation cannot be
+attributed to the warm start; it is the contribution of the cuts themselves.
+
+The capacity-cut configuration (cutLR-cap) records the highest instance-win
+count (35), reflecting that capacity tightness is widespread across the
+benchmark. Adding pair incompatibilities (cutLR-pair) sharpens the per-instance
+bound on medium-hard instances at the cost of a marginally slower convergence
+per call, shifting some wins to losses on small-easy instances. The triple
+configuration adds incompatible triples to the pair set, recovering the lowest
+aggregate mean while the per-instance win count stays at 30.
