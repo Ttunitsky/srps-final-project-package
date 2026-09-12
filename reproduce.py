@@ -107,6 +107,28 @@ STAGES = [
                "--time-limit", "30", "--threads", "4", "--tag", "quick"],
         needs_cplex=True,
     ),
+    # ── Tomer's cut-augmented Lagrangian (Section 5 of the paper) ────────────
+    # Both stages analyse pre-computed results (each runs in ~1 min).
+    # To fully re-generate the headroom experiment (~2h), run:
+    #   python run_adaptive_full_cutlag_exp_monotone.py --bound-mode lag ...
+    #   python run_adaptive_full_cutlag_exp_monotone.py --bound-mode cutlag_triple ...
+    # or:  .\dev_cut_lagrangian\run_headroom_exp.ps1
+    Stage(
+        "cutlr_standalone",
+        "CutLR standalone: dual bound comparison on stratified-54 (pre-computed)", 1,
+        ["dev_cut_lagrangian/analyze_cut_aug_stratified54.py"],
+        quick=["dev_cut_lagrangian/analyze_cut_aug_stratified54.py"],
+    ),
+    Stage(
+        "cutlr_headroom",
+        "CutLR headroom: two-arm pipeline comparison (pre-computed)", 1,
+        ["dev_cut_lagrangian/analyze_headroom_exp.py",
+         "--lr-csv",  "results/adaptive_full_20260910_1011.csv",
+         "--cut-csv", "results/adaptive_full_20260910_1216_headroom_cutlag.csv"],
+        quick=["dev_cut_lagrangian/analyze_headroom_exp.py",
+               "--lr-csv",  "results/adaptive_full_20260910_1011.csv",
+               "--cut-csv", "results/adaptive_full_20260910_1216_headroom_cutlag.csv"],
+    ),
 ]
 
 # H2 arm matrices are parameterised runs of one driver, listed separately so the

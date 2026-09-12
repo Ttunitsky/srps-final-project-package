@@ -4,10 +4,13 @@
 **Course:** 0572-5330, *Exact Algorithms for Combinatorial Optimization Problems* — Tel-Aviv University
 
 This repository contains everything needed to re-run, verify, or extend a study
-that tests **ten techniques from the course** against an existing certified
-primal–dual solver for the Selective Routing Problem with Synchronisation (SRPS).
+that (1) tests ten techniques from the course syllabus against a certified
+primal–dual solver for the Selective Routing Problem with Synchronisation (SRPS),
+and (2) develops a cut-augmented Lagrangian relaxation that demonstrably tightens
+the certified bound.
 
-- **The paper:** [`paper/coupling_falsification.tex`](paper/coupling_falsification.tex)
+- **The paper (PDF):** [`paper/coupling_falsification_with_cutlr.pdf`](paper/coupling_falsification_with_cutlr.pdf)
+- **The paper (source):** [`paper/coupling_falsification_with_cutlr.tex`](paper/coupling_falsification_with_cutlr.tex)
 - **The findings, in prose:** [`COURSE_PROJECT.md`](COURSE_PROJECT.md)
 - **This file:** how to install, run, and read everything.
 
@@ -117,6 +120,10 @@ The two functions that matter most:
 | `dev_dual_guided/profile_dual.py` | where dual time goes | no |
 | `dev_exact/cplex_srps.py` | the SRPS-1 arc-flow MILP | no |
 | `dev_exact/run_exact.py` | uncoupled CPLEX reference | no |
+| `dev_cut_lagrangian/cut_augmented_lagrangian.py` | Tomer's L(μ,γ,ν) implementation | no |
+| `dev_cut_lagrangian/analyze_cut_aug_stratified54.py` | standalone dual comparison analysis | no |
+| `dev_cut_lagrangian/analyze_headroom_exp.py` | headroom pipeline arm comparison | no |
+| `run_adaptive_full_cutlag_exp_monotone.py` | full pipeline runner (cutLR or plain LR) | no |
 
 ### Configuration, results, paper
 
@@ -126,9 +133,13 @@ The two functions that matter most:
 | `results/bpc_replica_dev/` | H1 outputs (S0, S0b, cut suite, activation sweep) |
 | `results/dual_guided_dev/` | H2, variants, fixing, parallel outputs |
 | `results/exact/` | CPLEX outputs |
-| `results/analysis/` | notes and cross-run summaries |
-| `paper/coupling_falsification.tex` | the paper |
-| `paper/fragments/*.tex` | **generated** results tables — do not edit by hand |
+| `results/analysis/cut_aug_lr_stratified54.csv` | standalone cutLR comparison (54 instances × 6 methods) |
+| `results/adaptive_full_20260910_1011.csv` | headroom pipeline ARM 1 (plain LR, ~1.93h) |
+| `results/adaptive_full_20260910_1216_headroom_cutlag.csv` | headroom pipeline ARM 2 (cutLR-triple, ~1.16h) |
+| `results/analysis/` | cross-run summaries |
+| `paper/coupling_falsification_with_cutlr.tex` | the paper (source) |
+| `paper/coupling_falsification_with_cutlr.pdf` | the paper (compiled PDF) |
+| `paper/fragments/*.tex` | results tables — most are **generated**; cutLR fragments are hand-authored |
 | `build_*_fragments.py` | regenerate those fragments from the CSVs |
 | `reproduce.py` | run any or all experiments |
 
@@ -154,7 +165,15 @@ python reproduce.py --all --quick   # everything, a few minutes
 | `convergence` | does the verdict change at 1000 iterations? | 10 min |
 | `parallel` | how much faster is the parallel dual? | 10 min |
 | `exact` | what is the true optimum? (CPLEX) | 90 min |
+| `cutlr_standalone` | analyse standalone cutLR dual comparison (pre-computed) | 1 min |
+| `cutlr_headroom` | analyse headroom pipeline arm comparison (pre-computed) | 1 min |
 | `fragments` | rebuild the paper's tables | 1 min |
+
+**Full re-generation of cutLR experiments** (not needed to verify results — pre-computed CSVs are included):
+```bash
+# Headroom experiment (~2h total, 3 workers, runs both arms sequentially)
+python -m dev_cut_lagrangian.run_headroom_exp   # or: .\dev_cut_lagrangian\run_headroom_exp.ps1
+```
 
 **Results never overwrite.** Every run writes a timestamped file, so repeated
 runs accumulate and the fragment builders pick up the most recent.
@@ -196,15 +215,17 @@ floor. When comparing bounds, always check `floor(ub)`, not `ub`.
 
 ## 7. Rebuilding the paper
 
-```bash
-python reproduce.py --fragments     # regenerate tables from the CSVs
-```
+A compiled PDF is included at `paper/coupling_falsification_with_cutlr.pdf`.
 
-Then compile `paper/coupling_falsification.tex` with any LaTeX toolchain
+To recompile from source:
+```bash
+python reproduce.py --fragments     # regenerate David's tables from the CSVs
+```
+Then compile `paper/coupling_falsification_with_cutlr.tex` with any LaTeX toolchain
 (Overleaf works; upload the whole `paper/` directory including `fragments/`).
 
-Never edit `paper/fragments/*.tex` by hand — they are overwritten on every
-rebuild. To change a number, change the experiment.
+Note: `paper/fragments/cutlr_*.tex` and `paper/fragments/coverage_results_cutlr.tex`
+are hand-authored from Tomer's experiment results and are not overwritten by `--fragments`.
 
 ---
 
@@ -223,21 +244,23 @@ rebuild. To change a number, change the experiment.
 
 ## 9. What the study found
 
-Ten techniques, one summary: **every technique targeting the certified gap was
-absorbed by a ceiling that was computable in advance; the two targeting runtime
-were not bounded by it, and one delivered.**
+**Falsification study:** every technique targeting the certified gap was absorbed
+by a ceiling computable in advance; the two targeting runtime were not, and one
+delivered. **Cut-augmented Lagrangian:** the one dual-side technique that
+demonstrably tightens the bound — when the initial certificate has genuine headroom.
 
 | Technique | Target | Outcome |
 |---|---|---|
 | BPC-style cut separation | gap | falsified on three grounds |
 | Dual-guided destroy/repair | gap | +0.0037 pp — nothing |
-| Warm-μ dual scheduling | gap | −0.0086 pp at full budget (a screen artifact) |
+| Warm-μ dual scheduling | gap | −0.0086 pp at full budget (screen artifact) |
 | Primal→dual seeding | gap | 9 tighter / 8 looser after flooring |
 | Dual stabilisation | gap | budget-dependent; no transfer |
 | Lagrangian decomposition | gap | **provably equal** to the existing bound |
-| Reduced-cost fixing | runtime | 24.8% → 0.3% reach at a 1%-suboptimal incumbent |
+| Reduced-cost fixing | runtime | 24.8% → 0.3% reach at 1%-suboptimal incumbent |
 | **Parallel subproblems** | **runtime** | **1.42× dual, bit-identical bounds** |
 | Compact MILP (CPLEX) | reference | Lagrangian bound tighter on 22/30 |
+| **Cut-augmented LR** (Tomer) | **gap** | **0.361% vs 0.455% standalone; 12/8 pipeline wins** |
 
 Full reasoning is in [`COURSE_PROJECT.md`](COURSE_PROJECT.md) and the paper.
 
