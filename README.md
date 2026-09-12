@@ -120,7 +120,7 @@ The two functions that matter most:
 | `dev_dual_guided/profile_dual.py` | where dual time goes | no |
 | `dev_exact/cplex_srps.py` | the SRPS-1 arc-flow MILP | no |
 | `dev_exact/run_exact.py` | uncoupled CPLEX reference | no |
-| `dev_cut_lagrangian/cut_augmented_lagrangian.py` | Tomer's L(μ,γ,ν) implementation | no |
+| `dev_cut_lagrangian/cut_augmented_lagrangian.py` | L(μ,γ,ν) cut-augmented implementation | no |
 | `dev_cut_lagrangian/analyze_cut_aug_stratified54.py` | standalone dual comparison analysis | no |
 | `dev_cut_lagrangian/analyze_headroom_exp.py` | headroom pipeline arm comparison | no |
 | `run_adaptive_full_cutlag_exp_monotone.py` | full pipeline runner (cutLR or plain LR) | no |
@@ -219,13 +219,13 @@ A compiled PDF is included at `paper/coupling_falsification_with_cutlr.pdf`.
 
 To recompile from source:
 ```bash
-python reproduce.py --fragments     # regenerate David's tables from the CSVs
+python reproduce.py --fragments     # regenerate the paper's tables from the CSVs
 ```
 Then compile `paper/coupling_falsification_with_cutlr.tex` with any LaTeX toolchain
 (Overleaf works; upload the whole `paper/` directory including `fragments/`).
 
 Note: `paper/fragments/cutlr_*.tex` and `paper/fragments/coverage_results_cutlr.tex`
-are hand-authored from Tomer's experiment results and are not overwritten by `--fragments`.
+are hand-authored from the cutLR experiment results and are not overwritten by `--fragments`.
 
 ---
 
@@ -260,7 +260,7 @@ demonstrably tightens the bound — when the initial certificate has genuine hea
 | Reduced-cost fixing | runtime | 24.8% → 0.3% reach at 1%-suboptimal incumbent |
 | **Parallel subproblems** | **runtime** | **1.42× dual, bit-identical bounds** |
 | Compact MILP (CPLEX) | reference | Lagrangian bound tighter on 22/30 |
-| **Cut-augmented LR** (Tomer) | **gap** | **0.361% vs 0.455% standalone; 12/8 pipeline wins** |
+| **Cut-augmented LR** | **gap** | **0.361% vs 0.455% standalone; 12/8 pipeline wins** |
 
 Full reasoning is in [`COURSE_PROJECT.md`](COURSE_PROJECT.md) and the paper.
 

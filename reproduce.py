@@ -107,7 +107,7 @@ STAGES = [
                "--time-limit", "30", "--threads", "4", "--tag", "quick"],
         needs_cplex=True,
     ),
-    # ── Tomer's cut-augmented Lagrangian (Section 5 of the paper) ────────────
+    # ── Cut-augmented Lagrangian (Section 5 of the paper) ───────────────────
     # Both stages analyse pre-computed results (each runs in ~1 min).
     # To fully re-generate the headroom experiment (~2h), run:
     #   python run_adaptive_full_cutlag_exp_monotone.py --bound-mode lag ...

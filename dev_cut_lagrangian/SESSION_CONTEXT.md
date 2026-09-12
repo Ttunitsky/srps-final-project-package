@@ -1,10 +1,10 @@
 # SRPS Cuts Project — Session Context & Recovery Guide
 
 **Last Updated**: 2026-09-10 (headroom experiment complete)
-**Session Goal**: Complete the headroom experiment (Option B) for Tomer's cut-augmented Lagrangian contribution  
+**Session Goal**: Complete the headroom experiment (Option B) for the cut-augmented Lagrangian contribution  
 **Deadline**: October 25, 2026 (course submission)  
 **Repo root**: `C:\Users\tomer.tunitsky\exact-algos-project\sandbox_new_david_repo\david_package_20260829_1416\`  
-**Branch**: `tomer/cut-augmented-lagrangian`
+**Branch**: `main` (merged from `tomer/cut-augmented-lagrangian`)
 
 ---
 
@@ -16,17 +16,17 @@
 - **Advisor**: Dr. Mor Kaspi  
 - **Problem**: SRPS — Selective Routing Problem with Synchronization (profit-maximizing multi-processor orienteering)
 
-### What David Built (the baseline)
+### The Baseline Solver
 A **certified primal–dual solver** combining:
 - **ALNS** (Adaptive Large Neighborhood Search) as the primal engine
 - **Lagrangian relaxation L(μ)** as the dual engine — decomposes per-processor into independent orienteering DPs
 - **Subgradient descent** with Polyak steps (100 iter warm or 200 iter cold)
 - **Results on 660 instances**: mean gap 0.133%, median 0.046%, 283 proven optimal
 
-David also ran a **falsification study of 10 course techniques** — 9 failed. The key reason: the **ceiling argument** — the certified gap is already 0.11pp mean / 0.009pp median, below the noise floor of any gap-directed experiment.
+The study also includes a **falsification study of 10 course techniques** — 9 failed. The key reason: the **ceiling argument** — the certified gap is already 0.11pp mean / 0.009pp median, below the noise floor of any gap-directed experiment.
 
-### What Tomer Built (the contribution)
-**Cut-augmented Lagrangian L(μ, γ, ν)** — adds valid inequalities in projected y-space into David's Lagrangian:
+### The Cut-Augmented Lagrangian (the contribution)
+**Cut-augmented Lagrangian L(μ, γ, ν)** — adds valid inequalities in projected y-space into the baseline Lagrangian:
 1. **Capacity cuts**: `Σ_{j∈J_k} (b_j/O_k) y_j ≤ 1` where O_k = independent orienteering optimum for processor k
 2. **Pair incompatibility**: `y_i + y_j ≤ 1` (pair can't fit on any single-processor route)
 3. **Triple incompatibility**: `y_i + y_j + y_l ≤ 2` (triple can't all fit)
@@ -37,7 +37,7 @@ David also ran a **falsification study of 10 course techniques** — 9 failed. T
 
 ### Mor's Guidance (Zoom call, Aug 19 2026)
 - "Integrate cuts into the Lagrangian per-processor" — done
-- Distinction between **Cut-and-Branch** (Tomer: cuts at root only) vs **Branch-and-Cut** (David: not done)
+- Distinction between **Cut-and-Branch** (cuts at root only, this study) vs **Branch-and-Cut** (not explored here)
 
 ---
 
@@ -73,7 +73,7 @@ Results: 660 instances, documented but not the focus.
 
 **Critical finding**: `beta_num_ub_refreshes = 0` on ALL 6 instances for BOTH arms.
 
-**Explanation (ceiling argument)**: The master's initial UB (from David's full run) is already tighter than what 100-iteration in-loop Lagrangian can achieve. CutLR's lower raw_ub doesn't help because floor(raw_ub) >= master_UB for all 6 instances.
+**Explanation (ceiling argument)**: The master's initial UB (from the baseline full run) is already tighter than what 100-iteration in-loop Lagrangian can achieve. CutLR's lower raw_ub doesn't help because floor(raw_ub) >= master_UB for all 6 instances.
 
 ### Experiment 4: Headroom Experiment — Full 54 Instances (DONE ✅)
 
@@ -169,7 +169,7 @@ ARM 1 ran without `--save-suffix` (flags dropped on PowerShell paste), so it upd
 
 1. **Standalone evidence (stratified54)**: cutLR_warm_100 beats LR_200_cold in apples-to-apples dual comparison on harder instances. Cuts genuinely tighten the relaxation.
 
-2. **Pipeline evidence (hard6)**: Neither LR nor cutLR triggers refreshes when the master's tight initial UB leaves no room (ceiling argument, David's Section 7).
+2. **Pipeline evidence (hard6)**: Neither LR nor cutLR triggers refreshes when the master's tight initial UB leaves no room (ceiling argument, Section 7).
 
 3. **Headroom experiment (DONE)**: Under deliberately weakened initial UB = floor(LR_200_cold), cutLR_triple outperforms LR:
    - 12 instance wins vs 8 (all 54)
@@ -177,7 +177,7 @@ ARM 1 ran without `--save-suffix` (flags dropped on PowerShell paste), so it upd
    - 35 total refreshes vs 32; cutLR tightens UB more often
    - LR wins 8 instances (mostly α=0.25 hard cases where accumulated warm multipliers eventually converge)
 
-4. **Conclusion**: cutLR demonstrably tightens the dual in standalone mode AND in the pipeline when headroom exists. The pre-existing tight UB from David's full solver removes the headroom needed — consistent with the ceiling argument.
+4. **Conclusion**: cutLR demonstrably tightens the dual in standalone mode AND in the pipeline when headroom exists. The pre-existing tight UB from the baseline solver removes the headroom needed — consistent with the ceiling argument.
 
 ---
 
@@ -189,7 +189,7 @@ david_package_20260829_1416/
 ├── run_adaptive_full_cutlag_exp_monotone.py   ← MAIN RUNNER (modified for --weak-ub-csv)
 │
 ├── dev_cut_lagrangian/
-│   ├── cut_augmented_lagrangian.py            ← Tomer's cutLR implementation
+│   ├── cut_augmented_lagrangian.py            ← cutLR implementation
 │   ├── gen_headroom_ubcsv.py                  ← generates the weak-UB CSVs
 │   ├── analyze_headroom_exp.py                ← compare LR vs cutLR pipeline arms
 │   └── SESSION_CONTEXT.md                     ← THIS FILE
@@ -199,7 +199,7 @@ david_package_20260829_1416/
 │   └── headroom_weak_ubs.csv                  ← per-instance initial UB = floor(LR_200_cold)
 │
 ├── results/
-│   ├── master_results.csv                     ← David's 660-instance baseline
+│   ├── master_results.csv                     ← 660-instance baseline results
 │   ├── adaptive_full_20260907_2107_hard6_lag_mono.csv       ← hard6 LR arm (all 0 refreshes)
 │   ├── adaptive_full_20260907_2139_hard6_cutlag_triple_mono.csv ← hard6 cutLR arm (all 0 refreshes)
 │   ├── adaptive_full_20260910_1011.csv        ← HEADROOM ARM 1 (LR, ~1.93h)
@@ -217,7 +217,7 @@ david_package_20260829_1416/
 
 1. Read this file: `dev_cut_lagrangian/SESSION_CONTEXT.md`
 2. The headroom experiment is **COMPLETE** — see Section 3 for all results
-3. **Next task**: Write the methodology and results section for Tomer's contribution to the joint paper
+3. **Next task**: Write the methodology and results section for the cutLR contribution to the joint paper
 
 ### Pending After Headroom Experiment
 - [ ] Write the paper methodology section (cutLR formulation, pipeline integration)
