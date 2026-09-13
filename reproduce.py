@@ -262,9 +262,12 @@ def main():
         print("\n=== h2: arm matrices ===", flush=True)
         rc |= run_h2(quick=a.quick)
 
-    if a.all:
+    if a.all and not a.quick:
         print("\n=== fragments ===", flush=True)
         rc |= do_fragments()
+    elif a.all and a.quick:
+        print("\n  (fragment rebuild skipped in --quick mode; "
+              "run --fragments separately to rebuild paper tables)", flush=True)
 
     sys.exit(rc)
 

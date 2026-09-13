@@ -5,7 +5,7 @@
 **Course:** 0572-5330, *Exact Algorithms for Combinatorial Optimization
 Problems* -- Tel-Aviv University.
 
-**Paper:** [`paper/coupling_falsification.tex`](paper/coupling_falsification.tex)
+**Paper:** [`paper/coupling_falsification_with_cutlr.pdf`](paper/coupling_falsification_with_cutlr.pdf) ([source](paper/coupling_falsification_with_cutlr.tex))
 
 This directory tree is the reproduction package for a study that tests two
 strengthening hypotheses against an existing certified primal–dual solver for
@@ -65,13 +65,17 @@ dev_dual_guided/       H2 instruments
   dual_guided_ops.py     v1 (degenerate) + v2 (corrected) operators
   run_dual_guided_experiment.py
   fixing_estimate.py     reduced-cost variable fixing reach
+dev_cut_lagrangian/    cut-augmented Lagrangian (Section 5 of the paper)
+  cut_augmented_lagrangian.py    L(μ,γ,ν) implementation
+  analyze_cut_aug_stratified54.py
+  analyze_headroom_exp.py
 dev_cut_guided/        earlier cut-guided variant (superseded by dev_bpc_replica)
 core/, adapters/       baseline solver (unmodified by this study)
 configs/               instance subsets used by each experiment
 results/bpc_replica_dev/   H1 artifacts
 results/dual_guided_dev/   H2 artifacts
 results/analysis/          notes and cross-run summaries
-paper/                 coupling_falsification.tex + generated fragments
+paper/                 coupling_falsification_with_cutlr.tex + generated fragments
 ```
 
 **No instrument in this study modifies the baseline solver.** `core/` and
@@ -81,10 +85,9 @@ paper/                 coupling_falsification.tex + generated fragments
 
 ## Reproduction
 
-Requires Python 3.10+ and `requirements.txt`. Benchmark instances are **not**
-redistributed here — fetch them from
-<https://github.com/RieraULL/OPS-Benchmark> into
-`benchmarks/ops_raw/OPS-Benchmark-master/input/`.
+Requires Python 3.10+ and `requirements.txt`. Benchmark instances are **bundled**
+in this repository under `benchmarks/ops_raw/OPS-Benchmark-master/input/` —
+nothing to download. See `README.md` for the full quick-start.
 
 ```bash
 # H1 - S0: do violations exist in the relaxed solution?

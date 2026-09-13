@@ -147,7 +147,7 @@ computational budget changes — in both directions.
 ```bash
 pip install -r requirements.txt
 python reproduce.py --list          # every experiment, its command, its runtime
-python reproduce.py --all --quick   # everything at reduced budgets, a few minutes
+python reproduce.py --all --quick   # everything at reduced budgets, ~20-35 minutes
 python reproduce.py --all           # everything at full budget, about 6 hours
 ```
 

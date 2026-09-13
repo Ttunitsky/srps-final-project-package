@@ -141,10 +141,15 @@ def main():
     print("  hard ceiling (1 DP) mean %.2fx   median %.2fx" % (st.mean(hc), st.median(hc)))
     print("  captured            mean %.0f%% of the achievable ceiling"
           % st.mean([r["pct_of_ceiling"] for r in rows]))
-    print("  bounds identical    %s" % ("YES, all" if all(r["identical"] for r in rows) else "NO"))
+    all_identical = all(r["identical"] for r in rows)
+    print("  bounds identical    %s" % ("YES, all" if all_identical else "NO"))
     print("  seq timing spread   mean %.1f%% across repeats"
           % st.mean([r["seq_spread_pct"] for r in rows]))
     print("  -> %s" % out)
+    if not all_identical:
+        print("ERROR: parallel bounds do not match sequential bounds — see 'identical' column above.",
+              flush=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

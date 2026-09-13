@@ -6,13 +6,21 @@
 This repository contains everything needed to re-run, verify, or extend a study
 that (1) tests ten techniques from the course syllabus against a certified
 primal–dual solver for the Selective Routing Problem with Synchronisation (SRPS),
-and (2) develops a cut-augmented Lagrangian relaxation that demonstrably tightens
-the certified bound.
+and (2) develops a cut-augmented Lagrangian relaxation that tightens the certified
+bound when the initial certificate has genuine headroom.
 
-- **The paper (PDF):** [`paper/coupling_falsification_with_cutlr.pdf`](paper/coupling_falsification_with_cutlr.pdf)
-- **The paper (source):** [`paper/coupling_falsification_with_cutlr.tex`](paper/coupling_falsification_with_cutlr.tex)
-- **The findings, in prose:** [`COURSE_PROJECT.md`](COURSE_PROJECT.md)
-- **This file:** how to install, run, and read everything.
+## Submission map
+
+| | |
+|---|---|
+| **Final paper (PDF)** | [`paper/coupling_falsification_with_cutlr.pdf`](paper/coupling_falsification_with_cutlr.pdf) |
+| **Paper source** | [`paper/coupling_falsification_with_cutlr.tex`](paper/coupling_falsification_with_cutlr.tex) |
+| **Quick reproduction** | `python reproduce.py --all --quick` |
+| **Expected runtime** | ~20–35 minutes on a standard laptop (CPLEX stage auto-skipped if absent) |
+| **Full experiments** | `python reproduce.py --all` (~6 hours); see §5 below |
+| **Findings in prose** | [`COURSE_PROJECT.md`](COURSE_PROJECT.md) |
+
+---
 
 ---
 
@@ -25,7 +33,7 @@ pip install -r requirements.txt
 # 2. see what can be run  (benchmark instances are already included — see §3)
 python reproduce.py --list
 
-# 3. run everything at reduced budgets (a few minutes)
+# 3. run everything at reduced budgets (~20-35 minutes)
 python reproduce.py --all --quick
 
 # 4. rebuild the paper's tables from whatever results exist
@@ -60,18 +68,10 @@ export CPLEX_API="/path/to/CPLEX_Studio2211/cplex/python/3.10/x64_win64"
 
 ## 3. Benchmark instances — already included
 
-**Nothing to download.** The 71 instance files every experiment touches are
-bundled in this repository under
+**Nothing to download.** All benchmark instances needed for the reproduction
+experiments are bundled in this repository under
 `benchmarks/ops_raw/OPS-Benchmark-master/input/` (5.7 MB, CC0 1.0 public
 domain). `python reproduce.py --all` works out of the box.
-
-Verify with:
-
-```bash
-find benchmarks/ops_raw/OPS-Benchmark-master/input -name "*.txt" | wc -l
-```
-
-You should see **71**.
 
 The full 780-instance benchmark is only needed to re-run the baseline evaluation
 of the paper's Section 6. See [`BENCHMARK.md`](BENCHMARK.md) for sources, the
@@ -152,7 +152,7 @@ python reproduce.py --list          # every stage, its command, its runtime
 python reproduce.py --stage s0      # one stage at full budget
 python reproduce.py --stage s0 --quick
 python reproduce.py --all           # everything, ~6 hours
-python reproduce.py --all --quick   # everything, a few minutes
+python reproduce.py --all --quick   # everything, ~20-35 minutes (no fragment rebuild)
 ```
 
 | Stage | What it answers | ~Runtime |
@@ -170,9 +170,9 @@ python reproduce.py --all --quick   # everything, a few minutes
 | `fragments` | rebuild the paper's tables | 1 min |
 
 **Full re-generation of cutLR experiments** (not needed to verify results — pre-computed CSVs are included):
-```bash
+```powershell
 # Headroom experiment (~2h total, 3 workers, runs both arms sequentially)
-python -m dev_cut_lagrangian.run_headroom_exp   # or: .\dev_cut_lagrangian\run_headroom_exp.ps1
+.\dev_cut_lagrangian\run_headroom_exp.ps1
 ```
 
 **Results never overwrite.** Every run writes a timestamped file, so repeated
@@ -247,7 +247,7 @@ are hand-authored from the cutLR experiment results and are not overwritten by `
 **Falsification study:** every technique targeting the certified gap was absorbed
 by a ceiling computable in advance; the two targeting runtime were not, and one
 delivered. **Cut-augmented Lagrangian:** the one dual-side technique that
-demonstrably tightens the bound — when the initial certificate has genuine headroom.
+tightens the bound — when the initial certificate has genuine headroom.
 
 | Technique | Target | Outcome |
 |---|---|---|

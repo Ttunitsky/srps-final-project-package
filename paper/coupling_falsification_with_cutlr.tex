@@ -46,12 +46,13 @@ We also develop a cut-augmented Lagrangian relaxation $L(\mu,\gamma,\nu)$ that
 inserts capacity and incompatibility inequalities in the projected selection
 space while preserving the per-processor orienteering decomposition. In
 standalone comparison on a 54-instance stratified sample, this tightens the
-certified bound against a matched-budget plain Lagrangian baseline, winning on
+certified bound against a matched-iteration plain Lagrangian baseline, winning on
 30 of 54 instances with a mean gap of $0.361\%$ versus $0.455\%$ ($-0.094\pp$).
 In a pipeline experiment with deliberately weakened initial bounds, the
 cut-augmented arm achieves a mean certified gap of $0.428\%$ against $0.533\%$
-for the plain Lagrangian arm, with 12 instance wins to 8. This is the one
-dual-side technique in the study that demonstrably tightens the bound, and its
+for the plain Lagrangian arm (12 instance wins to 8; exploratory, as both arms
+share incumbents --- $ub$ differences are the clean per-instance evidence).
+This is the one dual-side technique in the study that tightens the bound, and its
 benefit is conditional on the initial upper bound having genuine headroom.
 
 The bulk of this report is a systematic attempt to strengthen that solver using
@@ -120,7 +121,7 @@ decomposition, warm-start effort scheduling, reduced-cost variable fixing,
 parallel subproblem evaluation, and a standalone exact reference --- of which one
 improves what it targets. Beyond the ten-technique study, a cut-augmented
 Lagrangian extension (Section~\ref{sec:cutlr}) is the one dual-side contribution
-that demonstrably tightens the bound. Sections~\ref{sec:dual}--\ref{sec:runtime} are organised
+that tightens the bound. Sections~\ref{sec:dual}--\ref{sec:runtime} are organised
 by the metric each technique aims at, because that division is the organising fact
 of the study: everything aimed at the certified gap was bounded in advance by a
 ceiling computable from the solver's own results, and the two aimed at runtime
@@ -678,8 +679,8 @@ on every instance.
 
 \subsection{Verdict}\label{sec:cutlr-verdict}
 
-The cut-augmented Lagrangian demonstrably tightens the bound in standalone
-comparison.  With the same dual budget, cutLR-triple reduces mean certified gap
+The cut-augmented Lagrangian tightens the bound in standalone
+comparison.  With the same number of iterations, cutLR-triple reduces mean certified gap
 from $0.455\%$ to $0.361\%$ and wins on 30 of 54 instances; the plain warm
 continuation (LR\_100$+$LR\_100) achieves only $0.467\%$ on the same budget,
 confirming the improvement is from the cuts rather than the warm start alone.
@@ -1317,7 +1318,7 @@ bounds what any successor could achieve on this benchmark.
 We described a certified primal--dual solver for SRPS, tried ten times over to
 strengthen it with techniques from the exact-algorithms syllabus (nine of which
 failed on structural grounds), and then exhibited a positive dual-side
-contribution: a cut-augmented Lagrangian relaxation that demonstrably tightens
+contribution: a cut-augmented Lagrangian relaxation that tightens
 the bound when the initial certificate has genuine headroom.
 
 \textbf{Falsification study: nine of ten attempts fail.}
@@ -1362,10 +1363,12 @@ report it as such.
 (Section~\ref{sec:cutlr}).  Capacity and incompatibility inequalities in the
 projected $y$-space, combined via Lagrangian penalties while preserving the
 per-processor decomposition, tighten the certified bound on 30 of 54 stratified
-instances in standalone comparison ($0.361\%$ mean versus $0.455\%$ for matched-budget
-plain LR, $-0.094\pp$).  In a pipeline experiment with deliberately weakened
-initial bounds the cut-augmented arm wins 12 of 54 instance comparisons against
-8 for plain LR, with advantage concentrated on medium-hard instances.  The
+instances in standalone comparison ($0.361\%$ mean versus $0.455\%$ for a
+matched-iteration plain LR baseline, $-0.094\pp$).  In a pipeline experiment
+with deliberately weakened initial bounds the cut-augmented arm wins 12 of 54
+instance comparisons against 8 for plain LR (exploratory; both arms share
+incumbents --- certified $ub$ differences are the clean per-instance evidence),
+with advantage concentrated on medium-hard instances.  The
 benefit is conditional: where the initial certificate is already tight the
 ceiling absorbs both arms equally, and on the hardest low-alpha instances
 accumulated warm-multiplier subgradient calls eventually outpace per-call
