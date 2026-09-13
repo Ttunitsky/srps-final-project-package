@@ -1,21 +1,24 @@
 \begin{table}[htbp]
 \centering
-\caption{Headroom pipeline experiment: 54 instances, initial $ub$ set to
-$\lfloor L_{\text{200,cold}}\rfloor$ per instance, giving the in-loop dual
-refresh genuine room to tighten.  LAG\_MAX\_ITER\,$=$\,100, LAG\_MAX\_TIME\,$=$\,30\,s,
-three workers, 900\,s cap.  ``Refreshes'' counts in-loop dual calls that
-successfully lowered the certified bound.  The \emph{headroom-25} subset
-marks the 25 instances where $\lfloor \min_{\text{config}} L_{\text{cutLR}}\rfloor
-< ub_{\text{init}}$ (standalone cutLR provably tighter than the weakened bound).}
+\caption{Headroom pipeline experiment: 52 valid instances (2 excluded where
+$\lfloor L_{\text{200,cold}}\rfloor$ landed below the primal optimum, making the
+weakened bound invalid; both arms are unaffected in wins/refreshes counts).
+Initial $ub$ set to $\lfloor L_{\text{200,cold}}\rfloor$ per instance, giving
+the in-loop dual refresh genuine room to tighten.
+LAG\_MAX\_ITER\,$=$\,100, LAG\_MAX\_TIME\,$=$\,30\,s, three workers, 900\,s cap.
+``Refreshes'' counts in-loop dual calls that successfully lowered the certified
+bound.  The \emph{headroom-25} subset marks the 25 instances where
+$\lfloor \min_{\text{config}} L_{\text{cutLR}}\rfloor < ub_{\text{init}}$
+(standalone cutLR provably tighter than the weakened bound).}
 \label{tab:cutlr-headroom}
 \small
 \begin{tabular}{lrrrr}
 \toprule
 Arm & Mean gap (\%) & Median (\%) & Inst.\ wins & UB refreshes \\
 \midrule
-\multicolumn{5}{l}{\emph{All 54 instances}} \\
-LR in-loop & 0.533 & 0.088 & 8 & 32 \\
-cutLR-triple in-loop & \textbf{0.428} & \textbf{0.080} & \textbf{12} & \textbf{35} \\[4pt]
+\multicolumn{5}{l}{\emph{All 52 valid instances}} \\
+LR in-loop & 0.559 & 0.092 & 8 & 32 \\
+cutLR-triple in-loop & \textbf{0.451} & \textbf{0.088} & \textbf{12} & \textbf{35} \\[4pt]
 \multicolumn{5}{l}{\emph{Headroom-25 subset}} \\
 LR in-loop & 1.002 & 0.547 & --- & --- \\
 cutLR-triple in-loop & \textbf{0.780} & \textbf{0.411} & --- & --- \\
@@ -23,12 +26,12 @@ cutLR-triple in-loop & \textbf{0.780} & \textbf{0.411} & --- & --- \\
 \end{tabular}
 \end{table}
 
-Across all 54 instances the cutLR arm reduces mean certified gap by $0.105\pp$
+Across all 52 valid instances the cutLR arm reduces mean certified gap by $0.108\pp$
 and increases the refresh count from 32 to 35.  On the 25 confirmed-headroom
 instances the reduction grows to $0.222\pp$ ($1.002\%\to 0.780\%$); these are
 the cases where the standalone cutLR bound was already below the weakened
 initial $ub$, so the in-loop refresh has room to fire even within its reduced
-budget.  The 34 ties are instances the ceiling absorbs regardless: the weakened
+budget.  The 32 ties are instances the ceiling absorbs regardless: the weakened
 initial $ub$ is already close to the ALNS incumbent, or the ALNS proves
 optimality without a dual refresh.
 

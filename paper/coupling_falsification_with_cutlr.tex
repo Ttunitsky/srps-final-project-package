@@ -49,11 +49,13 @@ standalone comparison on a 54-instance stratified sample, this tightens the
 certified bound against a matched-iteration plain Lagrangian baseline, winning on
 30 of 54 instances with a mean gap of $0.361\%$ versus $0.455\%$ ($-0.094\pp$).
 In a pipeline experiment with deliberately weakened initial bounds, the
-cut-augmented arm achieves a mean certified gap of $0.428\%$ against $0.533\%$
-for the plain Lagrangian arm (12 instance wins to 8; exploratory, as both arms
-share incumbents --- $ub$ differences are the clean per-instance evidence).
-This is the one dual-side technique in the study that tightens the bound, and its
-benefit is conditional on the initial upper bound having genuine headroom.
+cut-augmented arm achieves a mean certified gap of $0.451\%$ against $0.559\%$
+for the plain Lagrangian arm on 52 valid instances (12 instance wins to 8;
+exploratory, as both arms share incumbents --- $ub$ differences are the clean
+per-instance evidence; 2 instances excluded where the weakened bound was
+inadvertently invalid).  This is the one dual-side technique in the study that
+tightens the bound, and its benefit is conditional on the initial upper bound
+having genuine headroom.
 
 The bulk of this report is a systematic attempt to strengthen that solver using
 ten techniques from the exact-algorithms syllabus, and an account of why nine
@@ -582,9 +584,10 @@ horizon $L$, so the total profit of selected jobs requiring $k$ is at most $O_k$
   \sum_{j \in J_k} b_j\, y_j \;\le\; O_k \qquad \forall\, k \in K.
 \end{equation}
 Introducing multipliers $\gamma_k \ge 0$ for these constraints and folding them into
-the Lagrangian modifies the effective profit for job $j$ on processor $k$'s subproblem
-to $\mu_{j,k} + \gamma_k b_j / O_k$.  Each per-processor subproblem remains a
-standard orienteering DP on the same arc graph, with augmented edge weights.
+the Lagrangian subtracts $\sum_{k:\,j\in J_k}\gamma_k b_j/O_k$ from job $j$'s
+selection threshold; the per-processor orienteering subproblems retain profits
+$\mu_{j,k}$ unchanged.  Each $O_k(\mu,\gamma)$ is therefore a standard orienteering
+DP on the same arc graph.
 
 \subsubsection{Incompatibility cuts}
 
@@ -617,11 +620,13 @@ $L(\mu,\gamma,\nu)$ separates into the same per-processor orienteering subproble
 as $L(\mu)$, with shifted job profits.
 \end{proposition}
 \begin{proof}
-The $\gamma_k$ penalties enter linearly through
-$\mu_{j,k}\leftarrow\mu_{j,k}+\gamma_k b_j/O_k$, so each $O_k(\mu,\gamma)$ is
-still a standard orienteering DP.  The incompatibility penalties shift the
-$y$-threshold before the selection rule fires, and do not enter the route
-subproblems.
+Both $\gamma_k$ and $\nu$ penalties enter only the $y$-selection threshold:
+$y_j=1$ iff $\mathrm{profit}_j - \sum_k\mu_{j,k}
+- \sum_{k:\,j\in J_k}\gamma_k b_j/O_k - \nu\text{-terms} > 0$.
+The per-processor route subproblems maximise $\sum_{j\in J_k}\mu_{j,k}\,x_{j,k}$
+subject to orienteering constraints, with profits $\mu_{j,k}$ unchanged by
+$\gamma$ or $\nu$.  Each $O_k(\mu,\gamma,\nu)$ is therefore a standard
+orienteering DP.
 \end{proof}
 
 Three configurations are evaluated: \textbf{cap} (capacity cuts only),
@@ -1365,8 +1370,8 @@ projected $y$-space, combined via Lagrangian penalties while preserving the
 per-processor decomposition, tighten the certified bound on 30 of 54 stratified
 instances in standalone comparison ($0.361\%$ mean versus $0.455\%$ for a
 matched-iteration plain LR baseline, $-0.094\pp$).  In a pipeline experiment
-with deliberately weakened initial bounds the cut-augmented arm wins 12 of 54
-instance comparisons against 8 for plain LR (exploratory; both arms share
+with deliberately weakened initial bounds the cut-augmented arm wins 12 of 52
+valid instance comparisons against 8 for plain LR (exploratory; both arms share
 incumbents --- certified $ub$ differences are the clean per-instance evidence),
 with advantage concentrated on medium-hard instances.  The
 benefit is conditional: where the initial certificate is already tight the

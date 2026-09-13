@@ -43,6 +43,7 @@ def main():
 
     common = sorted(set(lr_rows) & set(cut_rows))
     print(f"\nHeadroom Experiment: {len(common)} instances in common\n")
+    print("(Instances where weak_ub < primal optimum are excluded as degenerate — see EXCLUDED lines below)\n")
 
     # ── Per-instance comparison ───────────────────────────────────────────────
     header = (f"{'Instance':40s} {'Init UB':>8} "
@@ -64,6 +65,7 @@ def main():
     lr_gaps_headroom  = []
     cut_gaps_headroom = []
 
+    degenerate = []  # instances where weak_ub < primal optimum (floor artifact)
     for iid in common:
         lr  = lr_rows[iid]
         cut = cut_rows[iid]
@@ -73,6 +75,15 @@ def main():
         cut_gap = float(cut["beta_gap_pct"]) if cut["beta_gap_pct"] else None
         lr_ref  = int(lr["beta_num_ub_refreshes"])
         cut_ref = int(cut["beta_num_ub_refreshes"])
+
+        # Skip degenerate headroom instances: floor(LR_200_cold) landed below
+        # the true integer optimum, making the weak UB an invalid upper bound.
+        # Both arms exit immediately (stop_reason=UB), contributing identical
+        # negative gaps that are measurement artifacts, not algorithmic results.
+        if (lr_gap is not None and lr_gap < 0) or (cut_gap is not None and cut_gap < 0):
+            degenerate.append(iid)
+            print(f"{iid:40s}  [EXCLUDED: weak_ub < primal optimum — floor artifact]")
+            continue
 
         lr_refreshes_total  += lr_ref
         cut_refreshes_total += cut_ref
@@ -126,7 +137,10 @@ def main():
     print("=" * 60)
     print("AGGREGATE RESULTS")
     print("=" * 60)
+    valid = len(common) - len(degenerate)
     print(f"  Total instances:       {len(common)}")
+    print(f"  Excluded (degenerate): {len(degenerate)} ({', '.join(degenerate)})")
+    print(f"  Valid instances:       {valid}")
     print(f"  Headroom instances:    {instances_with_headroom}")
     print()
     print(f"  UB Refreshes (all 54):")
