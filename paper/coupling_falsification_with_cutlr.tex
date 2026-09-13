@@ -76,7 +76,7 @@ A ceiling argument computed from the solver's own gap distribution bounds
 $0.0087\pp$ at the median---below the run-to-run variance of the experiments built
 to detect it---and every gap-directed technique tested was absorbed by it. The two
 aimed at runtime were not so bounded, and one delivered: parallel evaluation of
-the per-processor subproblems is $1.42\times$ faster with bit-identical bounds.
+the per-processor subproblems is $1.42\times$ faster with numerically identical bounds (floored certificates match exactly).
 Beyond the negative results we extract two methodological lessons: mechanism
 \emph{activation} is not evidence of mechanism \emph{effect}, and a verdict
 measured at one computational budget can reverse at another---in both directions.
@@ -1357,7 +1357,7 @@ hold, because both properties are consequences of the same quantity $G$ and cann
 be played against each other.
 
 Parallelising the per-processor subproblems is the one intervention that improves
-what it targets: $1.42\times$ on the dual with bit-identical bounds, capturing
+what it targets: $1.42\times$ on the dual with numerically identical bounds (floored certificates match exactly), capturing
 59\% of a ceiling itself limited because a single subproblem can carry half an
 instance's work. Its end-to-end value is nonetheless about one per cent, because
 the dual is invoked on one instance in twelve. A correct optimisation of something

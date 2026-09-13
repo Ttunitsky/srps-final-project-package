@@ -184,7 +184,7 @@ COVERAGE = [
     ("Reduced-cost variable fixing", "runtime",
      r"reach $24.8\%\to0.3\%$ at $0.99z$", r"\ref{sec:fixing}"),
     ("Parallel subproblem evaluation", "runtime",
-     r"$\mathbf{1.42\times}$ dual, bit-identical bounds", r"\ref{sec:parallel}"),
+     r"$\mathbf{1.42\times}$ dual, numerically identical bounds", r"\ref{sec:parallel}"),
 ]
 
 

@@ -22,8 +22,6 @@ bound when the initial certificate has genuine headroom.
 
 ---
 
----
-
 ## 1. Five-minute quick start
 
 ```bash
@@ -36,7 +34,10 @@ python reproduce.py --list
 # 3. run everything at reduced budgets (~20-35 minutes)
 python reproduce.py --all --quick
 
-# 4. rebuild the paper's tables from whatever results exist
+# 4. (optional) rebuild the paper's tables from result CSVs
+#    Note: --all --quick produces smoke-budget CSVs, so paper tables
+#    will reflect those reduced runs. Run --all (full budget) first
+#    to get publication-quality tables.
 python reproduce.py --fragments
 ```
 
@@ -60,8 +61,14 @@ handles this automatically and *skips the stage with an explanation* if CPLEX is
 not found. Override the defaults with environment variables:
 
 ```bash
+# Unix/macOS
 export CPLEX_PYTHON="/path/to/python3.10.exe"
 export CPLEX_API="/path/to/CPLEX_Studio2211/cplex/python/3.10/x64_win64"
+```
+```powershell
+# Windows (PowerShell)
+$env:CPLEX_PYTHON = "C:\path\to\python3.10.exe"
+$env:CPLEX_API    = "C:\path\to\CPLEX_Studio2211\cplex\python\3.10\x64_win64"
 ```
 
 ---
@@ -171,7 +178,7 @@ python reproduce.py --all --quick   # everything, ~20-35 minutes (no fragment re
 
 **Full re-generation of cutLR experiments** (not needed to verify results — pre-computed CSVs are included):
 ```powershell
-# Headroom experiment (~2h total, 3 workers, runs both arms sequentially)
+# Headroom experiment (~3-4h total — two sequential arms, ~1.5-2h each, 3 workers)
 .\dev_cut_lagrangian\run_headroom_exp.ps1
 ```
 
@@ -233,7 +240,7 @@ are hand-authored from the cutLR experiment results and are not overwritten by `
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `FileNotFoundError: ...instances/X.txt` | asking for an instance outside the bundled 71 | download the full set — [`BENCHMARK.md`](BENCHMARK.md) |
+| `FileNotFoundError: ...instances/X.txt` | instance not in bundled set | download the full benchmark — [`BENCHMARK.md`](BENCHMARK.md) |
 | `ModuleNotFoundError: cplex` | CPLEX API absent or wrong Python | §2 — or ignore; only `exact` needs it |
 | `exact` stage says SKIP | CPLEX not found | expected; every other stage still runs |
 | A stage seems to hang | most run 10–90 min with sparse output | check `results/` for new files |
@@ -258,7 +265,7 @@ tightens the bound — when the initial certificate has genuine headroom.
 | Dual stabilisation | gap | budget-dependent; no transfer |
 | Lagrangian decomposition | gap | **provably equal** to the existing bound |
 | Reduced-cost fixing | runtime | 24.8% → 0.3% reach at 1%-suboptimal incumbent |
-| **Parallel subproblems** | **runtime** | **1.42× dual, bit-identical bounds** |
+| **Parallel subproblems** | **runtime** | **1.42× dual, numerically identical bounds** |
 | Compact MILP (CPLEX) | reference | Lagrangian bound tighter on 22/30 |
 | **Cut-augmented LR** | **gap** | **0.361% vs 0.455% standalone; 12/8 pipeline wins** |
 

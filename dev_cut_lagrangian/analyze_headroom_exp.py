@@ -143,11 +143,12 @@ def main():
     print(f"  Valid instances:       {valid}")
     print(f"  Headroom instances:    {instances_with_headroom}")
     print()
-    print(f"  UB Refreshes (all 54):")
+    valid = len(common) - len(degenerate)
+    print(f"  UB Refreshes ({valid} valid instances):")
     print(f"    LR  total refreshes:    {lr_refreshes_total}")
     print(f"    CUT total refreshes:    {cut_refreshes_total}")
     print()
-    print(f"  Final certified gap (all {len(common)} instances):")
+    print(f"  Final certified gap (all {valid} valid instances):")
     if lr_gaps_all:
         print(f"    LR   — mean={statistics.mean(lr_gaps_all):.4f}%  "
               f"median={statistics.median(lr_gaps_all):.4f}%  "

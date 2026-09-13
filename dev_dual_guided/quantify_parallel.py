@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import os
 import statistics as st
 import sys
@@ -95,7 +96,8 @@ def main():
                     max_time=None, workers=args.workers, executor=ex,
                 )
                 par_t.append(time.perf_counter() - t)
-                ok = ok and (pr["upper_bound"] == s["upper_bound"])
+                ok = ok and math.isclose(pr["upper_bound"], s["upper_bound"],
+                                         rel_tol=0, abs_tol=1e-9)
         finally:
             ex.shutdown(wait=True)
 

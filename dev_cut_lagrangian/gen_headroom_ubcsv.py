@@ -52,7 +52,11 @@ def main():
         w.writeheader()
         for i in instances:
             raw = lr200[i]
-            floored = math.floor(raw)
+            # Add tolerance before flooring: a raw bound of 1202.9999999999995
+            # is a floating-point representation of the integer 1203 and should
+            # floor to 1203, not 1202.
+            floored = math.floor(raw + 1e-9)
+            assert floored >= 0, f"Negative weak_ub for {i}: {floored}"
             w.writerow({"instance": i, "weak_ub": floored, "lr200_raw": f"{raw:.6f}"})
     print(f"Written: {WEAK_OUT}")
 

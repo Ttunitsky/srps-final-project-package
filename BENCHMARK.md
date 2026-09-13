@@ -2,7 +2,7 @@
 
 ## Short version
 
-**You do not need to download anything to reproduce this study.** The 71 instance
+**You do not need to download anything to reproduce this study.** The instance
 files every experiment touches are already in this repository, under
 `benchmarks/ops_raw/OPS-Benchmark-master/input/`. Run `python reproduce.py --all`
 and it works.
@@ -16,7 +16,7 @@ evaluation** of the paper's Section 6.
 
 | | |
 |---|---|
-| Instance files | **71** (5.7 MB) |
+| Instance files | (5.7 MB) |
 | Covers | every subset in `configs/*.csv` |
 | Enables | all nine experiment stages in `reproduce.py` |
 | Licence | **CC0 1.0 Universal** (public domain) — see `LICENSE.txt` beside the data |
@@ -76,7 +76,7 @@ cp -r OPS-Benchmark-master/input/* benchmarks/ops_raw/OPS-Benchmark-master/input
 find benchmarks/ops_raw/OPS-Benchmark-master/input -name "*.txt" | wc -l
 ```
 
-- **71** — only the bundled subset; every experiment stage runs
+- **bundled count** — only the bundled subset; every experiment stage runs
 - **841** — the six study families (B, C, D, EB, EC, ED), 75 MB; the full baseline
   can be re-run
 - **1191** — everything including families A and EA, 567 MB

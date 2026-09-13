@@ -237,7 +237,7 @@ def main():
         print("  %-12s %-48s ~%3d min" % ("h2", "H2 arm matrices (screen + production)", 150))
         print("      6 screen arms + 3 production arms of %s" % H2_DRIVER)
         print("  %-12s %-48s ~%3d min" % ("fragments", "rebuild paper tables from CSVs", 1))
-        print("\n  --all at full budget is roughly 6 hours; --quick is a few minutes.")
+        print("\n  --all at full budget is roughly 6 hours; --quick is ~20-35 minutes.")
         return
 
     if a.fragments:
