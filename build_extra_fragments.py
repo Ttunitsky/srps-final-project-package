@@ -248,7 +248,7 @@ def build_convergence():
         r"uses at most 200 iterations warm-started.}"
     )
     t.append(r"\label{tab:convergence}")
-    t.append(r"\begin{tabular}{llrrrrrr}")
+    t.append(r"\begin{tabular}{llrrrrrrr}")
     t.append(r"\toprule")
     t.append(r"Instance & Variant & " + " & ".join(c[2:] for c in cks) + r" & prod \\")
     t.append(r"\midrule")
